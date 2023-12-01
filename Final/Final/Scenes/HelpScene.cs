@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Final
+namespace Final.Scenes
 {
     internal class HelpScene : GameScene
     {

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Final
+namespace Final.Scenes
 {
     public abstract class GameScene : DrawableGameComponent
     {
@@ -13,13 +13,13 @@ namespace Final
 
         public virtual void Hide()
         {
-            this.Enabled = false;
-            this.Visible = false;
+            Enabled = false;
+            Visible = false;
         }
         public virtual void Show()
         {
-            this.Enabled = true;
-            this.Visible = true;
+            Enabled = true;
+            Visible = true;
         }
         protected GameScene(Game game) : base(game)
         {
@@ -28,9 +28,9 @@ namespace Final
         }
         public override void Update(GameTime gameTime)
         {
-            foreach(GameComponent gameComponent in ComponentList)
+            foreach (GameComponent gameComponent in ComponentList)
             {
-                if(gameComponent.Enabled)
+                if (gameComponent.Enabled)
                 {
                     gameComponent.Update(gameTime);
                 }
@@ -39,12 +39,12 @@ namespace Final
         }
         public override void Draw(GameTime gameTime)
         {
-            foreach(GameComponent gameComponent in ComponentList)
+            foreach (GameComponent gameComponent in ComponentList)
             {
-                if(gameComponent is DrawableGameComponent)
+                if (gameComponent is DrawableGameComponent)
                 {
                     DrawableGameComponent drawableGameComponent = (DrawableGameComponent)gameComponent;
-                    if(drawableGameComponent.Visible)
+                    if (drawableGameComponent.Visible)
                     {
                         drawableGameComponent.Draw(gameTime);
                     }

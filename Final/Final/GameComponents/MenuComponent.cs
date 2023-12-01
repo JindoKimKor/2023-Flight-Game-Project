@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Final
+namespace Final.GameComponents
 {
     public class MenuComponent : DrawableGameComponent
     {
@@ -24,11 +24,11 @@ namespace Final
         private KeyboardState oldKeyboardState;
         public MenuComponent(Game game, SpriteBatch startSceneSpriteBatch, SpriteFont regularFont, SpriteFont highlightFont, string[] menuArray) : base(game)
         {
-            this.menuComponentSpriteBatch = startSceneSpriteBatch;
+            menuComponentSpriteBatch = startSceneSpriteBatch;
             this.regularFont = regularFont;
             this.highlightFont = highlightFont;
             menuItemList = menuArray.ToList();
-            menuItemsStartPosition = new Vector2(Shared.stageSize.X/2, Shared.stageSize.Y/2);
+            menuItemsStartPosition = new Vector2(Shared.stageSize.X / 2, Shared.stageSize.Y / 2);
         }
         public override void Update(GameTime gameTime)
         {

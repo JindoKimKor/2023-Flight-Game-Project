@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Final.GameComponents;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Final
+namespace Final.Scenes
 {
     public class StartScene : GameScene
     {
@@ -16,22 +17,22 @@ namespace Final
         private SpriteFont titleFont;
         private Texture2D backgroundTexture;
         private string titleText = "2023";
-        
+
 
         public MenuComponent MenuComponent { get => menuComponent; set => menuComponent = value; }
 
         public StartScene(Game game) : base(game)
         {
             MainGame mainGame = (MainGame)game;
-            this.startSceneSpriteBatch = mainGame._spriteBatch;
+            startSceneSpriteBatch = mainGame._spriteBatch;
             SpriteFont regularFont = game.Content.Load<SpriteFont>("fonts/RegularFont");
-            SpriteFont highlightFont = game.Content.Load<SpriteFont>("fonts/HighlightFont"); 
+            SpriteFont highlightFont = game.Content.Load<SpriteFont>("fonts/HighlightFont");
             titleFont = game.Content.Load<SpriteFont>("fonts/TitleFont");
             backgroundTexture = mainGame.Content.Load<Texture2D>("images/background");
 
             string[] menuItems = { "Start Game", "Help", "Leaderboard", "Credit", "Option", "Exit" };
             menuComponent = new MenuComponent(game, startSceneSpriteBatch, regularFont, highlightFont, menuItems);
-            this.ComponentList.Add(menuComponent);
+            ComponentList.Add(menuComponent);
         }
         public override void Draw(GameTime gameTime)
         {

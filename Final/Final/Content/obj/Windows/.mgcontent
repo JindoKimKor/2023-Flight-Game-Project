@@ -8,9 +8,11 @@
     <File>C:/Users/blitz/Documents/AirborneAssault/Final/Final/Content/fonts/RegularFont.spritefont</File>
     <File>C:/Users/blitz/Documents/AirborneAssault/Final/Final/Content/fonts/TitleFont.spritefont</File>
     <File>C:/Users/blitz/Documents/AirborneAssault/Final/Final/Content/images/background.png</File>
+    <File>C:/Users/blitz/Documents/AirborneAssault/Final/Final/Content/images/fighterAircraft.png</File>
   </SourceFiles>
   <DestFiles>
     <File>fonts/HighlightFont.spritefont</File>
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
