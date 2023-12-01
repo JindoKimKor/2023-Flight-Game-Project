@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Final
 {
-    public class Game1 : Game
+    public class MainGame : Game
     {
         private GraphicsDeviceManager _graphics;
         public SpriteBatch _spriteBatch;
@@ -16,7 +16,7 @@ namespace Final
         private HelpScene helpScene;
 
 
-        public Game1()
+        public MainGame()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -29,7 +29,7 @@ namespace Final
         {
             // TODO: Add your initialization logic here
 
-            Shared.stage = new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
+            Shared.stageSize = new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
 
             base.Initialize();
         }
@@ -48,16 +48,16 @@ namespace Final
             playScene = new PlayScene(this);
             this.Components.Add(playScene);
 
-            startScene.show();
+            startScene.Show();
         }
-        private void hideAllScenes()
+        private void HideAllScenes()
         {
-            foreach (GameComponent item in Components)
+            foreach (GameComponent gameComponent in Components)
             {
-                if(item is GameScene)
+                if(gameComponent is GameScene)
                 {
-                    GameScene gs = (GameScene)item;
-                    gs.hide();
+                    GameScene gameScene = (GameScene)gameComponent;
+                    gameScene.Hide();
                 }
             }
         }
@@ -66,23 +66,23 @@ namespace Final
         {
 
             // TODO: Add your update logic here
-            KeyboardState ks = Keyboard.GetState();
+            KeyboardState keyboardState = Keyboard.GetState();
             int selectedIndex = 0;
 
             if (startScene.Enabled)
             {
-                selectedIndex = startScene.Menu.SelectedIndex;
-                if (selectedIndex == 0 && ks.IsKeyDown(Keys.Enter))
+                selectedIndex = startScene.MenuComponent.SelectedIndex;
+                if (selectedIndex == 0 && keyboardState.IsKeyDown(Keys.Enter))
                 {
-                    startScene.hide();
-                    playScene.show();
+                    startScene.Hide();
+                    playScene.Show();
                 }
-                else if (selectedIndex == 1 && ks.IsKeyDown(Keys.Enter))
+                else if (selectedIndex == 1 && keyboardState.IsKeyDown(Keys.Enter))
                 {
-                    startScene.hide();
-                    helpScene.show();
+                    startScene.Hide();
+                    helpScene.Show();
                 }
-                else if (selectedIndex == 4 && ks.IsKeyDown(Keys.Enter))
+                else if (selectedIndex == 4 && keyboardState.IsKeyDown(Keys.Enter))
                 {
                     Exit();
                 }
@@ -90,10 +90,10 @@ namespace Final
             }
             if(playScene.Enabled || helpScene.Enabled)
             {
-                if (ks.IsKeyDown(Keys.Escape))
+                if (keyboardState.IsKeyDown(Keys.Escape))
                 {
-                    hideAllScenes();
-                    startScene.show();
+                    HideAllScenes();
+                    startScene.Show();
                 }
             }
             base.Update(gameTime);

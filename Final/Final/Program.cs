@@ -1,3 +1,3 @@
 ﻿
-using var game = new Final.Game1();
+using var game = new Final.MainGame();
 game.Run();

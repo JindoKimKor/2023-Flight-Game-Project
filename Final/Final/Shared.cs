@@ -9,6 +9,6 @@ namespace Final
 {
     internal class Shared
     {
-        public static Vector2 stage;
+        public static Vector2 stageSize;
     }
 }

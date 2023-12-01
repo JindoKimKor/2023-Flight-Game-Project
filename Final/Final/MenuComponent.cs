@@ -12,73 +12,73 @@ namespace Final
 {
     public class MenuComponent : DrawableGameComponent
     {
-        private SpriteBatch sb;
-        private SpriteFont regularFont, hilightFont;
-        private List<string> menuItems;
+        private SpriteBatch menuComponentSpriteBatch;
+        private SpriteFont regularFont, highlightFont;
+        private List<string> menuItemList;
 
         public int SelectedIndex { get; set; }
-        private Vector2 position;
+        private Vector2 menuItemsStartPosition;
         private Color regularColor = Color.PaleVioletRed;
-        private Color hilightColor = Color.DarkViolet;
+        private Color highlightColor = Color.DarkViolet;
 
-        private KeyboardState oldState;
-        public MenuComponent(Game game, SpriteBatch sb, SpriteFont regularFont, SpriteFont hilightFont, string[] menus) : base(game)
+        private KeyboardState oldKeyboardState;
+        public MenuComponent(Game game, SpriteBatch startSceneSpriteBatch, SpriteFont regularFont, SpriteFont highlightFont, string[] menuArray) : base(game)
         {
-            this.sb = sb;
+            this.menuComponentSpriteBatch = startSceneSpriteBatch;
             this.regularFont = regularFont;
-            this.hilightFont = hilightFont;
-            menuItems = menus.ToList();
-            position = new Vector2(Shared.stage.X/2, Shared.stage.Y/2);
+            this.highlightFont = highlightFont;
+            menuItemList = menuArray.ToList();
+            menuItemsStartPosition = new Vector2(Shared.stageSize.X/2, Shared.stageSize.Y/2);
         }
         public override void Update(GameTime gameTime)
         {
-            KeyboardState ks = Keyboard.GetState();
-            if (ks.IsKeyUp(Keys.Down) && oldState.IsKeyDown(Keys.Down))
+            KeyboardState currentKeyboardState = Keyboard.GetState();
+            if (currentKeyboardState.IsKeyUp(Keys.Down) && oldKeyboardState.IsKeyDown(Keys.Down))
             {
                 SelectedIndex++;
-                if (SelectedIndex == menuItems.Count)
+                if (SelectedIndex == menuItemList.Count)
                 {
                     SelectedIndex = 0;
                 }
             }
 
-            if (ks.IsKeyUp(Keys.Up) && oldState.IsKeyDown(Keys.Up))
+            if (currentKeyboardState.IsKeyUp(Keys.Up) && oldKeyboardState.IsKeyDown(Keys.Up))
             {
                 SelectedIndex--;
                 if (SelectedIndex == -1)
                 {
-                    SelectedIndex = menuItems.Count - 1;
+                    SelectedIndex = menuItemList.Count - 1;
                 }
             }
-            oldState = ks;
+            oldKeyboardState = currentKeyboardState;
             base.Update(gameTime);
         }
         public override void Draw(GameTime gameTime)
         {
-            Vector2 tempPos = position;
+            Vector2 drawingPosition = menuItemsStartPosition;
 
+            menuComponentSpriteBatch.Begin();
 
-            sb.Begin();
-            for (int i = 0; i < menuItems.Count; i++)
+            for (int i = 0; i < menuItemList.Count; i++)
             {
-                float itemWidth = regularFont.MeasureString(menuItems[i]).X;
-                tempPos.X = (Shared.stage.X - itemWidth) / 2;
+                float itemWidth = regularFont.MeasureString(menuItemList[i]).X;
+                drawingPosition.X = (Shared.stageSize.X - itemWidth) / 2;
 
                 if (i == SelectedIndex)
                 {
-                    itemWidth = hilightFont.MeasureString(menuItems[i]).X;
-                    tempPos.X = (Shared.stage.X - itemWidth) / 2;
-                    sb.DrawString(hilightFont, menuItems[i], tempPos, hilightColor);
-                    tempPos.Y += hilightFont.LineSpacing;
+                    itemWidth = highlightFont.MeasureString(menuItemList[i]).X;
+                    drawingPosition.X = (Shared.stageSize.X - itemWidth) / 2;
+                    menuComponentSpriteBatch.DrawString(highlightFont, menuItemList[i], drawingPosition, highlightColor);
+                    drawingPosition.Y += highlightFont.LineSpacing;
 
                 }
                 else
                 {
-                    sb.DrawString(regularFont, menuItems[i], tempPos, regularColor);
-                    tempPos.Y += regularFont.LineSpacing;
+                    menuComponentSpriteBatch.DrawString(regularFont, menuItemList[i], drawingPosition, regularColor);
+                    drawingPosition.Y += regularFont.LineSpacing;
                 }
             }
-            sb.End();
+            menuComponentSpriteBatch.End();
 
             base.Draw(gameTime);
         }

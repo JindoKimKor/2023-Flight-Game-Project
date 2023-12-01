@@ -10,19 +10,19 @@ namespace Final
 {
     internal class HelpScene : GameScene
     {
-        private SpriteBatch sb;
+        private SpriteBatch helpSceneSpriteBatch;
         private Texture2D tex;
         public HelpScene(Game game) : base(game)
         {
-            Game1 g = (Game1)game;
-            sb = g._spriteBatch;
+            MainGame mainGame = (MainGame)game;
+            helpSceneSpriteBatch = mainGame._spriteBatch;
 
         }
         public override void Draw(GameTime gameTime)
         {
-            sb.Begin();
-            sb.Draw(tex, Vector2.Zero, Color.White);
-            sb.End();
+            helpSceneSpriteBatch.Begin();
+            helpSceneSpriteBatch.Draw(tex, Vector2.Zero, Color.White);
+            helpSceneSpriteBatch.End();
 
             base.Draw(gameTime);
         }

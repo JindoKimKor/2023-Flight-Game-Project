@@ -9,44 +9,44 @@ namespace Final
 {
     public abstract class GameScene : DrawableGameComponent
     {
-        public List<GameComponent> Components { get; set; }
+        public List<GameComponent> ComponentList { get; set; }
 
-        public virtual void hide()
+        public virtual void Hide()
         {
             this.Enabled = false;
             this.Visible = false;
         }
-        public virtual void show()
+        public virtual void Show()
         {
             this.Enabled = true;
             this.Visible = true;
         }
         protected GameScene(Game game) : base(game)
         {
-            Components = new List<GameComponent>();
-            hide();
+            ComponentList = new List<GameComponent>();
+            Hide();
         }
         public override void Update(GameTime gameTime)
         {
-            foreach(GameComponent item in Components)
+            foreach(GameComponent gameComponent in ComponentList)
             {
-                if(item.Enabled)
+                if(gameComponent.Enabled)
                 {
-                    item.Update(gameTime);
+                    gameComponent.Update(gameTime);
                 }
             }
             base.Update(gameTime);
         }
         public override void Draw(GameTime gameTime)
         {
-            foreach(GameComponent item in Components)
+            foreach(GameComponent gameComponent in ComponentList)
             {
-                if(item is DrawableGameComponent)
+                if(gameComponent is DrawableGameComponent)
                 {
-                    DrawableGameComponent comp = (DrawableGameComponent)item;
-                    if(comp.Visible)
+                    DrawableGameComponent drawableGameComponent = (DrawableGameComponent)gameComponent;
+                    if(drawableGameComponent.Visible)
                     {
-                        comp.Draw(gameTime);
+                        drawableGameComponent.Draw(gameTime);
                     }
                 }
             }
