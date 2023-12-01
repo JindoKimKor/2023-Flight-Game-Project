@@ -17,6 +17,7 @@ namespace Final
             MainGame mainGame = (MainGame)game;
             helpSceneSpriteBatch = mainGame._spriteBatch;
 
+
         }
         public override void Draw(GameTime gameTime)
         {

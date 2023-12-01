@@ -9,7 +9,6 @@ namespace Final
         private GraphicsDeviceManager _graphics;
         public SpriteBatch _spriteBatch;
 
-        private Texture2D backgroundTexture;
 
         private StartScene startScene;
         private PlayScene playScene;
@@ -39,7 +38,6 @@ namespace Final
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            backgroundTexture = Content.Load<Texture2D>("images/background");
 
             startScene = new StartScene(this);
             this.Components.Add(startScene);
@@ -104,10 +102,6 @@ namespace Final
         {
 
             // TODO: Add your drawing code here
-            _spriteBatch.Begin();
-            _spriteBatch.Draw(backgroundTexture, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.White);
-            _spriteBatch.End();
-
             base.Draw(gameTime);
         }
     }
