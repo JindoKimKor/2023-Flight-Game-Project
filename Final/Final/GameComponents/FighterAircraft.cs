@@ -12,22 +12,22 @@ namespace Final.GameComponents
     public enum AircraftFrames
     {
         Idle = 12,
-        MoveLeft1 = 11,
-        MoveLeft2 = 10,
-        MoveRight1 = 13,
-        MoveRight2 = 14,
-        MoveUp1 = 7,
-        MoveUp2 = 2,
-        MoveDown1 = 17,
-        MoveDown2 = 22,
-        MoveNorthwest1 = 6,
-        MoveNorthwest2 = 0,
-        MoveNortheast1 = 8,
-        MoveNortheast2 = 4,
-        MoveSouthwest1 = 16,
-        MoveSouthwest2 = 20,
-        MoveSoutheast1 = 19,
-        MoveSoutheast2 = 24,
+        MoveLeftSlow = 11,
+        MoveLeftFast = 10,
+        MoveRightSlow = 13,
+        MoveRightFast = 14,
+        MoveUpSlow = 7,
+        MoveUpFast = 2,
+        MoveDownSlow = 17,
+        MoveDownFast = 22,
+        MoveNorthwestSlow = 6,
+        MoveNorthwestFast = 0,
+        MoveNortheastSlow = 8,
+        MoveNortheastFast = 4,
+        MoveSouthwestSlow = 16,
+        MoveSouthwestFast = 20,
+        MoveSoutheastSlow = 19,
+        MoveSoutheastFast = 24,
     }
 
     public class FighterAircraft : DrawableGameComponent
@@ -84,7 +84,7 @@ namespace Final.GameComponents
             this.Visible = true;
         }
 
-        public void ChangeAnimationAndPosition(AircraftFrames newFrame, Vector2 newPosition)
+        public void ChangeAirCraftPositionAndAnimationWithSpeed(AircraftFrames newFrame, Vector2 newPosition)
         {
             currentFrame = newFrame;
             currentPosition = newPosition;
