@@ -4,14 +4,16 @@
   <Platform>Windows</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/Users/blitz/Documents/AirborneAssault/Final/Final/Content/fonts/HilightFont.spritefont</File>
-    <File>C:/Users/blitz/Documents/AirborneAssault/Final/Final/Content/fonts/RegularFont.spritefont</File>
-    <File>C:/Users/blitz/Documents/AirborneAssault/Final/Final/Content/fonts/TitleFont.spritefont</File>
-    <File>C:/Users/blitz/Documents/AirborneAssault/Final/Final/Content/images/background.png</File>
-    <File>C:/Users/blitz/Documents/AirborneAssault/Final/Final/Content/images/fighterAircraft.png</File>
+    <File>C:/Users/sk996/OneDrive - Conestoga College/conestogacollege2023Fall/gaming/Final/AirborneAssault/Final/Final/Content/fonts/HilightFont.spritefont</File>
+    <File>C:/Users/sk996/OneDrive - Conestoga College/conestogacollege2023Fall/gaming/Final/AirborneAssault/Final/Final/Content/fonts/RegularFont.spritefont</File>
+    <File>C:/Users/sk996/OneDrive - Conestoga College/conestogacollege2023Fall/gaming/Final/AirborneAssault/Final/Final/Content/fonts/TitleFont.spritefont</File>
+    <File>C:/Users/sk996/OneDrive - Conestoga College/conestogacollege2023Fall/gaming/Final/AirborneAssault/Final/Final/Content/images/background.png</File>
+    <File>C:/Users/sk996/OneDrive - Conestoga College/conestogacollege2023Fall/gaming/Final/AirborneAssault/Final/Final/Content/images/fighterAircraft.png</File>
+    <File>C:/Users/sk996/OneDrive - Conestoga College/conestogacollege2023Fall/gaming/Final/AirborneAssault/Final/Final/Content/sounds/backgroundMusic.mp3</File>
   </SourceFiles>
   <DestFiles>
     <File>fonts/HighlightFont.spritefont</File>
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

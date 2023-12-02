@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 
 namespace Final
 {
@@ -14,6 +15,9 @@ namespace Final
         private StartScene startScene;
         private PlayScene playScene;
         private HelpScene helpScene;
+        private CreditScene creditScene;
+
+        private Song backgroundMusic;
 
 
         public MainGame()
@@ -46,6 +50,12 @@ namespace Final
             this.Components.Add(helpScene);
             playScene = new PlayScene(this);
             this.Components.Add(playScene);
+            creditScene = new CreditScene(this);
+            this.Components.Add(creditScene);
+
+            backgroundMusic = this.Content.Load<Song>("sounds/backgroundMusic");
+            MediaPlayer.IsRepeating = true;
+            MediaPlayer.Play(backgroundMusic);
 
             startScene.Show();
         }
@@ -81,13 +91,29 @@ namespace Final
                     startScene.Hide();
                     helpScene.Show();
                 }
-                else if (selectedIndex == 4 && keyboardState.IsKeyDown(Keys.Enter))
+                else if(selectedIndex == 3 && keyboardState.IsKeyDown(Keys.Enter))
+                {
+                    startScene.Hide();
+                    creditScene.Show();
+                }
+                else if (selectedIndex == 5 && keyboardState.IsKeyDown(Keys.Enter))
                 {
                     Exit();
                 }
 
+                if(MediaPlayer.State != MediaState.Playing)
+                {
+                    MediaPlayer.Play(backgroundMusic);
+                }
             }
-            if(playScene.Enabled || helpScene.Enabled)
+            else
+            {
+                if(MediaPlayer.State == MediaState.Playing)
+                {
+                    MediaPlayer.Stop();
+                }
+            }
+            if(playScene.Enabled || helpScene.Enabled || creditScene.Enabled)
             {
                 if (keyboardState.IsKeyDown(Keys.Escape))
                 {

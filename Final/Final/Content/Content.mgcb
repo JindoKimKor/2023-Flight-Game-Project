@@ -58,3 +58,9 @@
 /processorParam:TextureFormat=Color
 /build:images/fighterAircraft.png
 
+#begin sounds/backgroundMusic.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:sounds/backgroundMusic.mp3
+
