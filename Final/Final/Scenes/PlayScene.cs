@@ -24,7 +24,7 @@ namespace Final.Scenes
         private static bool isStartingSequence = true;
         private Vector2 fighterAircraftStartingPosition;
         private float fighterAircraftFullyLoadedYPosition = Shared.stageSize.Y - 300;
-        private Vector2 fighterAircraftCurrentPosition;
+        private static Vector2 fighterAircraftCurrentPosition;
         private int fighterAircraftEntrySpeed = 1;
         private AircraftFrames currentFrame;
 
@@ -35,6 +35,7 @@ namespace Final.Scenes
 
 
         public static bool IsStartingSequence { get => isStartingSequence; set => isStartingSequence = value; }
+        public static Vector2 FighterAircraftCurrentPosition { get => fighterAircraftCurrentPosition; set => fighterAircraftCurrentPosition = value; }
 
         public PlayScene(Game game) : base(game)
         {
@@ -49,7 +50,7 @@ namespace Final.Scenes
             InitializeAircraftDirections();
 
             fighterAircraft = new FighterAircraft(mainGame, playSceneSpriteBatch, fighterAircraftTexture, fighterAircraftStartingPosition, fighterAircraftEntrySpeed);
-            fighterAircraftCurrentPosition = fighterAircraftStartingPosition;
+            FighterAircraftCurrentPosition = fighterAircraftStartingPosition;
             ComponentList.Add(fighterAircraft);
             fighterAircraft.Show();
         }
@@ -145,11 +146,11 @@ namespace Final.Scenes
             {
                 fighterAircraftCurrentPosition.Y -= fighterAircraftEntrySpeed;
 
-                if (fighterAircraftCurrentPosition.Y == fighterAircraftFullyLoadedYPosition)
+                if (FighterAircraftCurrentPosition.Y == fighterAircraftFullyLoadedYPosition)
                 {
                     IsStartingSequence = false;
                 }
-                fighterAircraft.ChangeAirCraftPositionAndAnimationWithSpeed(AircraftFrames.Idle, fighterAircraftCurrentPosition);
+                fighterAircraft.ChangeAirCraftPositionAndAnimationWithSpeed(AircraftFrames.Idle, FighterAircraftCurrentPosition);
             }
             else//!IsStartingSequence
             {
@@ -206,8 +207,8 @@ namespace Final.Scenes
                 {
                     currentFrame = DetermineCurrentFrameAndInitilizeOthers(AircraftFrames.Idle);
                 }
-                fighterAircraftCurrentPosition += aircraftDirectionsWithSpeed[currentFrame];
-                fighterAircraft.ChangeAirCraftPositionAndAnimationWithSpeed(currentFrame, fighterAircraftCurrentPosition);
+                FighterAircraftCurrentPosition += aircraftDirectionsWithSpeed[currentFrame];
+                fighterAircraft.ChangeAirCraftPositionAndAnimationWithSpeed(currentFrame, FighterAircraftCurrentPosition);
 
             }
             base.Update(gameTime);

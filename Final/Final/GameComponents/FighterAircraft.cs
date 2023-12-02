@@ -36,7 +36,6 @@ namespace Final.GameComponents
         private Texture2D fighterAircraftTexture;
         private Vector2 frameDimension;
         private List<Rectangle> animationFrames;
-        private Vector2 currentPosition;
         private AircraftFrames currentFrame;
 
         //frame index
@@ -50,7 +49,7 @@ namespace Final.GameComponents
             fighterAircraftSpriteBatch = playSceneSpriteBatch;
             this.fighterAircraftTexture = fighterAircraftTexture;
             frameDimension = new Vector2(fighterAircraftTexture.Width / ROWS, fighterAircraftTexture.Height / COLS);
-            currentPosition = startingPosition;
+            PlayScene.FighterAircraftCurrentPosition = startingPosition;
             currentFrame = AircraftFrames.Idle;
             InitializeAnimationFrames();
         }
@@ -87,7 +86,10 @@ namespace Final.GameComponents
         public void ChangeAirCraftPositionAndAnimationWithSpeed(AircraftFrames newFrame, Vector2 newPosition)
         {
             currentFrame = newFrame;
-            currentPosition = newPosition;
+            PlayScene.FighterAircraftCurrentPosition = new Vector2(
+                newPosition.X <= 0 ? 0 : newPosition.X >= (Shared.stageSize.X - frameDimension.X) ? (Shared.stageSize.X - frameDimension.X) : newPosition.X,
+                newPosition.Y <= 0 ? 0 : newPosition.Y >= (Shared.stageSize.Y - frameDimension.Y) ? (Shared.stageSize.Y - frameDimension.Y) : newPosition.Y
+            );
         }
 
         public override void Update(GameTime gameTime)
@@ -98,7 +100,7 @@ namespace Final.GameComponents
         public override void Draw(GameTime gameTime)
         {
             fighterAircraftSpriteBatch.Begin();
-            fighterAircraftSpriteBatch.Draw(fighterAircraftTexture, currentPosition, animationFrames[(int)currentFrame], Color.White);
+            fighterAircraftSpriteBatch.Draw(fighterAircraftTexture, PlayScene.FighterAircraftCurrentPosition, animationFrames[(int)currentFrame], Color.White);
             fighterAircraftSpriteBatch.End();
 
 
