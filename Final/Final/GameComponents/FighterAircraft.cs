@@ -87,13 +87,19 @@ namespace Final.GameComponents
 
         public void ChangeAirCraftPositionAndAnimationWithSpeed(AircraftFrames newFrame, Vector2 newPosition)
         {
+            float screenEdgeMinimumX = (frameDimension.X / 2);
+            float screenEdgeMinimumY = (frameDimension.Y / 2);
+            float screenEdgeMaxX = Shared.stageSize.X - (frameDimension.X / 2);
+            float screenEdgeMaxY = Shared.stageSize.Y - (frameDimension.Y / 2);
+
+
             currentFrame = newFrame;
             //To keep the aircraft within the screen
             if (!PlayScene.IsStartingSequence)
             {
                 PlayScene.FighterAircraftCurrentPosition = new Vector2(
-                    newPosition.X <= 0 ? 0 : newPosition.X >= (Shared.stageSize.X - frameDimension.X) ? (Shared.stageSize.X - frameDimension.X) : newPosition.X,
-                    newPosition.Y <= 0 ? 0 : newPosition.Y >= (Shared.stageSize.Y - frameDimension.Y) ? (Shared.stageSize.Y - frameDimension.Y) : newPosition.Y
+                    newPosition.X <= screenEdgeMinimumX ? screenEdgeMinimumX : newPosition.X >= screenEdgeMaxX ? screenEdgeMaxX : newPosition.X,
+                    newPosition.Y <= screenEdgeMinimumY ? screenEdgeMinimumY : newPosition.Y >= screenEdgeMaxY ? screenEdgeMaxY : newPosition.Y
                 );
             }
         }
