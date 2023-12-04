@@ -43,9 +43,9 @@ namespace Final.GameComponents
         private const int COLS = 5;
 
 
-        public FighterAircraft(Game game, SpriteBatch playSceneSpriteBatch, Texture2D fighterAircraftTexture, Vector2 startingPosition, int entrySpeed) : base(game)
+        public FighterAircraft(Game game, SpriteBatch playSceneSpriteBatch, Texture2D fighterAircraftTexture, Vector2 startingPosition) : base(game)
         {
-            MainGame mainGame = (MainGame)game;
+            
             fighterAircraftSpriteBatch = playSceneSpriteBatch;
             this.fighterAircraftTexture = fighterAircraftTexture;
             frameDimension = new Vector2(fighterAircraftTexture.Width / ROWS, fighterAircraftTexture.Height / COLS);
@@ -57,12 +57,12 @@ namespace Final.GameComponents
         private void InitializeAnimationFrames()
         {
             animationFrames = new List<Rectangle>();
-            for (int i = 0; i < ROWS; i++)
+            for (int r = 0; r < ROWS; r++)
             {
-                for (int j = 0; j < COLS; j++)
+                for (int c = 0; c < COLS; c++)
                 {
-                    int x = j * (int)frameDimension.X;
-                    int y = i * (int)frameDimension.Y;
+                    int x = c * (int)frameDimension.X;
+                    int y = r * (int)frameDimension.Y;
 
                     Rectangle frameRectangle = new Rectangle(x, y, (int)frameDimension.X, (int)frameDimension.Y);
 
@@ -86,10 +86,14 @@ namespace Final.GameComponents
         public void ChangeAirCraftPositionAndAnimationWithSpeed(AircraftFrames newFrame, Vector2 newPosition)
         {
             currentFrame = newFrame;
-            PlayScene.FighterAircraftCurrentPosition = new Vector2(
-                newPosition.X <= 0 ? 0 : newPosition.X >= (Shared.stageSize.X - frameDimension.X) ? (Shared.stageSize.X - frameDimension.X) : newPosition.X,
-                newPosition.Y <= 0 ? 0 : newPosition.Y >= (Shared.stageSize.Y - frameDimension.Y) ? (Shared.stageSize.Y - frameDimension.Y) : newPosition.Y
-            );
+            //To keep the aircraft within the screen
+            if (!PlayScene.IsStartingSequence)
+            {
+                PlayScene.FighterAircraftCurrentPosition = new Vector2(
+                    newPosition.X <= 0 ? 0 : newPosition.X >= (Shared.stageSize.X - frameDimension.X) ? (Shared.stageSize.X - frameDimension.X) : newPosition.X,
+                    newPosition.Y <= 0 ? 0 : newPosition.Y >= (Shared.stageSize.Y - frameDimension.Y) ? (Shared.stageSize.Y - frameDimension.Y) : newPosition.Y
+                );
+            }
         }
 
         public override void Update(GameTime gameTime)

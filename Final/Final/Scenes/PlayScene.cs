@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
 namespace Final.Scenes
 {
@@ -20,6 +21,8 @@ namespace Final.Scenes
         private int backgroundTextureScrollSpeed = 3;
 
         private FighterAircraft fighterAircraft;
+        private BossHelicopter bossHelicopter;
+
         private Texture2D fighterAircraftTexture;
         private static bool isStartingSequence = true;
         private Vector2 fighterAircraftStartingPosition;
@@ -27,6 +30,8 @@ namespace Final.Scenes
         private static Vector2 fighterAircraftCurrentPosition;
         private int fighterAircraftEntrySpeed = 1;
         private AircraftFrames currentFrame;
+
+        private Vector2 bossHelicopterStartingPosition;
 
         private MainGame mainGame;
 
@@ -49,10 +54,15 @@ namespace Final.Scenes
 
             InitializeAircraftDirections();
 
-            fighterAircraft = new FighterAircraft(mainGame, playSceneSpriteBatch, fighterAircraftTexture, fighterAircraftStartingPosition, fighterAircraftEntrySpeed);
+            fighterAircraft = new FighterAircraft(mainGame, playSceneSpriteBatch, fighterAircraftTexture, fighterAircraftStartingPosition);
             FighterAircraftCurrentPosition = fighterAircraftStartingPosition;
             ComponentList.Add(fighterAircraft);
             fighterAircraft.Show();
+
+            bossHelicopter = new BossHelicopter(mainGame, playSceneSpriteBatch);
+            ComponentList.Add(bossHelicopter);
+            bossHelicopter.Show();
+
         }
         private void InitializeAircraftDirections()
         {

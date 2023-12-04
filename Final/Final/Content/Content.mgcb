@@ -58,6 +58,30 @@
 /processorParam:TextureFormat=Color
 /build:images/fighterAircraft.png
 
+#begin images/firstStageBossHelicopter.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:images/firstStageBossHelicopter.png
+
+#begin images/secondStageBossHelicopter.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:images/secondStageBossHelicopter.png
+
 #begin sounds/backgroundMusic.mp3
 /importer:Mp3Importer
 /processor:SongProcessor
