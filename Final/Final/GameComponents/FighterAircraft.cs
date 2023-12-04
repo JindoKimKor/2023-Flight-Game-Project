@@ -37,6 +37,7 @@ namespace Final.GameComponents
         private Vector2 frameDimension;
         private List<Rectangle> animationFrames;
         private AircraftFrames currentFrame;
+        private Vector2 textureOrigin;
 
         //frame index
         private const int ROWS = 5;
@@ -49,6 +50,7 @@ namespace Final.GameComponents
             fighterAircraftSpriteBatch = playSceneSpriteBatch;
             this.fighterAircraftTexture = fighterAircraftTexture;
             frameDimension = new Vector2(fighterAircraftTexture.Width / ROWS, fighterAircraftTexture.Height / COLS);
+            textureOrigin = new Vector2(frameDimension.X / 2, frameDimension.Y / 2);
             PlayScene.FighterAircraftCurrentPosition = startingPosition;
             currentFrame = AircraftFrames.Idle;
             InitializeAnimationFrames();
@@ -104,7 +106,7 @@ namespace Final.GameComponents
         public override void Draw(GameTime gameTime)
         {
             fighterAircraftSpriteBatch.Begin();
-            fighterAircraftSpriteBatch.Draw(fighterAircraftTexture, PlayScene.FighterAircraftCurrentPosition, animationFrames[(int)currentFrame], Color.White);
+            fighterAircraftSpriteBatch.Draw(fighterAircraftTexture, PlayScene.FighterAircraftCurrentPosition, animationFrames[(int)currentFrame], Color.White, 0f, textureOrigin, 1.1f, SpriteEffects.None, 0f);
             fighterAircraftSpriteBatch.End();
 
 

@@ -26,9 +26,9 @@ namespace Final.Scenes
         private Texture2D fighterAircraftTexture;
         private static bool isStartingSequence = true;
         private Vector2 fighterAircraftStartingPosition;
-        private float fighterAircraftFullyLoadedYPosition = Shared.stageSize.Y - 300;
+        private float fighterAircraftFullyLoadedYPosition = Shared.stageSize.Y - 250;
         private static Vector2 fighterAircraftCurrentPosition;
-        private int fighterAircraftEntrySpeed = 1;
+        private int fighterAircraftEntrySpeed = 2;
         private AircraftFrames currentFrame;
 
         private Vector2 bossHelicopterStartingPosition;

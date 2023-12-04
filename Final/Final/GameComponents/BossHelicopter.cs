@@ -16,10 +16,12 @@ namespace Final.GameComponents
         private Vector2 aliveBossFrameDimension;
         private List<Rectangle> aliveBossAnimationFrame;
         private Vector2 currentPosition;
+        private Vector2 textureOrigin;
         private const int ALIVE_BOSS_HELICOPTER_ROWS = 4;
         private bool isStartSequence;
         private const float entirySpeed = 0.7f;
         private int currentFrameIndex = -1;
+        private int finalYPosition = 100;
 
 
         public BossHelicopter(Game game, SpriteBatch playSceneSpriteBatch) : base(game)
@@ -27,12 +29,15 @@ namespace Final.GameComponents
             
             bossHelicopterSpriteBatch = playSceneSpriteBatch;
 
+            currentPosition = new Vector2(Shared.stageSize.X / 2, -aliveBossFrameDimension.Y);
+
             aliveBossHelicopterTexture = game.Content.Load<Texture2D>("images/firstStageBossHelicopter");
+
             aliveBossFrameDimension = new Vector2(aliveBossHelicopterTexture.Width / ALIVE_BOSS_HELICOPTER_ROWS, aliveBossHelicopterTexture.Height);
+            textureOrigin = new Vector2(aliveBossFrameDimension.X / 2, aliveBossFrameDimension.Y / 2);
             isStartSequence = true;
             aliveBossAnimationFrame = new List<Rectangle>();
             InitializeAnimationFrames();
-            currentPosition = new Vector2(Shared.stageSize.X / 2, -aliveBossFrameDimension.Y);
         }
 
         public void InitializeAnimationFrames()
@@ -60,14 +65,12 @@ namespace Final.GameComponents
 
         public override void Update(GameTime gameTime)
         {
-            int limitBoosYPosition = 30;
-
             Action<int> changeStartSequence = (x) => { if (currentPosition.Y >= x) isStartSequence = false; };
 
             currentFrameIndex = currentFrameIndex == aliveBossAnimationFrame.Count() - 1 ? 0 : ++currentFrameIndex;
             currentPosition.Y = isStartSequence == true ? currentPosition.Y + entirySpeed : currentPosition.Y;
             
-            changeStartSequence(limitBoosYPosition);
+            changeStartSequence(finalYPosition);
 
             base.Update(gameTime);
         }
@@ -76,7 +79,7 @@ namespace Final.GameComponents
         {
 
             bossHelicopterSpriteBatch.Begin();
-            bossHelicopterSpriteBatch.Draw(aliveBossHelicopterTexture, currentPosition, aliveBossAnimationFrame[currentFrameIndex], Color.White);
+            bossHelicopterSpriteBatch.Draw(aliveBossHelicopterTexture, currentPosition, aliveBossAnimationFrame[currentFrameIndex], Color.White, 0f, textureOrigin, 1f, SpriteEffects.None, 0f);
             bossHelicopterSpriteBatch.End();
             base.Draw(gameTime);
         }
