@@ -2,13 +2,11 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using SharpDX.Direct3D9;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
 namespace Final.Scenes
 {
@@ -16,8 +14,8 @@ namespace Final.Scenes
     {
         private SpriteBatch playSceneSpriteBatch;
         private Texture2D backgroundTexture;
-        private Rectangle screenRectangleOne;
-        private Rectangle screenRectangleTwo;
+        private Rectangle upperScreenRectangle;
+        private Rectangle bottomScreenRectangle;
         private int backgroundTextureScrollSpeed = 3;
 
         private FighterAircraft fighterAircraft;
@@ -33,9 +31,9 @@ namespace Final.Scenes
 
         private MainGame mainGame;
 
-        Dictionary<AircraftFrames, Vector2> aircraftDirectionsWithSpeed;
-        private Dictionary<AircraftFrames, double> directionDurations;
+        private Dictionary<AircraftFrames, Vector2> aircraftDirectionsWithSpeed;
 
+        private Dictionary<AircraftFrames, double> directionDurations;
 
         public static bool IsStartingSequence { get => isStartingSequence; set => isStartingSequence = value; }
         public static Vector2 FighterAircraftCurrentPosition { get => fighterAircraftCurrentPosition; set => fighterAircraftCurrentPosition = value; }
@@ -46,8 +44,8 @@ namespace Final.Scenes
             playSceneSpriteBatch = mainGame._spriteBatch;
             backgroundTexture = mainGame.Content.Load<Texture2D>("images/background");
             fighterAircraftTexture = mainGame.Content.Load<Texture2D>("images/fighterAircraft");
-            screenRectangleOne = new Rectangle(0, 0, (int)Shared.stageSize.X, (int)Shared.stageSize.Y);
-            screenRectangleTwo = new Rectangle(0, -(int)Shared.stageSize.Y, (int)Shared.stageSize.X, (int)Shared.stageSize.Y);
+            upperScreenRectangle = new Rectangle(0, 0, (int)Shared.stageSize.X, (int)Shared.stageSize.Y);
+            bottomScreenRectangle = new Rectangle(0, -(int)Shared.stageSize.Y, (int)Shared.stageSize.X, (int)Shared.stageSize.Y);
             fighterAircraftStartingPosition = new Vector2(Shared.stageSize.X / 2, Shared.stageSize.Y);
 
             InitializeAircraftDirections();
@@ -60,21 +58,20 @@ namespace Final.Scenes
             bossHelicopter = new BossHelicopter(mainGame, playSceneSpriteBatch);
             ComponentList.Add(bossHelicopter);
             bossHelicopter.Show();
-
         }
         private void InitializeAircraftDirections()
         {
             aircraftDirectionsWithSpeed = new Dictionary<AircraftFrames, Vector2>
             {
                 { AircraftFrames.Idle, new Vector2(0, 0) },
-                { AircraftFrames.MoveLeftSlow, new Vector2(-2, 0) },
-                { AircraftFrames.MoveLeftFast, new Vector2(-4, 0) },
-                { AircraftFrames.MoveRightSlow, new Vector2(2, 0) },
-                { AircraftFrames.MoveRightFast, new Vector2(4, 0) },
-                { AircraftFrames.MoveUpSlow, new Vector2(0, -2) },
-                { AircraftFrames.MoveUpFast, new Vector2(0, -4) },
-                { AircraftFrames.MoveDownSlow, new Vector2(0, 2) },
-                { AircraftFrames.MoveDownFast, new Vector2(0, 4) },
+                { AircraftFrames.MoveLeftSlow, new Vector2(-1 * 2, 0) },
+                { AircraftFrames.MoveLeftFast, new Vector2(-2 * 2, 0) },
+                { AircraftFrames.MoveRightSlow, new Vector2(1 * 2, 0) },
+                { AircraftFrames.MoveRightFast, new Vector2(2 * 2, 0) },
+                { AircraftFrames.MoveUpSlow, new Vector2(0, -1 * 2) },
+                { AircraftFrames.MoveUpFast, new Vector2(0, -2 * 2) },
+                { AircraftFrames.MoveDownSlow, new Vector2(0, 1 * 2) },
+                { AircraftFrames.MoveDownFast, new Vector2(0, 2 * 2) },
                 { AircraftFrames.MoveNorthwestSlow, new Vector2(-0.7071f * 2, -0.7071f * 2) },
                 { AircraftFrames.MoveNorthwestFast, new Vector2(-1.4142f * 2, -1.4142f * 2) },
                 { AircraftFrames.MoveNortheastSlow, new Vector2(0.7071f * 2, -0.7071f * 2) },
@@ -135,9 +132,14 @@ namespace Final.Scenes
             return aircraftFrames;
         }
 
+        //
         private double lastBulletTime = 0;
-        private double bulletCooldown = 200;
-
+        private double aircraftBulletCooldown = 200;
+        private double bossBulletElapsedTime;
+        private double generatingBossBasicBulletElapsedTime;
+        private double stoppingBossBasicBulletElapsedTime;
+        private bool isGeneratingBossBulletTime;
+        private double bulletGeneratingSequence = 900;
         public override void Update(GameTime gameTime)
         {
             double currentTime = gameTime.TotalGameTime.TotalMilliseconds;
@@ -145,30 +147,62 @@ namespace Final.Scenes
 
             if (keyboardState.IsKeyDown(Keys.Space) && !PlayScene.IsStartingSequence)
             {
-                if (currentTime - lastBulletTime > bulletCooldown)
+                if (currentTime - lastBulletTime > aircraftBulletCooldown)
                 {
                     AircraftBasicBullet aircraftBasicBullet = new AircraftBasicBullet(mainGame, playSceneSpriteBatch);
-                    aircraftBasicBullet.RemoveBulletDelegate = RemoveBullet;
+                    aircraftBasicBullet.RemoveBulletDelegate = RemoveAircraftBullet;
                     ComponentList.Add(aircraftBasicBullet);
 
                     lastBulletTime = currentTime;
                 }
             }
-            void RemoveBullet(AircraftBasicBullet bullet)
+            void RemoveAircraftBullet(AircraftBasicBullet aircraftBasicBullet)
             {
-                bullet.Dispose();
-                ComponentList.Remove(bullet);
+                ComponentList.Remove(aircraftBasicBullet);
+                aircraftBasicBullet.Dispose();
+            }
+            //generating bullet time control logic
+            generatingBossBasicBulletElapsedTime = isGeneratingBossBulletTime == false ? generatingBossBasicBulletElapsedTime += gameTime.ElapsedGameTime.TotalMilliseconds : 0;
+
+            if (generatingBossBasicBulletElapsedTime > 3000)
+            {
+                isGeneratingBossBulletTime = true;
+            }
+            if (stoppingBossBasicBulletElapsedTime > 3000)
+            {
+                isGeneratingBossBulletTime = false;
+                stoppingBossBasicBulletElapsedTime = 0;
             }
 
-            screenRectangleOne.Y += backgroundTextureScrollSpeed;
-            screenRectangleTwo.Y += backgroundTextureScrollSpeed;
-            if (screenRectangleOne.Y >= (int)Shared.stageSize.Y)
+            if (isGeneratingBossBulletTime)
             {
-                screenRectangleOne.Y = 0;
+                stoppingBossBasicBulletElapsedTime += gameTime.ElapsedGameTime.TotalMilliseconds;
+                //generating bullet sequence logic
+                bossBulletElapsedTime += gameTime.ElapsedGameTime.TotalMilliseconds;
+                if (bossBulletElapsedTime > bulletGeneratingSequence && !bossHelicopter.IsStartSequence)
+                {
+                    BossHelicopterBasicBullet aircraftBasicBullet = new BossHelicopterBasicBullet(mainGame, playSceneSpriteBatch);
+                    aircraftBasicBullet.RemoveBossBulletDelegate = RemoveBossBasictBullet;
+                    ComponentList.Add(aircraftBasicBullet);
+                    bossBulletElapsedTime = 0;
+                }
+                void RemoveBossBasictBullet(BossHelicopterBasicBullet bossHelicopterBasicBullet)
+                {
+                    ComponentList.Remove(bossHelicopterBasicBullet);
+                    bossHelicopterBasicBullet.Dispose();
+                }
             }
-            if (screenRectangleTwo.Y >= 0)
+
+            //Background scrolling
+            upperScreenRectangle.Y += backgroundTextureScrollSpeed;
+            bottomScreenRectangle.Y += backgroundTextureScrollSpeed;
+            if (upperScreenRectangle.Y >= (int)Shared.stageSize.Y)
             {
-                screenRectangleTwo.Y = -(int)Shared.stageSize.Y;
+                upperScreenRectangle.Y = 0;
+            }
+            if (bottomScreenRectangle.Y >= 0)
+            {
+                bottomScreenRectangle.Y = -(int)Shared.stageSize.Y;
             }
 
             //Control aircraft loading time
@@ -246,8 +280,8 @@ namespace Final.Scenes
         public override void Draw(GameTime gameTime)
         {
             playSceneSpriteBatch.Begin();
-            playSceneSpriteBatch.Draw(backgroundTexture, screenRectangleOne, Color.White);
-            playSceneSpriteBatch.Draw(backgroundTexture, screenRectangleTwo, Color.White);
+            playSceneSpriteBatch.Draw(backgroundTexture, upperScreenRectangle, Color.White);
+            playSceneSpriteBatch.Draw(backgroundTexture, bottomScreenRectangle, Color.White);
 
             playSceneSpriteBatch.End();
             base.Draw(gameTime);

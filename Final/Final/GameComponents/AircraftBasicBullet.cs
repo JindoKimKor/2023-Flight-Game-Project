@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Final.GameComponents
 {
-    public delegate void RemovePassedMaxYCoordinateBullet(AircraftBasicBullet bullet);
+    public delegate void RemovePassedMinYCoordinateBullet(AircraftBasicBullet bullet);
 
     public class AircraftBasicBullet : DrawableGameComponent
     {
@@ -22,17 +22,17 @@ namespace Final.GameComponents
 
         private Vector2 originTexture;
         private float maxBulletYCoordinate;
-        private const float movingSpeed = 10f;
+        private const float movingSpeed = 30f;
 
         private Vector2 bulletFrameDimension;
         private List<Rectangle> animationFrames;
-        private const int BASIC_ATTACK_ROWS = 6;
+        private const int BASIC_BULLET_ROWS = 6;
         private int currentFrameIndex = 0;
 
 
         private MainGame mainGame;
 
-        public RemovePassedMaxYCoordinateBullet RemoveBulletDelegate { get; set; }
+        public RemovePassedMinYCoordinateBullet RemoveBulletDelegate { get; set; }
 
         public AircraftBasicBullet(Game game, SpriteBatch playSceneAircraftSpriteBatch) : base(game)
         {
@@ -41,12 +41,12 @@ namespace Final.GameComponents
             currentPosition = PlayScene.FighterAircraftCurrentPosition;
             currentPosition.Y = currentPosition.Y - 30f;
             basicBulletTexture = mainGame.Content.Load<Texture2D>("images/aircraftBasicAttackBullet");
-            bulletFrameDimension = new Vector2(basicBulletTexture.Width / BASIC_ATTACK_ROWS, basicBulletTexture.Height);
+            bulletFrameDimension = new Vector2(basicBulletTexture.Width / BASIC_BULLET_ROWS, basicBulletTexture.Height);
             maxBulletYCoordinate = -basicBulletTexture.Height;
             originTexture = new Vector2(bulletFrameDimension.X / 2, bulletFrameDimension.Y / 2);
             animationFrames = new List<Rectangle>();
 
-            for (int c = 0; c < BASIC_ATTACK_ROWS; c++)
+            for (int c = 0; c < BASIC_BULLET_ROWS; c++)
             {
                 int x = c * (int)bulletFrameDimension.X;
 
@@ -62,7 +62,7 @@ namespace Final.GameComponents
             {
                 currentFrameIndex++;
                 currentPosition.Y = currentPosition.Y - movingSpeed;
-                if (currentFrameIndex >= BASIC_ATTACK_ROWS)
+                if (currentFrameIndex >= BASIC_BULLET_ROWS)
                 {
                     currentFrameIndex = 0;
                 }
@@ -79,8 +79,6 @@ namespace Final.GameComponents
 
         public override void Draw(GameTime gameTime)
         {
-            KeyboardState keyboardState = Keyboard.GetState();
-
             basicBulletSpriteBatch.Begin();
 
             basicBulletSpriteBatch.Draw(basicBulletTexture, currentPosition, animationFrames[currentFrameIndex], Color.White, 0f, originTexture, 0.2f, SpriteEffects.None, 0f);

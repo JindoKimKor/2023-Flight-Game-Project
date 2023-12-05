@@ -45,7 +45,7 @@ namespace Final.GameComponents
         private Vector2 fireFrameDimension;
         private List<Rectangle> fireAnimationFrames;
         private Vector2 firePosition;
-        private int fireFrameIndex = 0;
+        private int fireFrameIndex;
 
         //frame index
         private const int AIRCRAFT_TEXTURE_ROWS = 5;
@@ -70,7 +70,7 @@ namespace Final.GameComponents
             //fire animation
             fireTexture = mainGame.Content.Load<Texture2D>("images/aircraftAttackAnimation");
             fireFrameDimension = new Vector2(fireTexture.Width, fireTexture.Height / FIRE_TEXTURE_ROWS);
-
+            fireFrameIndex = (FIRE_TEXTURE_ROWS - 1);
             InitializeAnimationFrames();
 
         }
@@ -129,8 +129,6 @@ namespace Final.GameComponents
                     newPosition.Y <= screenEdgeMinimumY ? screenEdgeMinimumY : newPosition.Y >= screenEdgeMaxY ? screenEdgeMaxY : newPosition.Y
                 );
             }
-
-
         }
 
         private double elapsedTime = 0;
@@ -141,38 +139,33 @@ namespace Final.GameComponents
             elapsedTime += gameTime.ElapsedGameTime.TotalMilliseconds;
             if (elapsedTime >= frameInterval)
             {
-                fireFrameIndex++;
-                if (fireFrameIndex >= FIRE_TEXTURE_ROWS)
+                fireFrameIndex--;
+                if (fireFrameIndex <= 1)
                 {
-                    fireFrameIndex = 0;
+                    fireFrameIndex = (FIRE_TEXTURE_ROWS - 1);
                 }
                 elapsedTime = 0;
             }
 
-            base.Update(gameTime);
+            firePosition = PlayScene.FighterAircraftCurrentPosition;
+            //adjust position according to its presentation
+            firePosition.X = firePosition.X - 22f;
+            firePosition.Y = firePosition.Y - 50f;
 
+            base.Update(gameTime);
 
         }
         public override void Draw(GameTime gameTime)
         {
             KeyboardState keyboardState = Keyboard.GetState();
 
-
-            firePosition = PlayScene.FighterAircraftCurrentPosition;
-            //adjust position according to its presentation
-            firePosition.X = firePosition.X - 22f;
-            firePosition.Y = firePosition.Y - 65f;
-
-
-
             fighterAircraftSpriteBatch.Begin();
-            fighterAircraftSpriteBatch.Draw(fighterAircraftTexture, PlayScene.FighterAircraftCurrentPosition, animationFrames[(int)currentFrame], Color.White, 0f, textureOrigin, 1.1f, SpriteEffects.None, 0f);
+            fighterAircraftSpriteBatch.Draw(fighterAircraftTexture, PlayScene.FighterAircraftCurrentPosition, animationFrames[(int)currentFrame], Color.White, 0f, textureOrigin, 0.8f, SpriteEffects.None, 0f);
 
             if (keyboardState.IsKeyDown(Keys.Space) && !PlayScene.IsStartingSequence)
             {
                 fighterAircraftSpriteBatch.Draw(fireTexture, firePosition, fireAnimationFrames[fireFrameIndex], Color.White);
             }
-
             fighterAircraftSpriteBatch.End();
 
 
