@@ -34,6 +34,30 @@
 /processorParam:TextureFormat=Compressed
 /build:fonts/TitleFont.spritefont
 
+#begin images/aircraftAttackAnimation.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:images/aircraftAttackAnimation.png
+
+#begin images/aircraftBasicAttackBullet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:images/aircraftBasicAttackBullet.png
+
 #begin images/background.png
 /importer:TextureImporter
 /processor:TextureProcessor

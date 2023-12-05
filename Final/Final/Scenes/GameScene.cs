@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Final.GameComponents;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,8 +29,9 @@ namespace Final.Scenes
         }
         public override void Update(GameTime gameTime)
         {
-            foreach (GameComponent gameComponent in ComponentList)
+            for (int i = ComponentList.Count - 1; i >= 0; i--)
             {
+                GameComponent gameComponent = ComponentList[i];
                 if (gameComponent.Enabled)
                 {
                     gameComponent.Update(gameTime);

@@ -31,8 +31,6 @@ namespace Final.Scenes
         private int fighterAircraftEntrySpeed = 2;
         private AircraftFrames currentFrame;
 
-        private Vector2 bossHelicopterStartingPosition;
-
         private MainGame mainGame;
 
         Dictionary<AircraftFrames, Vector2> aircraftDirectionsWithSpeed;
@@ -137,9 +135,31 @@ namespace Final.Scenes
             return aircraftFrames;
         }
 
+        private double lastBulletTime = 0;
+        private double bulletCooldown = 200;
 
         public override void Update(GameTime gameTime)
         {
+            double currentTime = gameTime.TotalGameTime.TotalMilliseconds;
+            KeyboardState keyboardState = Keyboard.GetState();
+
+            if (keyboardState.IsKeyDown(Keys.Space) && !PlayScene.IsStartingSequence)
+            {
+                if (currentTime - lastBulletTime > bulletCooldown)
+                {
+                    AircraftBasicBullet aircraftBasicBullet = new AircraftBasicBullet(mainGame, playSceneSpriteBatch);
+                    aircraftBasicBullet.RemoveBulletDelegate = RemoveBullet;
+                    ComponentList.Add(aircraftBasicBullet);
+
+                    lastBulletTime = currentTime;
+                }
+            }
+            void RemoveBullet(AircraftBasicBullet bullet)
+            {
+                bullet.Dispose();
+                ComponentList.Remove(bullet);
+            }
+
             screenRectangleOne.Y += backgroundTextureScrollSpeed;
             screenRectangleTwo.Y += backgroundTextureScrollSpeed;
             if (screenRectangleOne.Y >= (int)Shared.stageSize.Y)
@@ -164,7 +184,6 @@ namespace Final.Scenes
             }
             else//!IsStartingSequence
             {
-                KeyboardState keyboardState = Keyboard.GetState();
                 currentFrame = AircraftFrames.Idle;
 
                 bool left = keyboardState.IsKeyDown(Keys.Left) || keyboardState.IsKeyDown(Keys.A);

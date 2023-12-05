@@ -129,12 +129,15 @@ C:\Users\sk996\OneDrive - Conestoga College\conestogacollege2023Fall\gaming\Fina
 C:\Users\sk996\OneDrive - Conestoga College\conestogacollege2023Fall\gaming\Final\AirborneAssault\Final\Final\bin\Debug\net6.0-windows\Content\sounds\backgroundMusic.xnb
 C:\Users\blitz\Documents\AirborneAssault\Final\Final\bin\Debug\net6.0-windows\Content\sounds\backgroundMusic.wma
 C:\Users\blitz\Documents\AirborneAssault\Final\Final\bin\Debug\net6.0-windows\Content\sounds\backgroundMusic.xnb
-C:\Users\blitz\OneDrive - Conestoga College\3rdSemester\PROG2370\Projects\AirborneAssault\Final\Final\bin\Debug\net6.0-windows\Content\fonts\HilightFont.xnb
 C:\Users\blitz\OneDrive - Conestoga College\3rdSemester\PROG2370\Projects\AirborneAssault\Final\Final\bin\Debug\net6.0-windows\Content\fonts\HighlightFont.xnb
+C:\Users\blitz\OneDrive - Conestoga College\3rdSemester\PROG2370\Projects\AirborneAssault\Final\Final\bin\Debug\net6.0-windows\Content\fonts\HilightFont.xnb
 C:\Users\blitz\OneDrive - Conestoga College\3rdSemester\PROG2370\Projects\AirborneAssault\Final\Final\bin\Debug\net6.0-windows\Content\fonts\RegularFont.xnb
 C:\Users\blitz\OneDrive - Conestoga College\3rdSemester\PROG2370\Projects\AirborneAssault\Final\Final\bin\Debug\net6.0-windows\Content\fonts\TitleFont.xnb
+C:\Users\blitz\OneDrive - Conestoga College\3rdSemester\PROG2370\Projects\AirborneAssault\Final\Final\bin\Debug\net6.0-windows\Content\images\aircraftFire.xnb
 C:\Users\blitz\OneDrive - Conestoga College\3rdSemester\PROG2370\Projects\AirborneAssault\Final\Final\bin\Debug\net6.0-windows\Content\images\background.xnb
 C:\Users\blitz\OneDrive - Conestoga College\3rdSemester\PROG2370\Projects\AirborneAssault\Final\Final\bin\Debug\net6.0-windows\Content\images\fighterAircraft.xnb
+C:\Users\blitz\OneDrive - Conestoga College\3rdSemester\PROG2370\Projects\AirborneAssault\Final\Final\bin\Debug\net6.0-windows\Content\images\firstStageBossHelicopter.xnb
+C:\Users\blitz\OneDrive - Conestoga College\3rdSemester\PROG2370\Projects\AirborneAssault\Final\Final\bin\Debug\net6.0-windows\Content\images\secondStageBossHelicopter.xnb
 C:\Users\blitz\OneDrive - Conestoga College\3rdSemester\PROG2370\Projects\AirborneAssault\Final\Final\bin\Debug\net6.0-windows\Content\sounds\backgroundMusic.wma
 C:\Users\blitz\OneDrive - Conestoga College\3rdSemester\PROG2370\Projects\AirborneAssault\Final\Final\bin\Debug\net6.0-windows\Content\sounds\backgroundMusic.xnb
 C:\Users\blitz\OneDrive - Conestoga College\3rdSemester\PROG2370\Projects\AirborneAssault\Final\Final\bin\Debug\net6.0-windows\Final.exe
@@ -174,5 +177,5 @@ C:\Users\blitz\OneDrive - Conestoga College\3rdSemester\PROG2370\Projects\Airbor
 C:\Users\blitz\OneDrive - Conestoga College\3rdSemester\PROG2370\Projects\AirborneAssault\Final\Final\obj\Debug\net6.0-windows\Final.pdb
 C:\Users\blitz\OneDrive - Conestoga College\3rdSemester\PROG2370\Projects\AirborneAssault\Final\Final\obj\Debug\net6.0-windows\Final.genruntimeconfig.cache
 C:\Users\blitz\OneDrive - Conestoga College\3rdSemester\PROG2370\Projects\AirborneAssault\Final\Final\obj\Debug\net6.0-windows\ref\Final.dll
-C:\Users\blitz\OneDrive - Conestoga College\3rdSemester\PROG2370\Projects\AirborneAssault\Final\Final\bin\Debug\net6.0-windows\Content\images\firstStageBossHelicopter.xnb
-C:\Users\blitz\OneDrive - Conestoga College\3rdSemester\PROG2370\Projects\AirborneAssault\Final\Final\bin\Debug\net6.0-windows\Content\images\secondStageBossHelicopter.xnb
+C:\Users\blitz\OneDrive - Conestoga College\3rdSemester\PROG2370\Projects\AirborneAssault\Final\Final\bin\Debug\net6.0-windows\Content\images\aircraftAttackAnimation.xnb
+C:\Users\blitz\OneDrive - Conestoga College\3rdSemester\PROG2370\Projects\AirborneAssault\Final\Final\bin\Debug\net6.0-windows\Content\images\aircraftBasicAttackBullet.xnb

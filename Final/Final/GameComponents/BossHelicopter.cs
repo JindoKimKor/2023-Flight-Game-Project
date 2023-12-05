@@ -17,7 +17,7 @@ namespace Final.GameComponents
         private List<Rectangle> aliveBossAnimationFrame;
         private Vector2 currentPosition;
         private Vector2 textureOrigin;
-        private const int ALIVE_BOSS_HELICOPTER_ROWS = 4;
+        private const int ALIVE_BOSS_HELICOPTER_COLS = 4;
         private bool isStartSequence;
         private const float entirySpeed = 0.7f;
         private int currentFrameIndex = -1;
@@ -33,7 +33,7 @@ namespace Final.GameComponents
 
             aliveBossHelicopterTexture = game.Content.Load<Texture2D>("images/firstStageBossHelicopter");
 
-            aliveBossFrameDimension = new Vector2(aliveBossHelicopterTexture.Width / ALIVE_BOSS_HELICOPTER_ROWS, aliveBossHelicopterTexture.Height);
+            aliveBossFrameDimension = new Vector2(aliveBossHelicopterTexture.Width / ALIVE_BOSS_HELICOPTER_COLS, aliveBossHelicopterTexture.Height);
             textureOrigin = new Vector2(aliveBossFrameDimension.X / 2, aliveBossFrameDimension.Y / 2);
             isStartSequence = true;
             aliveBossAnimationFrame = new List<Rectangle>();
@@ -42,9 +42,9 @@ namespace Final.GameComponents
 
         public void InitializeAnimationFrames()
         {
-            for (int r = 0; r < ALIVE_BOSS_HELICOPTER_ROWS; r++)
+            for (int c = 0; c < ALIVE_BOSS_HELICOPTER_COLS; c++)
             {
-                    int x = r * (int)aliveBossFrameDimension.X;
+                    int x = c * (int)aliveBossFrameDimension.X;
 
                     aliveBossAnimationFrame.Add(new Rectangle(x, 0, (int)aliveBossFrameDimension.X, (int)aliveBossFrameDimension.Y));
             }
