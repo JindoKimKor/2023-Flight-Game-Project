@@ -1,14 +1,8 @@
 ﻿using Final.Scenes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing.Imaging;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Final.GameComponents
 {
@@ -73,7 +67,10 @@ namespace Final.GameComponents
                 //It got called only if It's not null
                 RemoveBulletDelegate?.Invoke(this);
             }
+            if (true)
+            {
 
+            }
             base.Update(gameTime);
         }
 
@@ -87,6 +84,11 @@ namespace Final.GameComponents
 
 
             base.Draw(gameTime);
+        }
+
+        public Rectangle GetHitbox()
+        {
+            return new Rectangle((int)currentPosition.X, (int)currentPosition.Y, (int)bulletFrameDimension.X, (int)bulletFrameDimension.Y);
         }
     }
 }

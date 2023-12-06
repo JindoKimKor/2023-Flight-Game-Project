@@ -30,9 +30,7 @@ namespace Final.GameComponents
         public bool IsStartSequence { get => isStartSequence; set => isStartSequence = value; }
         public static Vector2 BossHelicopterCurrentPosition { get => bossHelicopterCurrentPosition; set => bossHelicopterCurrentPosition = value; }
 
-        //Basic bullet
-
-
+        public bool IsGotHit { get => isGotHit; set => isGotHit = value; }
 
         public BossHelicopter(Game game, SpriteBatch playSceneSpriteBatch) : base(game)
         {
@@ -47,18 +45,13 @@ namespace Final.GameComponents
             textureOrigin = new Vector2(aliveBossFrameDimension.X / 2, aliveBossFrameDimension.Y / 2);
             IsStartSequence = true;
             aliveBossAnimationFrame = new List<Rectangle>();
-            InitializeAnimationFrames();
-        }
 
-        public void InitializeAnimationFrames()
-        {
             for (int c = 0; c < ALIVE_BOSS_HELICOPTER_COLS; c++)
             {
-                    int x = c * (int)aliveBossFrameDimension.X;
+                int x = c * (int)aliveBossFrameDimension.X;
 
-                    aliveBossAnimationFrame.Add(new Rectangle(x, 0, (int)aliveBossFrameDimension.X, (int)aliveBossFrameDimension.Y));
+                aliveBossAnimationFrame.Add(new Rectangle(x, 0, (int)aliveBossFrameDimension.X, (int)aliveBossFrameDimension.Y));
             }
-
         }
 
         public void Hide()
@@ -76,6 +69,8 @@ namespace Final.GameComponents
         private double gettingNewXCoordinateElapsedTime = 0;
         private double frameInterval = 1000;
         private float newXCoordinate;
+        private bool isGotHit;
+
         public override void Update(GameTime gameTime)
         {
             Action<int> changeStartSequence = (x) => { if (BossHelicopterCurrentPosition.Y >= x) IsStartSequence = false; };
@@ -104,13 +99,35 @@ namespace Final.GameComponents
             base.Update(gameTime);
         }
 
+        private double hitEffectDuration = 500;
+        private double hitEffectTimer = 0;
         public override void Draw(GameTime gameTime)
         {
 
             bossHelicopterSpriteBatch.Begin();
-            bossHelicopterSpriteBatch.Draw(aliveBossHelicopterTexture, BossHelicopterCurrentPosition, aliveBossAnimationFrame[currentFrameIndex], Color.White, 0f, textureOrigin, 1f, SpriteEffects.None, 0f);
+
+            if (IsGotHit)
+            {
+                hitEffectTimer -= gameTime.ElapsedGameTime.TotalSeconds;
+                if (hitEffectTimer <= 0)
+                {
+                    IsGotHit = false;
+                }
+                bossHelicopterSpriteBatch.Draw(aliveBossHelicopterTexture, BossHelicopterCurrentPosition, aliveBossAnimationFrame[currentFrameIndex], Color.Red, 0f, textureOrigin, 1f, SpriteEffects.None, 0f);
+            }
+            else
+            {
+                bossHelicopterSpriteBatch.Draw(aliveBossHelicopterTexture, BossHelicopterCurrentPosition, aliveBossAnimationFrame[currentFrameIndex], Color.White, 0f, textureOrigin, 1f, SpriteEffects.None, 0f);
+            }
             bossHelicopterSpriteBatch.End();
             base.Draw(gameTime);
+        }
+
+        public Rectangle GetHitbox()
+        {
+            int margin = 50;
+
+            return new Rectangle((int)BossHelicopterCurrentPosition.X + (margin / 2), (int)BossHelicopterCurrentPosition.Y, (int)aliveBossFrameDimension.X - (margin * 2), (int)aliveBossFrameDimension.Y);
         }
 
     }

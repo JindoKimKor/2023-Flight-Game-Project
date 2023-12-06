@@ -20,6 +20,7 @@ namespace Final.Scenes
 
         private FighterAircraft fighterAircraft;
         private BossHelicopter bossHelicopter;
+        private CollisionManager collisionManager;
 
         private Texture2D fighterAircraftTexture;
         private static bool isStartingSequence = true;
@@ -58,6 +59,10 @@ namespace Final.Scenes
             bossHelicopter = new BossHelicopter(mainGame, playSceneSpriteBatch);
             ComponentList.Add(bossHelicopter);
             bossHelicopter.Show();
+
+            collisionManager = new CollisionManager(mainGame, this, bossHelicopter, fighterAircraft);
+            ComponentList.Add(collisionManager);
+
         }
         private void InitializeAircraftDirections()
         {
@@ -132,6 +137,12 @@ namespace Final.Scenes
             return aircraftFrames;
         }
 
+        public void RemoveAircraftBullet(AircraftBasicBullet aircraftBasicBullet)
+        {
+            ComponentList.Remove(aircraftBasicBullet);
+            aircraftBasicBullet.Dispose();
+        }
+
         //
         private double lastBulletTime = 0;
         private double aircraftBulletCooldown = 200;
@@ -156,11 +167,7 @@ namespace Final.Scenes
                     lastBulletTime = currentTime;
                 }
             }
-            void RemoveAircraftBullet(AircraftBasicBullet aircraftBasicBullet)
-            {
-                ComponentList.Remove(aircraftBasicBullet);
-                aircraftBasicBullet.Dispose();
-            }
+
             //generating bullet time control logic
             generatingBossBasicBulletElapsedTime = isGeneratingBossBulletTime == false ? generatingBossBasicBulletElapsedTime += gameTime.ElapsedGameTime.TotalMilliseconds : 0;
 
