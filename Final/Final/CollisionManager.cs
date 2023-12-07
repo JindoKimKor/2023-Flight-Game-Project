@@ -15,7 +15,6 @@ namespace Final
         private BossHelicopter bossHelicopter;
         private FighterAircraft fighterAircraft;
 
-
         public CollisionManager(Game game, PlayScene playScene, BossHelicopter bossHelicopter, FighterAircraft fighterAircraft) : base(game)
         {
             this.gameSceneGameComponents = playScene.ComponentList;
@@ -26,26 +25,37 @@ namespace Final
         private double stayingbulletElapsedTime;
         public override void Update(GameTime gameTime)
         {
+            //Remove aircraft bullet
             List<AircraftBasicBullet> bulletsToRemove = new List<AircraftBasicBullet>();
-
+            
             foreach (GameComponent item in gameSceneGameComponents)
             {
                 if (item is AircraftBasicBullet eachAircraftBullet)
                 {
-                    Rectangle bulletHitBox = eachAircraftBullet.GetHitbox();
+                    Rectangle aircraftBulletHitBox = eachAircraftBullet.GetHitbox();
                     Rectangle bossHitBox = bossHelicopter.GetHitbox();
 
-                    if (bossHitBox.Intersects(bulletHitBox))
+                    if (bossHitBox.Intersects(aircraftBulletHitBox))
                     {
                         bossHelicopter.IsGotHit = true;
                         bulletsToRemove.Add(eachAircraftBullet);
                     }
+                    foreach (SmallHelicopter smallHelicopter in PlayScene.SmallHelicopterList)
+                    {
+                        Rectangle smallHelicopterHitBox = smallHelicopter.GetHitbox();
+                        if (smallHelicopterHitBox.Intersects(aircraftBulletHitBox))
+                        {
+                            
+                            bulletsToRemove.Add(eachAircraftBullet);
+                            smallHelicopter.IsGotHit = true;
+                        }
+                    }
                 }
             }
             stayingbulletElapsedTime += gameTime.ElapsedGameTime.TotalMilliseconds;
-            if (stayingbulletElapsedTime > 200)
+            if (stayingbulletElapsedTime > 200)//Improve collision effect
             {
-                foreach (var bullet in bulletsToRemove)
+                foreach (AircraftBasicBullet bullet in bulletsToRemove)
                 {
                     gameSceneGameComponents.Remove(bullet);
                     bullet.Dispose();

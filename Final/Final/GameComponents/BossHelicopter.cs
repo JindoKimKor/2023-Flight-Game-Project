@@ -26,6 +26,7 @@ namespace Final.GameComponents
         private const float entirySpeed = 0.7f;
         private int currentFrameIndex = -1;
         private int finalYPosition = 100;
+        private bool isGotHit;
 
         public bool IsStartSequence { get => isStartSequence; set => isStartSequence = value; }
         public static Vector2 BossHelicopterCurrentPosition { get => bossHelicopterCurrentPosition; set => bossHelicopterCurrentPosition = value; }
@@ -69,7 +70,6 @@ namespace Final.GameComponents
         private double gettingNewXCoordinateElapsedTime = 0;
         private double frameInterval = 1000;
         private float newXCoordinate;
-        private bool isGotHit;
 
         public override void Update(GameTime gameTime)
         {
@@ -99,13 +99,11 @@ namespace Final.GameComponents
             base.Update(gameTime);
         }
 
-        private double hitEffectDuration = 500;
-        private double hitEffectTimer = 0;
+        private double hitEffectTimer = 0.005;
         public override void Draw(GameTime gameTime)
         {
 
             bossHelicopterSpriteBatch.Begin();
-
             if (IsGotHit)
             {
                 hitEffectTimer -= gameTime.ElapsedGameTime.TotalSeconds;
@@ -113,11 +111,11 @@ namespace Final.GameComponents
                 {
                     IsGotHit = false;
                 }
-                bossHelicopterSpriteBatch.Draw(aliveBossHelicopterTexture, BossHelicopterCurrentPosition, aliveBossAnimationFrame[currentFrameIndex], Color.Red, 0f, textureOrigin, 1f, SpriteEffects.None, 0f);
+                bossHelicopterSpriteBatch.Draw(aliveBossHelicopterTexture, BossHelicopterCurrentPosition, aliveBossAnimationFrame[currentFrameIndex], Color.Red, 0f, textureOrigin, 0.91f, SpriteEffects.None, 0f);
             }
             else
             {
-                bossHelicopterSpriteBatch.Draw(aliveBossHelicopterTexture, BossHelicopterCurrentPosition, aliveBossAnimationFrame[currentFrameIndex], Color.White, 0f, textureOrigin, 1f, SpriteEffects.None, 0f);
+                bossHelicopterSpriteBatch.Draw(aliveBossHelicopterTexture, BossHelicopterCurrentPosition, aliveBossAnimationFrame[currentFrameIndex], Color.White, 0f, textureOrigin, 0.9f, SpriteEffects.None, 0f);
             }
             bossHelicopterSpriteBatch.End();
             base.Draw(gameTime);
