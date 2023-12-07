@@ -32,7 +32,7 @@ namespace Final.Scenes
             titleFont = game.Content.Load<SpriteFont>("fonts/TitleFont");
             backgroundTexture = mainGame.Content.Load<Texture2D>("images/background");
 
-            string[] menuItems = { "Start Game", "Help", "Leaderboard", "Credit", "Option", "Exit" };
+            string[] menuItems = { "Start Game", "Help", "Leaderboard", "Credit", "Exit" };
             menuComponent = new MenuComponent(game, startSceneSpriteBatch, regularFont, highlightFont, menuItems);
             ComponentList.Add(menuComponent);
         }
