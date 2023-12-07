@@ -32,18 +32,22 @@ namespace Final.GameComponents
         private bool isGotHit = false;
         private bool isDestroyed = false;
 
-        //explosed
+        //destroyed
         private Texture2D destroyedTexture;
         private Vector2 destroyFrameDimension;
         private List<Rectangle> destroyAnimationFrames;
         private const int DESTROY_ANIMATION_COLS = 7;
         private int destroyedTextureIndex = 0;
 
+        //generating bullet
+        PlayScene playScene;
+        
         public bool IsGotHit { get => isGotHit; set => isGotHit = value; }
 
         public RemovePassedOrExpolosedDelegate RemovePassedOrExpolosed { get; set; }
+        public Vector2 CurrentPosition { get => currentPosition; set => currentPosition = value; }
 
-        public SmallHelicopter(Game game, SpriteBatch playSceneSpriteBatch) : base(game)
+        public SmallHelicopter(Game game, SpriteBatch playSceneSpriteBatch, PlayScene playScene) : base(game)
         {
             mainGame = (MainGame)game;
             smallHelicopterSpriteBatch = playSceneSpriteBatch;
@@ -53,7 +57,7 @@ namespace Final.GameComponents
             animationFrames = new List<Rectangle>();
             random = new Random();
             randomXPosition = random.Next(0, 2);
-            int randomYPosition = random.Next(150, 400);
+            int randomYPosition = random.Next(170, 450);
             movingSpeed = random.Next(2, 4);
             currentPosition = new Vector2(randomXPosition == 0 ? 0 : Shared.stageSize.X, randomYPosition);
 
@@ -77,6 +81,7 @@ namespace Final.GameComponents
                 destroyAnimationFrames.Add(new Rectangle(x, 0, (int)destroyFrameDimension.X, (int)destroyFrameDimension.Y));
             }
 
+            this.playScene = playScene;
 
         }
 
@@ -131,6 +136,8 @@ namespace Final.GameComponents
             base.Update(gameTime);
         }
 
+        private double elapsedTime = 0;
+        private double frameInterval = 400;
         private double hitEffectTimer = 0.005;
         public override void Draw(GameTime gameTime)
         {
@@ -140,6 +147,16 @@ namespace Final.GameComponents
             {
                 Vector2 adjustPosition = new Vector2(currentPosition.X + 40, currentPosition.Y + 50);
                 smallHelicopterSpriteBatch.Draw(destroyedTexture, adjustPosition, destroyAnimationFrames[destroyedTextureIndex], Color.White, 0f, textureOrigin, 1.2f, SpriteEffects.None, 0f);
+            }
+            elapsedTime += gameTime.ElapsedGameTime.TotalMilliseconds;
+            if (!isDestroyed)
+            {
+                if (elapsedTime >= frameInterval)
+                {
+                    SmallHelicopterBullet smallHelicopterBullet = new SmallHelicopterBullet(mainGame, smallHelicopterSpriteBatch, this);
+                    playScene.ComponentList.Add(smallHelicopterBullet);
+                    elapsedTime = 0;
+                }
             }
 
             if (IsGotHit && !isDestroyed)

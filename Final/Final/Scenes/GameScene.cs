@@ -41,16 +41,18 @@ namespace Final.Scenes
         }
         public override void Draw(GameTime gameTime)
         {
+            List<DrawableGameComponent> drawableComponentsToDraw = new List<DrawableGameComponent>();
+
             foreach (GameComponent gameComponent in ComponentList)
             {
-                if (gameComponent is DrawableGameComponent)
+                if (gameComponent is DrawableGameComponent drawableGameComponent && drawableGameComponent.Visible)
                 {
-                    DrawableGameComponent drawableGameComponent = (DrawableGameComponent)gameComponent;
-                    if (drawableGameComponent.Visible)
-                    {
-                        drawableGameComponent.Draw(gameTime);
-                    }
+                    drawableComponentsToDraw.Add(drawableGameComponent);
                 }
+            }
+            foreach (DrawableGameComponent drawable in drawableComponentsToDraw)
+            {
+                drawable.Draw(gameTime);
             }
             base.Draw(gameTime);
         }

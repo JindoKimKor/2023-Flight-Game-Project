@@ -300,9 +300,10 @@ namespace Final.Scenes
                 smallHelicopterElapsedTime += gameTime.ElapsedGameTime.TotalMilliseconds;
                 if (smallHelicopterElapsedTime > smallHelicopterGeneratingSequence)
                 {
-                    smallHelicopter = new SmallHelicopter(mainGame, playSceneSpriteBatch);
+                    smallHelicopter = new SmallHelicopter(mainGame, playSceneSpriteBatch, this);
                     ComponentList.Add(smallHelicopter);
                     smallHelicopterElapsedTime = 0;
+
                     smallHelicopter.RemovePassedOrExpolosed += RemoveAircraftBullet;
                     void RemoveAircraftBullet(SmallHelicopter smallHelicopter)
                     {

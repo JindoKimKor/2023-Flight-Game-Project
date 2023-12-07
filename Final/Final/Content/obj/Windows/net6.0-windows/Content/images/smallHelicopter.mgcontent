@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <SourceFile>C:/Users/blitz/OneDrive - Conestoga College/3rdSemester/PROG2370/Projects/AirborneAssault/Final/Final/Content/images/smallHelicopter.png</SourceFile>
-  <SourceTime>2023-12-06T14:59:13.9827921-05:00</SourceTime>
+  <SourceTime>2023-12-06T19:48:48.1205397-05:00</SourceTime>
   <DestFile>C:/Users/blitz/OneDrive - Conestoga College/3rdSemester/PROG2370/Projects/AirborneAssault/Final/Final/Content/bin/Windows/Content/images/smallHelicopter.xnb</DestFile>
-  <DestTime>2023-12-06T15:00:20.3590954-05:00</DestTime>
+  <DestTime>2023-12-06T21:54:30.6715195-05:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2022-07-26T07:44:56-04:00</ImporterTime>
   <Processor>TextureProcessor</Processor>
