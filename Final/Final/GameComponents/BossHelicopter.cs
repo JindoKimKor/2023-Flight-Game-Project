@@ -10,13 +10,22 @@ using System.Threading.Tasks;
 namespace Final.GameComponents
 {
 
+
+
     public class BossHelicopter : DrawableGameComponent
     {
-               
+        public enum BossStage
+        {
+            firstStage,
+            secondStage,
+            destroyed
+        }
+
         private SpriteBatch bossHelicopterSpriteBatch;
 
         //Boss Helicopter
-        private Texture2D aliveBossHelicopterTexture;
+        private Texture2D firstStageBossHelicopterTexture;
+        private Texture2D secondStageBossHelicopterTexture;
         private Vector2 aliveBossFrameDimension;
         private List<Rectangle> aliveBossAnimationFrame;
         private static Vector2 bossHelicopterCurrentPosition;
@@ -27,6 +36,10 @@ namespace Final.GameComponents
         private int currentFrameIndex = -1;
         private int finalYPosition = 100;
         private bool isGotHit;
+        private int maxHealth = 5000;
+        private int secondStageHealth = 100;
+        private int hitCount;
+        public BossStage bossStage;
 
         public bool IsStartSequence { get => isStartSequence; set => isStartSequence = value; }
         public static Vector2 BossHelicopterCurrentPosition { get => bossHelicopterCurrentPosition; set => bossHelicopterCurrentPosition = value; }
@@ -35,14 +48,16 @@ namespace Final.GameComponents
 
         public BossHelicopter(Game game, SpriteBatch playSceneSpriteBatch) : base(game)
         {
-            
+
             bossHelicopterSpriteBatch = playSceneSpriteBatch;
 
             BossHelicopterCurrentPosition = new Vector2(Shared.stageSize.X / 2, -aliveBossFrameDimension.Y);
 
-            aliveBossHelicopterTexture = game.Content.Load<Texture2D>("images/firstStageBossHelicopter");
+            firstStageBossHelicopterTexture = game.Content.Load<Texture2D>("images/firstStageBossHelicopter");
+            secondStageBossHelicopterTexture = game.Content.Load<Texture2D>("images/secondStageBossHelicopter");
 
-            aliveBossFrameDimension = new Vector2(aliveBossHelicopterTexture.Width / ALIVE_BOSS_HELICOPTER_COLS, aliveBossHelicopterTexture.Height);
+
+            aliveBossFrameDimension = new Vector2(firstStageBossHelicopterTexture.Width / ALIVE_BOSS_HELICOPTER_COLS, firstStageBossHelicopterTexture.Height);
             textureOrigin = new Vector2(aliveBossFrameDimension.X / 2, aliveBossFrameDimension.Y / 2);
             IsStartSequence = true;
             aliveBossAnimationFrame = new List<Rectangle>();
@@ -53,18 +68,7 @@ namespace Final.GameComponents
 
                 aliveBossAnimationFrame.Add(new Rectangle(x, 0, (int)aliveBossFrameDimension.X, (int)aliveBossFrameDimension.Y));
             }
-        }
-
-        public void Hide()
-        {
-            this.Enabled = false;
-            this.Visible = false;
-        }
-
-        public void Show()
-        {
-            this.Enabled = true;
-            this.Visible = true;
+            bossStage = BossStage.firstStage;
         }
 
         private double gettingNewXCoordinateElapsedTime = 0;
@@ -77,7 +81,7 @@ namespace Final.GameComponents
 
             currentFrameIndex = currentFrameIndex == aliveBossAnimationFrame.Count() - 1 ? 0 : ++currentFrameIndex;
             bossHelicopterCurrentPosition.Y = IsStartSequence == true ? BossHelicopterCurrentPosition.Y + entirySpeed : BossHelicopterCurrentPosition.Y;
-            
+
             changeStartSequence(finalYPosition);
             //Adjust X coordinate according to fighter aircraft X coordinate
 
@@ -95,7 +99,13 @@ namespace Final.GameComponents
             {
                 bossHelicopterCurrentPosition.X++;
             }
-            
+
+            //change boss stage
+            if (hitCount >= secondStageHealth)
+            {
+                bossStage = BossStage.secondStage;
+            }
+
             base.Update(gameTime);
         }
 
@@ -110,12 +120,30 @@ namespace Final.GameComponents
                 if (hitEffectTimer <= 0)
                 {
                     IsGotHit = false;
+                    hitCount++;
                 }
-                bossHelicopterSpriteBatch.Draw(aliveBossHelicopterTexture, BossHelicopterCurrentPosition, aliveBossAnimationFrame[currentFrameIndex], Color.Red, 0f, textureOrigin, 0.91f, SpriteEffects.None, 0f);
+                if (hitCount >= secondStageHealth)
+                {
+                    bossHelicopterSpriteBatch.Draw(secondStageBossHelicopterTexture, BossHelicopterCurrentPosition, aliveBossAnimationFrame[currentFrameIndex], Color.Red, 0f, textureOrigin, 0.9f, SpriteEffects.None, 0f);
+                }
+
+                else if (hitCount >= 0 && hitCount < secondStageHealth)
+                {
+                    bossHelicopterSpriteBatch.Draw(firstStageBossHelicopterTexture, BossHelicopterCurrentPosition, aliveBossAnimationFrame[currentFrameIndex], Color.Red, 0f, textureOrigin, 0.91f, SpriteEffects.None, 0f);
+                }
+
             }
             else
             {
-                bossHelicopterSpriteBatch.Draw(aliveBossHelicopterTexture, BossHelicopterCurrentPosition, aliveBossAnimationFrame[currentFrameIndex], Color.White, 0f, textureOrigin, 0.9f, SpriteEffects.None, 0f);
+                if (hitCount >= secondStageHealth)
+                {
+                    bossHelicopterSpriteBatch.Draw(secondStageBossHelicopterTexture, BossHelicopterCurrentPosition, aliveBossAnimationFrame[currentFrameIndex], Color.White, 0f, textureOrigin, 0.9f, SpriteEffects.None, 0f);
+                }
+                else if (hitCount >= 0 && hitCount < secondStageHealth)
+                {
+                    bossHelicopterSpriteBatch.Draw(firstStageBossHelicopterTexture, BossHelicopterCurrentPosition, aliveBossAnimationFrame[currentFrameIndex], Color.White, 0f, textureOrigin, 0.9f, SpriteEffects.None, 0f);
+                }
+
             }
             bossHelicopterSpriteBatch.End();
             base.Draw(gameTime);

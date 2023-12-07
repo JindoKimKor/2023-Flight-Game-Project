@@ -48,6 +48,41 @@ namespace Final.GameComponents
                 animationFrames.Add(new Rectangle(x, 0, (int)frameDimension.X, (int)frameDimension.Y));
             }
         }
+
+        public BossHelicopterBasicBullet(Game game, SpriteBatch playSceneSpriteBatch, string startingPosition) : base(game)
+        {
+            mainGame = (MainGame)game;
+            bossBasicBulletSpriteBatch = playSceneSpriteBatch;
+            basicBulletTexture = mainGame.Content.Load<Texture2D>("images/bossHelicopterBasicBullet");
+            frameDimension = new Vector2(basicBulletTexture.Width / BASIC_BULLET_ROWS, basicBulletTexture.Height);
+            animationFrames = new List<Rectangle>();
+            switch (startingPosition)
+            {
+                case "left":
+                    currentPosition = BossHelicopter.BossHelicopterCurrentPosition - new Vector2(50f, 0);
+                    break;
+                case "right":
+                    currentPosition = BossHelicopter.BossHelicopterCurrentPosition + new Vector2(50f, 0);
+                    break;
+                default:
+                    currentPosition = BossHelicopter.BossHelicopterCurrentPosition;
+                    break;
+            }
+
+            
+            originTexture = new Vector2(frameDimension.X / 2, frameDimension.Y / 2);
+            direction = Vector2.Normalize(PlayScene.FighterAircraftCurrentPosition - currentPosition);
+            direction += direction;
+            maxYCoordinate = Shared.stageSize.Y;
+
+            for (int r = 0; r < BASIC_BULLET_ROWS; r++)
+            {
+                int x = r * (int)frameDimension.X;
+                animationFrames.Add(new Rectangle(x, 0, (int)frameDimension.X, (int)frameDimension.Y));
+            }
+        }
+
+
         private double elapsedTime = 0;
         private double frameInterval = 40;
         public override void Update(GameTime gameTime)

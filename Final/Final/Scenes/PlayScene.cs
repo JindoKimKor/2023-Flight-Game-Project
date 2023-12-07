@@ -238,12 +238,31 @@ namespace Final.Scenes
                 stoppingBossBasicBulletElapsedTime += gameTime.ElapsedGameTime.TotalMilliseconds;
                 //generating bullet sequence logic
                 bossBulletElapsedTime += gameTime.ElapsedGameTime.TotalMilliseconds;
-                if (bossBulletElapsedTime > bossBulletGeneratingSequence && !bossHelicopter.IsStartSequence)
+                if (bossHelicopter.bossStage == BossHelicopter.BossStage.firstStage)
                 {
-                    BossHelicopterBasicBullet aircraftBasicBullet = new BossHelicopterBasicBullet(mainGame, playSceneSpriteBatch);
-                    aircraftBasicBullet.RemoveBossBulletDelegate = RemoveBossBasictBullet;
-                    ComponentList.Add(aircraftBasicBullet);
-                    bossBulletElapsedTime = 0;
+                    if (bossBulletElapsedTime > bossBulletGeneratingSequence && !bossHelicopter.IsStartSequence)
+                    {
+                        BossHelicopterBasicBullet bossBasicBullet = new BossHelicopterBasicBullet(mainGame, playSceneSpriteBatch);
+                        bossBasicBullet.RemoveBossBulletDelegate = RemoveBossBasictBullet;
+                        ComponentList.Add(bossBasicBullet);
+                        bossBulletElapsedTime = 0;
+                    }
+                }
+                else if (bossHelicopter.bossStage == BossHelicopter.BossStage.secondStage)
+                {
+                    if (bossBulletElapsedTime > bossBulletGeneratingSequence && !bossHelicopter.IsStartSequence)
+                    {
+                        BossHelicopterBasicBullet leftBossBasicBullet = new BossHelicopterBasicBullet(mainGame, playSceneSpriteBatch, "left");
+                        BossHelicopterBasicBullet centerBossBasicBullet = new BossHelicopterBasicBullet(mainGame, playSceneSpriteBatch, "center");
+                        BossHelicopterBasicBullet rightBossBasicBullet = new BossHelicopterBasicBullet(mainGame, playSceneSpriteBatch, "right");
+                        leftBossBasicBullet.RemoveBossBulletDelegate = RemoveBossBasictBullet;
+                        centerBossBasicBullet.RemoveBossBulletDelegate = RemoveBossBasictBullet;
+                        rightBossBasicBullet.RemoveBossBulletDelegate = RemoveBossBasictBullet;
+                        ComponentList.Add(leftBossBasicBullet);
+                        ComponentList.Add(centerBossBasicBullet);
+                        ComponentList.Add(rightBossBasicBullet);
+                        bossBulletElapsedTime = 0;
+                    }
                 }
                 void RemoveBossBasictBullet(BossHelicopterBasicBullet bossHelicopterBasicBullet)
                 {
