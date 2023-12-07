@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Final.Scenes;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,7 @@ namespace Final.GameComponents
         private List<Rectangle> animationFrames;
         private const int BASIC_BULLET_ROWS = 4;
         private Vector2 currentPosition;
-
+        private Vector2 direction;
         private Vector2 originTexture;
 
         private float maxYCoordinate;
@@ -38,7 +39,7 @@ namespace Final.GameComponents
             animationFrames = new List<Rectangle>();
             currentPosition = BossHelicopter.BossHelicopterCurrentPosition;
             originTexture = new Vector2(frameDimension.X / 2, frameDimension.Y / 2);
-
+            direction = Vector2.Normalize(PlayScene.FighterAircraftCurrentPosition - currentPosition);
             maxYCoordinate = Shared.stageSize.Y;
 
             for (int r = 0; r < BASIC_BULLET_ROWS; r++)
@@ -55,7 +56,7 @@ namespace Final.GameComponents
             if (elapsedTime >= frameInterval)
             {
                 currentFrameIndex++;
-                currentPosition.Y = currentPosition.Y + bulletSpeed;
+                currentPosition += direction * bulletSpeed;
                 if (currentFrameIndex >= BASIC_BULLET_ROWS)
                 {
                     currentFrameIndex = 0;

@@ -82,6 +82,18 @@
 /processorParam:TextureFormat=Color
 /build:images/bossHelicopterBasicBullet.png
 
+#begin images/destroyAnimation.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:images/destroyAnimation.png
+
 #begin images/fighterAircraft.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -118,7 +130,7 @@
 /processorParam:TextureFormat=Color
 /build:images/secondStageBossHelicopter.png
 
-#begin images/Spacebar.webp
+#begin images/smallHelicopter.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -128,9 +140,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:images/Spacebar.webp
+/build:images/smallHelicopter.png
 
-#begin images/wasd (1).png
+#begin images/smallHelicopterBullet.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -140,7 +152,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:images/wasd (1).png
+/build:images/smallHelicopterBullet.png
 
 #begin sounds/backgroundMusic.mp3
 /importer:Mp3Importer
