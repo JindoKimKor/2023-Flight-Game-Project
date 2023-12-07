@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>C:/Users/blitz/OneDrive - Conestoga College/3rdSemester/PROG2370/Projects/AirborneAssault/Final/Final/Content/images/firstStageBossHelicopter.png</SourceFile>
-  <SourceTime>2023-12-05T20:57:47.1521437-05:00</SourceTime>
-  <DestFile>C:/Users/blitz/OneDrive - Conestoga College/3rdSemester/PROG2370/Projects/AirborneAssault/Final/Final/Content/bin/Windows/images/firstStageBossHelicopter.xnb</DestFile>
-  <DestTime>2023-12-05T20:58:29.6627573-05:00</DestTime>
+  <SourceFile>C:/Users/sk996/OneDrive - Conestoga College/conestogacollege2023Fall/gaming/Final/AirborneAssault/Final/Final/Content/images/firstStageBossHelicopter.png</SourceFile>
+  <SourceTime>2023-12-06T10:48:19.7984022-05:00</SourceTime>
+  <DestFile>C:/Users/sk996/OneDrive - Conestoga College/conestogacollege2023Fall/gaming/Final/AirborneAssault/Final/Final/Content/bin/Windows/images/firstStageBossHelicopter.xnb</DestFile>
+  <DestTime>2023-12-06T15:08:14.1807538-05:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2022-07-26T07:44:56-04:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

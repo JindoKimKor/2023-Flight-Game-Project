@@ -91,12 +91,16 @@ namespace Final
                     startScene.Hide();
                     helpScene.Show();
                 }
+                else if(selectedIndex == 2 && keyboardState.IsKeyDown(Keys.Enter))
+                {
+                    startScene.Hide();
+                }
                 else if(selectedIndex == 3 && keyboardState.IsKeyDown(Keys.Enter))
                 {
                     startScene.Hide();
                     creditScene.Show();
                 }
-                else if (selectedIndex == 5 && keyboardState.IsKeyDown(Keys.Enter))
+                else if (selectedIndex == 4 && keyboardState.IsKeyDown(Keys.Enter))
                 {
                     Exit();
                 }

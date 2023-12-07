@@ -180,3 +180,11 @@ C:\Users\blitz\OneDrive - Conestoga College\3rdSemester\PROG2370\Projects\Airbor
 C:\Users\blitz\OneDrive - Conestoga College\3rdSemester\PROG2370\Projects\AirborneAssault\Final\Final\bin\Debug\net6.0-windows\Content\images\aircraftAttackAnimation.xnb
 C:\Users\blitz\OneDrive - Conestoga College\3rdSemester\PROG2370\Projects\AirborneAssault\Final\Final\bin\Debug\net6.0-windows\Content\images\aircraftBasicAttackBullet.xnb
 C:\Users\blitz\OneDrive - Conestoga College\3rdSemester\PROG2370\Projects\AirborneAssault\Final\Final\bin\Debug\net6.0-windows\Content\images\bossHelicopterBasicBullet.xnb
+C:\Users\sk996\OneDrive - Conestoga College\conestogacollege2023Fall\gaming\Final\AirborneAssault\Final\Final\bin\Debug\net6.0-windows\Content\images\aircraftFire.xnb
+C:\Users\sk996\OneDrive - Conestoga College\conestogacollege2023Fall\gaming\Final\AirborneAssault\Final\Final\bin\Debug\net6.0-windows\Content\images\aircraftAttackAnimation.xnb
+C:\Users\sk996\OneDrive - Conestoga College\conestogacollege2023Fall\gaming\Final\AirborneAssault\Final\Final\bin\Debug\net6.0-windows\Content\images\aircraftBasicAttackBullet.xnb
+C:\Users\sk996\OneDrive - Conestoga College\conestogacollege2023Fall\gaming\Final\AirborneAssault\Final\Final\bin\Debug\net6.0-windows\Content\images\bossHelicopterBasicBullet.xnb
+C:\Users\sk996\OneDrive - Conestoga College\conestogacollege2023Fall\gaming\Final\AirborneAssault\Final\Final\bin\Debug\net6.0-windows\Content\images\firstStageBossHelicopter.xnb
+C:\Users\sk996\OneDrive - Conestoga College\conestogacollege2023Fall\gaming\Final\AirborneAssault\Final\Final\bin\Debug\net6.0-windows\Content\images\secondStageBossHelicopter.xnb
+C:\Users\sk996\OneDrive - Conestoga College\conestogacollege2023Fall\gaming\Final\AirborneAssault\Final\Final\bin\Debug\net6.0-windows\Content\images\wasd (1).xnb
+C:\Users\sk996\OneDrive - Conestoga College\conestogacollege2023Fall\gaming\Final\AirborneAssault\Final\Final\bin\Debug\net6.0-windows\Content\images\Spacebar.xnb
