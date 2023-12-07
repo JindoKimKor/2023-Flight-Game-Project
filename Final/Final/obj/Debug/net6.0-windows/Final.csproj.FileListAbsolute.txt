@@ -183,3 +183,5 @@ C:\Users\blitz\OneDrive - Conestoga College\3rdSemester\PROG2370\Projects\Airbor
 C:\Users\blitz\OneDrive - Conestoga College\3rdSemester\PROG2370\Projects\AirborneAssault\Final\Final\bin\Debug\net6.0-windows\Content\images\destroyAnimation.xnb
 C:\Users\blitz\OneDrive - Conestoga College\3rdSemester\PROG2370\Projects\AirborneAssault\Final\Final\bin\Debug\net6.0-windows\Content\images\smallHelicopter.xnb
 C:\Users\blitz\OneDrive - Conestoga College\3rdSemester\PROG2370\Projects\AirborneAssault\Final\Final\bin\Debug\net6.0-windows\Content\images\smallHelicopterBullet.xnb
+C:\Users\blitz\OneDrive - Conestoga College\3rdSemester\PROG2370\Projects\AirborneAssault\Final\Final\bin\Debug\net6.0-windows\Content\images\oneBulletMode.xnb
+C:\Users\blitz\OneDrive - Conestoga College\3rdSemester\PROG2370\Projects\AirborneAssault\Final\Final\bin\Debug\net6.0-windows\Content\images\threeBulletMode.xnb

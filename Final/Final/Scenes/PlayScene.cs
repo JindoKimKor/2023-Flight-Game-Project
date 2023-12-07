@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,13 +18,13 @@ namespace Final.Scenes
         private Rectangle upperScreenRectangle;
         private Rectangle bottomScreenRectangle;
         private int backgroundTextureScrollSpeed = 3;
-
+        
         private FighterAircraft fighterAircraft;
         private BossHelicopter bossHelicopter;
         private CollisionManager collisionManager;
         private SmallHelicopter smallHelicopter;
         private static List<SmallHelicopter> smallHelicopterList;
-
+        
         private Texture2D fighterAircraftTexture;
         private static bool isStartingSequence = true;
         private Vector2 fighterAircraftStartingPosition;
@@ -32,6 +33,12 @@ namespace Final.Scenes
         private int fighterAircraftEntrySpeed = 2;
         private AircraftFrames currentFrame;
 
+        private Texture2D oneBulletMode;
+        private Rectangle oneBulletModeRectangle;
+        private bool isOneBulletMode = true;
+        private Texture2D threeBulletMode;
+        private Rectangle threeBulletModeRectangle;
+        private float iconScale = 0.2f;
         private MainGame mainGame;
 
         private Dictionary<AircraftFrames, Vector2> aircraftDirectionsWithSpeed;
@@ -57,16 +64,19 @@ namespace Final.Scenes
             fighterAircraft = new FighterAircraft(mainGame, playSceneSpriteBatch, fighterAircraftTexture, fighterAircraftStartingPosition);
             FighterAircraftCurrentPosition = fighterAircraftStartingPosition;
             ComponentList.Add(fighterAircraft);
-            //fighterAircraft.Show();
 
             bossHelicopter = new BossHelicopter(mainGame, playSceneSpriteBatch);
             ComponentList.Add(bossHelicopter);
-            //bossHelicopter.Show();
 
             collisionManager = new CollisionManager(mainGame, this, bossHelicopter, fighterAircraft);
             ComponentList.Add(collisionManager);
 
             smallHelicopterList = new List<SmallHelicopter>();
+
+            oneBulletMode = mainGame.Content.Load<Texture2D>("images/oneBulletMode");
+            oneBulletModeRectangle = new Rectangle((int)Shared.stageSize.X - 120, (int)Shared.stageSize.Y - 250, (int)(oneBulletMode.Width * iconScale), (int)(oneBulletMode.Height * iconScale));
+            threeBulletMode = mainGame.Content.Load<Texture2D>("images/threeBulletMode");
+            threeBulletModeRectangle = new Rectangle((int)Shared.stageSize.X - 120, (int)Shared.stageSize.Y - 150, (int)(threeBulletMode.Width * iconScale), (int)(threeBulletMode.Height * iconScale));
         }
         private void InitializeAircraftDirections()
         {
@@ -161,14 +171,45 @@ namespace Final.Scenes
             double currentTime = gameTime.TotalGameTime.TotalMilliseconds;
             KeyboardState keyboardState = Keyboard.GetState();
 
+            MouseState mouseState = Mouse.GetState();
+
+            //one or three bullet Mode
+            if (mouseState.LeftButton == ButtonState.Pressed)
+            {
+                Point mousePosition = new Point(mouseState.X, mouseState.Y);
+                if (oneBulletModeRectangle.Contains(mousePosition))
+                {
+                    isOneBulletMode = true;
+                }
+                else if (threeBulletModeRectangle.Contains(mousePosition))
+                {
+                    isOneBulletMode = false;
+                }
+            }
+
+            //generating aircraft basic bullet
             if (keyboardState.IsKeyDown(Keys.Space) && !PlayScene.IsStartingSequence)
             {
                 if (currentTime - lastBulletTime > aircraftBulletCooldown)
                 {
-                    AircraftBasicBullet aircraftBasicBullet = new AircraftBasicBullet(mainGame, playSceneSpriteBatch);
-                    aircraftBasicBullet.RemoveBulletDelegate = RemoveAircraftBullet;
-                    ComponentList.Add(aircraftBasicBullet);
-
+                    if (isOneBulletMode)
+                    {
+                        AircraftBasicBullet aircraftBasicBullet = new AircraftBasicBullet(mainGame, playSceneSpriteBatch);
+                        aircraftBasicBullet.RemoveBulletDelegate = RemoveAircraftBullet;
+                        ComponentList.Add(aircraftBasicBullet);
+                    }
+                    else
+                    {
+                        AircraftBasicBullet leftAircraftBasicBullet = new AircraftBasicBullet(mainGame, playSceneSpriteBatch, "left");
+                        AircraftBasicBullet centerAircraftBasicBullet = new AircraftBasicBullet(mainGame, playSceneSpriteBatch, "center");
+                        AircraftBasicBullet rightAircraftBasicBullet = new AircraftBasicBullet(mainGame, playSceneSpriteBatch, "right");
+                        leftAircraftBasicBullet.RemoveBulletDelegate = RemoveAircraftBullet;
+                        centerAircraftBasicBullet.RemoveBulletDelegate = RemoveAircraftBullet;
+                        rightAircraftBasicBullet.RemoveBulletDelegate = RemoveAircraftBullet;
+                        ComponentList.Add(leftAircraftBasicBullet);
+                        ComponentList.Add(centerAircraftBasicBullet);
+                        ComponentList.Add(rightAircraftBasicBullet);
+                    }
                     lastBulletTime = currentTime;
                 }
                 void RemoveAircraftBullet(AircraftBasicBullet aircraftBasicBullet)
@@ -294,7 +335,7 @@ namespace Final.Scenes
 
             }
 
-            //small helicopter
+            // generating small helicopter
             if (!IsStartingSequence)
             {
                 smallHelicopterElapsedTime += gameTime.ElapsedGameTime.TotalMilliseconds;
@@ -322,6 +363,8 @@ namespace Final.Scenes
             playSceneSpriteBatch.Begin();
             playSceneSpriteBatch.Draw(backgroundTexture, upperScreenRectangle, Color.White);
             playSceneSpriteBatch.Draw(backgroundTexture, bottomScreenRectangle, Color.White);
+            playSceneSpriteBatch.Draw(oneBulletMode, oneBulletModeRectangle, Color.White);
+            playSceneSpriteBatch.Draw(threeBulletMode, threeBulletModeRectangle, Color.White);
 
             playSceneSpriteBatch.End();
             base.Draw(gameTime);
