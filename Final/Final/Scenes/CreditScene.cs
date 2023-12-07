@@ -19,6 +19,8 @@ namespace Final.Scenes
         string creator2 = "Sangkwon Kim";
         SpriteFont regularFont;
         SpriteFont hilightFont;
+        private Texture2D transparentBackground;
+
 
         public CreditScene(Game game) : base(game)
         {
@@ -28,6 +30,9 @@ namespace Final.Scenes
             hilightFont = game.Content.Load<SpriteFont>("fonts/HighlightFont");
             titleFont = game.Content.Load<SpriteFont>("fonts/TitleFont");
             backgroundTexture = mainGame.Content.Load<Texture2D>("images/background");
+
+            transparentBackground = new Texture2D(GraphicsDevice, 1, 1);
+            transparentBackground.SetData(new[] { Color.Black });
         }
         
         public override void Draw(GameTime gameTime)
@@ -48,6 +53,8 @@ namespace Final.Scenes
 
 
             creditSceneSpritebatch.Draw(backgroundTexture, new Rectangle(0, 0, (int)Shared.stageSize.X, (int)Shared.stageSize.Y), Color.White);
+            creditSceneSpritebatch.Draw(transparentBackground, new Rectangle(0, 0, (int)Shared.stageSize.X, (int)Shared.stageSize.Y), Color.White * 0.6f);
+
             creditSceneSpritebatch.DrawString(titleFont, titleText, titlePosition, Color.BlueViolet);
 
             creditSceneSpritebatch.DrawString(hilightFont, createdBy, SubtitlePosition, Color.DarkViolet);

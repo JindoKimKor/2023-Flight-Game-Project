@@ -13,20 +13,20 @@ namespace Final.GameComponents
     public class MenuComponent : DrawableGameComponent
     {
         private SpriteBatch menuComponentSpriteBatch;
-        private SpriteFont regularFont, highlightFont;
+        private SpriteFont regularFont, hilightFont;
         private List<string> menuItemList;
 
         public int SelectedIndex { get; set; }
         private Vector2 menuItemsStartPosition;
         private Color regularColor = Color.PaleVioletRed;
-        private Color highlightColor = Color.DarkViolet;
+        private Color hilightColor = Color.DarkViolet;
 
         private KeyboardState oldKeyboardState;
-        public MenuComponent(Game game, SpriteBatch startSceneSpriteBatch, SpriteFont regularFont, SpriteFont highlightFont, string[] menuArray) : base(game)
+        public MenuComponent(Game game, SpriteBatch startSceneSpriteBatch, SpriteFont regularFont, SpriteFont hilightfont, string[] menuArray) : base(game)
         {
             menuComponentSpriteBatch = startSceneSpriteBatch;
             this.regularFont = regularFont;
-            this.highlightFont = highlightFont;
+            this.hilightFont = hilightfont;
             menuItemList = menuArray.ToList();
             menuItemsStartPosition = new Vector2(Shared.stageSize.X / 2, Shared.stageSize.Y / 2);
         }
@@ -66,10 +66,10 @@ namespace Final.GameComponents
 
                 if (i == SelectedIndex)
                 {
-                    itemWidth = highlightFont.MeasureString(menuItemList[i]).X;
+                    itemWidth = hilightFont.MeasureString(menuItemList[i]).X;
                     drawingPosition.X = (Shared.stageSize.X - itemWidth) / 2;
-                    menuComponentSpriteBatch.DrawString(highlightFont, menuItemList[i], drawingPosition, highlightColor);
-                    drawingPosition.Y += highlightFont.LineSpacing;
+                    menuComponentSpriteBatch.DrawString(hilightFont, menuItemList[i], drawingPosition, hilightColor);
+                    drawingPosition.Y += hilightFont.LineSpacing;
 
                 }
                 else
