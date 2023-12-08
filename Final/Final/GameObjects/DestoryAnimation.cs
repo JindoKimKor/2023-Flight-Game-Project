@@ -50,7 +50,6 @@ namespace Final.GameObjects
                 destroyeGeneratingElapsedTime = 0f;
             }
 
-
             base.Update(gameTime);
         }
 

@@ -16,6 +16,7 @@ namespace Final
         private PlayScene playScene;
         private HelpScene helpScene;
         private CreditScene creditScene;
+        private FinishScene finishScene;
 
         private Song backgroundMusic;
 
@@ -50,9 +51,11 @@ namespace Final
             this.Components.Add(helpScene);
             playScene = new PlayScene(this);
             this.Components.Add(playScene);
+            playScene.EndGameEventHandler += EndPlayMode;
             creditScene = new CreditScene(this);
             this.Components.Add(creditScene);
-
+            finishScene = new FinishScene(this);
+            Components.Add(finishScene);
             backgroundMusic = this.Content.Load<Song>("sounds/backgroundMusic");
             MediaPlayer.IsRepeating = true;
 
@@ -68,6 +71,17 @@ namespace Final
                     gameScene.Hide();
                 }
             }
+        }
+
+        private void EndPlayMode()
+        {
+            playScene.Hide();
+            finishScene.Show();
+            Components.Remove(playScene);
+
+            playScene = new PlayScene(this);
+            playScene.EndGameEventHandler += EndPlayMode;
+            Components.Add(playScene);
         }
 
         protected override void Update(GameTime gameTime)
@@ -124,6 +138,11 @@ namespace Final
                     startScene.Show();
                 }
             }
+
+
+
+
+
             base.Update(gameTime);
 
         }

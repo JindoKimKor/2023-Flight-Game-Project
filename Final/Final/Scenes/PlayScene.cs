@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 
 namespace Final.Scenes
 {
+    public delegate void EndGameEventHandlerDelegate();
+
     public class PlayScene : GameScene
     {
         private SpriteBatch playSceneSpriteBatch;
@@ -28,7 +30,7 @@ namespace Final.Scenes
         private static List<SmallHelicopter> smallHelicopterList;
         
         private Texture2D fighterAircraftTexture;
-        private static bool isStartingSequence = true;
+        private static bool isStartingSequence;
         private Vector2 fighterAircraftStartingPosition;
         private float fighterAircraftFullyLoadedYPosition = Shared.stageSize.Y - 250;
         private static Vector2 fighterAircraftCurrentPosition;
@@ -52,6 +54,9 @@ namespace Final.Scenes
         public static Vector2 FighterAircraftCurrentPosition { get => fighterAircraftCurrentPosition; set => fighterAircraftCurrentPosition = value; }
         public static List<SmallHelicopter> SmallHelicopterList { get => smallHelicopterList; set => smallHelicopterList = value; }
         public static string TimeString { get => timeString; set => timeString = value; }
+        public BossHelicopter BossHelicopter { get => bossHelicopter; set => bossHelicopter = value; }
+
+        public event EndGameEventHandlerDelegate EndGameEventHandler;
 
         public PlayScene(Game game) : base(game)
         {
@@ -83,8 +88,11 @@ namespace Final.Scenes
             threeBulletModeRectangle = new Rectangle((int)Shared.stageSize.X - 120, (int)Shared.stageSize.Y - 150, (int)(threeBulletMode.Width * iconScale), (int)(threeBulletMode.Height * iconScale));
 
             gameBoard = new GameBoard(mainGame, playSceneSpriteBatch);
+            GameBoard.NumberOfDestoryedSmallHelicopter = 0;
+            GameBoard.NumberOfGotHit = 0;
             ComponentList.Add(gameBoard);
 
+            isStartingSequence = true;
         }
         private void InitializeAircraftDirections()
         {
@@ -178,6 +186,8 @@ namespace Final.Scenes
         private double destroyAnimationElapsedTime;
         private double destoryAnimationGeneratingSequence = 1000;
 
+        private double closeGameElapsedTime = 0;
+        private double closeGameInterval = 5000;
         public override void Update(GameTime gameTime)
         {
             double currentTime = gameTime.TotalGameTime.TotalMilliseconds;
@@ -292,6 +302,11 @@ namespace Final.Scenes
                     DestoryAnimation destoryAnimation = new DestoryAnimation(mainGame, playSceneSpriteBatch);
                     ComponentList.Add(destoryAnimation);
                     destroyAnimationElapsedTime = 0;
+                }
+                closeGameElapsedTime += gameTime.ElapsedGameTime.TotalMilliseconds;
+                if (closeGameElapsedTime >= closeGameInterval)
+                {
+                    EndGameEventHandler?.Invoke();
                 }
             }
 

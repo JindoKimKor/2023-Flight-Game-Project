@@ -7,6 +7,7 @@ using System.Linq;
 
 namespace Final.GameComponents
 {
+
     public class BossHelicopter : DrawableGameComponent
     {
         public enum BossStage
@@ -43,6 +44,7 @@ namespace Final.GameComponents
 
         public bool IsGotHit { get => isGotHit; set => isGotHit = value; }
 
+
         public BossHelicopter(Game game, SpriteBatch playSceneSpriteBatch) : base(game)
         {
 
@@ -78,6 +80,7 @@ namespace Final.GameComponents
         private Random random = new Random();
         private double shakeElapsedTime = 0;
         private double shakeInterval = 50;
+
 
         public override void Update(GameTime gameTime)
         {
