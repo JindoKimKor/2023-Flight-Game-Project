@@ -46,14 +46,14 @@ namespace Final
 
                     gameBoardSpriteBatch.DrawString(regularFont, $"Hitten: {numberOfGotHit}", hittenCountPosition + new Vector2(x, y), Color.Black);
                     gameBoardSpriteBatch.DrawString(regularFont, $"Enemy Kill: {numberOfDestoryedSmallHelicopter}", enemyKillCountPosition + new Vector2(x, y), Color.Black);
-                    gameBoardSpriteBatch.DrawString(regularFont, $"Time: {PlayScene.TimeString}", timeCountPosition + new Vector2(x, y), Color.White);
+                    gameBoardSpriteBatch.DrawString(regularFont, $"Time: {PlayScene.TimeString}", timeCountPosition + new Vector2(x, y), Color.Black);
                 }
 
             }
 
             gameBoardSpriteBatch.DrawString(regularFont, $"Hitten: {numberOfGotHit}", hittenCountPosition, Color.White);
             gameBoardSpriteBatch.DrawString(regularFont, $"Enemy Kill: {numberOfDestoryedSmallHelicopter}", enemyKillCountPosition, Color.White);
-            gameBoardSpriteBatch.DrawString(regularFont, $"Time: ", timeCountPosition, Color.White);
+            gameBoardSpriteBatch.DrawString(regularFont, $"Time: {PlayScene.TimeString}", timeCountPosition, Color.White);
             gameBoardSpriteBatch.End();
 
 
