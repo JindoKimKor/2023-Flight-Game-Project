@@ -24,6 +24,8 @@ namespace Final
         {
             gameBoardSpriteBatch = playSceneSpirteBatch;
             regularFont = game.Content.Load<SpriteFont>("fonts/RegularFont");
+            numberOfDestoryedSmallHelicopter = 0;
+            numberOfGotHit = 0;
         }
 
         public override void Update(GameTime gameTime)
@@ -55,7 +57,6 @@ namespace Final
             gameBoardSpriteBatch.DrawString(regularFont, $"Enemy Kill: {numberOfDestoryedSmallHelicopter}", enemyKillCountPosition, Color.White);
             gameBoardSpriteBatch.DrawString(regularFont, $"Time: {PlayScene.TimeString}", timeCountPosition, Color.White);
             gameBoardSpriteBatch.End();
-
 
             base.Draw(gameTime);
         }

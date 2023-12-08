@@ -76,7 +76,6 @@ namespace Final.GameComponents
             fireFrameDimension = new Vector2(fireTexture.Width, fireTexture.Height / FIRE_TEXTURE_ROWS);
             fireFrameIndex = (FIRE_TEXTURE_ROWS - 1);
             InitializeAnimationFrames();
-
         }
 
         private void InitializeAnimationFrames()
