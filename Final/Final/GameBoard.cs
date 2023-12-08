@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Final.Scenes;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -45,7 +46,7 @@ namespace Final
 
                     gameBoardSpriteBatch.DrawString(regularFont, $"Hitten: {numberOfGotHit}", hittenCountPosition + new Vector2(x, y), Color.Black);
                     gameBoardSpriteBatch.DrawString(regularFont, $"Enemy Kill: {numberOfDestoryedSmallHelicopter}", enemyKillCountPosition + new Vector2(x, y), Color.Black);
-                    gameBoardSpriteBatch.DrawString(regularFont, $"Time: ", timeCountPosition + new Vector2(x, y), Color.Black);
+                    gameBoardSpriteBatch.DrawString(regularFont, $"Time: {PlayScene.TimeString}", timeCountPosition + new Vector2(x, y), Color.White);
                 }
 
             }

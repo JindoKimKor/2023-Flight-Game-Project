@@ -37,6 +37,8 @@ namespace Final.Scenes
                     gameComponent.Update(gameTime);
                 }
             }
+
+
             base.Update(gameTime);
         }
         public override void Draw(GameTime gameTime)

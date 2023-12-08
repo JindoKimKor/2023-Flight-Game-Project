@@ -41,7 +41,8 @@ namespace Final.Scenes
         private Rectangle threeBulletModeRectangle;
         private float iconScale = 0.2f;
         private MainGame mainGame;
-
+        private TimeSpan totalTimeElapsed;
+        private static string timeString;
         private Dictionary<AircraftFrames, Vector2> aircraftDirectionsWithSpeed;
 
         private Dictionary<AircraftFrames, double> directionDurations;
@@ -49,6 +50,7 @@ namespace Final.Scenes
         public static bool IsStartingSequence { get => isStartingSequence; set => isStartingSequence = value; }
         public static Vector2 FighterAircraftCurrentPosition { get => fighterAircraftCurrentPosition; set => fighterAircraftCurrentPosition = value; }
         public static List<SmallHelicopter> SmallHelicopterList { get => smallHelicopterList; set => smallHelicopterList = value; }
+        public static string TimeString { get => timeString; set => timeString = value; }
 
         public PlayScene(Game game) : base(game)
         {
@@ -371,12 +373,17 @@ namespace Final.Scenes
                     smallHelicopter.RemovePassedOrExpolosed += RemoveAircraftBullet;
                     void RemoveAircraftBullet(SmallHelicopter smallHelicopter)
                     {
-                        GameBoard.NumberOfDestoryedSmallHelicopter++;
                         ComponentList.Remove(smallHelicopter);
                         SmallHelicopterList.Remove(smallHelicopter);
                         smallHelicopter.Dispose();
                     }
                 }
+            }
+            //tracking play time
+            if (Enabled == true && Visible == true)
+            {
+                totalTimeElapsed += gameTime.ElapsedGameTime;
+                TimeString = $"{totalTimeElapsed.Minutes:D2}:{totalTimeElapsed.Seconds:D2}";
             }
 
             base.Update(gameTime);

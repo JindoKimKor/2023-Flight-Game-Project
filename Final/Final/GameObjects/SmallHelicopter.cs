@@ -122,7 +122,7 @@ namespace Final.GameComponents
             //if It got destroyed
             if (isDestroyed)
             {
-                if (destroyeGeneratingElapsedTime >= 0.5f)
+                if (destroyeGeneratingElapsedTime >= 0.3f)
                 {
                     destroyedTextureIndex++;
                     destroyeGeneratingElapsedTime = 0f;
@@ -131,6 +131,7 @@ namespace Final.GameComponents
             if (destroyedTextureIndex >= DESTROY_ANIMATION_COLS - 1)
             {
                 RemovePassedOrExpolosed?.Invoke(this);
+                GameBoard.NumberOfDestoryedSmallHelicopter++;
             }
 
             base.Update(gameTime);
