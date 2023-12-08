@@ -23,6 +23,7 @@ namespace Final.Scenes
         private BossHelicopter bossHelicopter;
         private CollisionManager collisionManager;
         private SmallHelicopter smallHelicopter;
+        private GameBoard gameBoard;
         private static List<SmallHelicopter> smallHelicopterList;
         
         private Texture2D fighterAircraftTexture;
@@ -77,6 +78,9 @@ namespace Final.Scenes
             oneBulletModeRectangle = new Rectangle((int)Shared.stageSize.X - 120, (int)Shared.stageSize.Y - 250, (int)(oneBulletMode.Width * iconScale), (int)(oneBulletMode.Height * iconScale));
             threeBulletMode = mainGame.Content.Load<Texture2D>("images/threeBulletMode");
             threeBulletModeRectangle = new Rectangle((int)Shared.stageSize.X - 120, (int)Shared.stageSize.Y - 150, (int)(threeBulletMode.Width * iconScale), (int)(threeBulletMode.Height * iconScale));
+
+            gameBoard = new GameBoard(mainGame, playSceneSpriteBatch);
+            ComponentList.Add(gameBoard);
         }
         private void InitializeAircraftDirections()
         {
@@ -367,6 +371,7 @@ namespace Final.Scenes
                     smallHelicopter.RemovePassedOrExpolosed += RemoveAircraftBullet;
                     void RemoveAircraftBullet(SmallHelicopter smallHelicopter)
                     {
+                        GameBoard.NumberOfDestoryedSmallHelicopter++;
                         ComponentList.Remove(smallHelicopter);
                         SmallHelicopterList.Remove(smallHelicopter);
                         smallHelicopter.Dispose();

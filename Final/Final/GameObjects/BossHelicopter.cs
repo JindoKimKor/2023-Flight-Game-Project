@@ -3,15 +3,13 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Final.GameComponents
 {
-
-
-
     public class BossHelicopter : DrawableGameComponent
     {
         public enum BossStage
@@ -151,9 +149,10 @@ namespace Final.GameComponents
 
         public Rectangle GetHitbox()
         {
-            int margin = 50;
+            int scaledWidth = (int)(aliveBossFrameDimension.X * 0.9f);
+            int scaledHeight = (int)(aliveBossFrameDimension.Y * 0.9f);
 
-            return new Rectangle((int)BossHelicopterCurrentPosition.X + (margin / 2), (int)BossHelicopterCurrentPosition.Y, (int)aliveBossFrameDimension.X - (margin * 2), (int)aliveBossFrameDimension.Y);
+            return new Rectangle((int)BossHelicopterCurrentPosition.X, (int)BossHelicopterCurrentPosition.Y, scaledWidth, scaledHeight);
         }
 
     }

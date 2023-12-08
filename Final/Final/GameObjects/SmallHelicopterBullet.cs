@@ -69,5 +69,13 @@ namespace Final.GameComponents
 
             base.Draw(gameTime);
         }
+
+        public Rectangle GetHitbox()
+        {
+            int scaledWidth = (int)(frameDimension.X * 0.2f);
+            int scaledHeight = (int)(frameDimension.Y * 0.2f);
+
+            return new Rectangle((int)currentPosition.X, (int)currentPosition.Y, scaledWidth, scaledHeight);
+        }
     }
 }

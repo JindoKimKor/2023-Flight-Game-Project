@@ -8,25 +8,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Final.GameComponents
+namespace Final
 {
     public class MenuComponent : DrawableGameComponent
     {
         private SpriteBatch menuComponentSpriteBatch;
-        private SpriteFont regularFont, hilightFont;
+        private SpriteFont regularFont, highlightFont;
         private List<string> menuItemList;
 
         public int SelectedIndex { get; set; }
         private Vector2 menuItemsStartPosition;
         private Color regularColor = Color.PaleVioletRed;
-        private Color hilightColor = Color.DarkViolet;
+        private Color highlightColor = Color.DarkViolet;
 
         private KeyboardState oldKeyboardState;
-        public MenuComponent(Game game, SpriteBatch startSceneSpriteBatch, SpriteFont regularFont, SpriteFont hilightfont, string[] menuArray) : base(game)
+        public MenuComponent(Game game, SpriteBatch startSceneSpriteBatch, SpriteFont regularFont, SpriteFont highlightfont, string[] menuArray) : base(game)
         {
             menuComponentSpriteBatch = startSceneSpriteBatch;
             this.regularFont = regularFont;
-            this.hilightFont = hilightfont;
+            highlightFont = highlightfont;
             menuItemList = menuArray.ToList();
             menuItemsStartPosition = new Vector2(Shared.stageSize.X / 2, Shared.stageSize.Y / 2);
         }
@@ -66,10 +66,10 @@ namespace Final.GameComponents
 
                 if (i == SelectedIndex)
                 {
-                    itemWidth = hilightFont.MeasureString(menuItemList[i]).X;
+                    itemWidth = highlightFont.MeasureString(menuItemList[i]).X;
                     drawingPosition.X = (Shared.stageSize.X - itemWidth) / 2;
-                    menuComponentSpriteBatch.DrawString(hilightFont, menuItemList[i], drawingPosition, hilightColor);
-                    drawingPosition.Y += hilightFont.LineSpacing;
+                    menuComponentSpriteBatch.DrawString(highlightFont, menuItemList[i], drawingPosition, highlightColor);
+                    drawingPosition.Y += highlightFont.LineSpacing;
 
                 }
                 else

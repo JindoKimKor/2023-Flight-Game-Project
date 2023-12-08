@@ -26,7 +26,7 @@ namespace Final.GameComponents
 
         private float movingSpeed;
         private int randomXPosition;
-        private const int maxHealthCount = 50;
+        private const int maxHealthCount = 1;
         private int hitCount = 0;
 
         private bool isGotHit = false;
@@ -183,9 +183,10 @@ namespace Final.GameComponents
 
         public Rectangle GetHitbox()
         {
-            int margin = 30;
+            int scaledWidth = (int)(frameDimension.X * 0.2f);
+            int scaledHeight = (int)(frameDimension.Y * 0.2f);
 
-            return new Rectangle((int)currentPosition.X + (margin * 3), (int)currentPosition.Y, (int)frameDimension.X - 160, (int)frameDimension.Y);
+            return new Rectangle((int)currentPosition.X, (int)currentPosition.Y, scaledWidth, scaledHeight);
         }
     }
 }

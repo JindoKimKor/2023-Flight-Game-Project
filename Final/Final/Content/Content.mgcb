@@ -13,12 +13,12 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin fonts/HilightFont.spritefont
+#begin fonts/HighlightFont.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
-/build:fonts/HilightFont.spritefont;fonts/HighlightFont.spritefont
+/build:fonts/HighlightFont.spritefont
 
 #begin fonts/RegularFont.spritefont
 /importer:FontDescriptionImporter

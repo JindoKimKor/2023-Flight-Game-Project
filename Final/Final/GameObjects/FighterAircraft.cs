@@ -56,6 +56,10 @@ namespace Final.GameComponents
 
         private MainGame mainGame;
 
+        private bool isGotHit;
+        private int hitCount;
+        public bool IsGotHit { get => isGotHit; set => isGotHit = value; }
+        public int HitCount { get => hitCount; set => hitCount = value; }
 
         public FighterAircraft(Game game, SpriteBatch playSceneSpriteBatch, Texture2D fighterAircraftTexture, Vector2 startingPosition) : base(game)
         {
@@ -100,18 +104,6 @@ namespace Final.GameComponents
             }
         }
 
-        public void Hide()
-        {
-            this.Enabled = false;
-            this.Visible = false;
-        }
-
-        public void Show()
-        {
-            this.Enabled = true;
-            this.Visible = true;
-        }
-
         public void ChangeAirCraftPositionAndAnimationWithSpeed(AircraftFrames newFrame, Vector2 newPosition)
         {
             float screenEdgeMinimumX = (frameDimension.X / 2);
@@ -133,6 +125,7 @@ namespace Final.GameComponents
 
         private double elapsedTime = 0;
         private double frameInterval = 100;
+
         public override void Update(GameTime gameTime)
         {
 
@@ -155,12 +148,29 @@ namespace Final.GameComponents
             base.Update(gameTime);
 
         }
+
+        private double hitEffectTimer = 0.005;
         public override void Draw(GameTime gameTime)
         {
             KeyboardState keyboardState = Keyboard.GetState();
 
             fighterAircraftSpriteBatch.Begin();
-            fighterAircraftSpriteBatch.Draw(fighterAircraftTexture, PlayScene.FighterAircraftCurrentPosition, animationFrames[(int)currentFrame], Color.White, 0f, textureOrigin, 0.8f, SpriteEffects.None, 0f);
+
+            if (IsGotHit)
+            {
+                hitEffectTimer -= gameTime.ElapsedGameTime.TotalSeconds;
+                if (hitEffectTimer <= 0)
+                {
+                    IsGotHit = false;
+                    hitCount++;
+                }
+                fighterAircraftSpriteBatch.Draw(fighterAircraftTexture, PlayScene.FighterAircraftCurrentPosition, animationFrames[(int)currentFrame], Color.Red, 0f, textureOrigin, 0.8f, SpriteEffects.None, 0f);
+            }
+            else
+            {
+                fighterAircraftSpriteBatch.Draw(fighterAircraftTexture, PlayScene.FighterAircraftCurrentPosition, animationFrames[(int)currentFrame], Color.White, 0f, textureOrigin, 0.8f, SpriteEffects.None, 0f);
+            }
+
 
             if (keyboardState.IsKeyDown(Keys.Space) && !PlayScene.IsStartingSequence)
             {
@@ -171,6 +181,14 @@ namespace Final.GameComponents
 
 
             base.Draw(gameTime);
+        }
+
+        public Rectangle GetHitbox()
+        {
+            int scaledWidth = (int)(frameDimension.X * 0.8f);
+            int scaledHeight = (int)(frameDimension.Y * 0.8f);
+
+            return new Rectangle((int)PlayScene.FighterAircraftCurrentPosition.X, (int)PlayScene.FighterAircraftCurrentPosition.Y, scaledWidth, scaledHeight);
         }
     }
 }

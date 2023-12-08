@@ -16,7 +16,7 @@ namespace Final.GameComponents
         private MainGame mainGame;
 
         private SpriteBatch bossBasicBulletSpriteBatch;
-        private Texture2D basicBulletTexture;
+        private Texture2D bossBulletTexture;
         private Vector2 frameDimension;
         private List<Rectangle> animationFrames;
         private const int BASIC_BULLET_ROWS = 4;
@@ -34,8 +34,8 @@ namespace Final.GameComponents
         {
             mainGame = (MainGame)game;
             bossBasicBulletSpriteBatch = playSceneSpriteBatch;
-            basicBulletTexture = mainGame.Content.Load<Texture2D>("images/bossHelicopterBasicBullet");
-            frameDimension = new Vector2(basicBulletTexture.Width / BASIC_BULLET_ROWS, basicBulletTexture.Height);
+            bossBulletTexture = mainGame.Content.Load<Texture2D>("images/bossHelicopterBasicBullet");
+            frameDimension = new Vector2(bossBulletTexture.Width / BASIC_BULLET_ROWS, bossBulletTexture.Height);
             animationFrames = new List<Rectangle>();
             currentPosition = BossHelicopter.BossHelicopterCurrentPosition;
             originTexture = new Vector2(frameDimension.X / 2, frameDimension.Y / 2);
@@ -53,8 +53,8 @@ namespace Final.GameComponents
         {
             mainGame = (MainGame)game;
             bossBasicBulletSpriteBatch = playSceneSpriteBatch;
-            basicBulletTexture = mainGame.Content.Load<Texture2D>("images/bossHelicopterBasicBullet");
-            frameDimension = new Vector2(basicBulletTexture.Width / BASIC_BULLET_ROWS, basicBulletTexture.Height);
+            bossBulletTexture = mainGame.Content.Load<Texture2D>("images/bossHelicopterBasicBullet");
+            frameDimension = new Vector2(bossBulletTexture.Width / BASIC_BULLET_ROWS, bossBulletTexture.Height);
             animationFrames = new List<Rectangle>();
             switch (startingPosition)
             {
@@ -110,11 +110,19 @@ namespace Final.GameComponents
         {
             bossBasicBulletSpriteBatch.Begin();
 
-            bossBasicBulletSpriteBatch.Draw(basicBulletTexture, currentPosition, animationFrames[currentFrameIndex], Color.White, 0f, originTexture, 0.07f, SpriteEffects.None, 0f);
+            bossBasicBulletSpriteBatch.Draw(bossBulletTexture, currentPosition, animationFrames[currentFrameIndex], Color.White, 0f, originTexture, 0.07f, SpriteEffects.None, 0f);
 
 
             bossBasicBulletSpriteBatch.End();
             base.Draw(gameTime);
+        }
+
+        public Rectangle GetHitbox()
+        {
+            int scaledWidth = (int)(frameDimension.X * 0.1f);
+            int scaledHeight = (int)(frameDimension.Y * 0.1f);
+
+            return new Rectangle((int)currentPosition.X, (int)currentPosition.Y, scaledWidth, scaledHeight);
         }
     }
 }

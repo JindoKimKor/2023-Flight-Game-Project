@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using System.Drawing.Imaging;
 
 
 namespace Final.GameComponents
@@ -128,7 +129,10 @@ namespace Final.GameComponents
 
         public Rectangle GetHitbox()
         {
-            return new Rectangle((int)currentPosition.X, (int)currentPosition.Y, (int)bulletFrameDimension.X, (int)bulletFrameDimension.Y);
+            int scaledWidth = (int)(bulletFrameDimension.X * 0.2f);
+            int scaledHeight = (int)(bulletFrameDimension.Y * 0.2f);
+
+            return new Rectangle((int)currentPosition.X, (int)currentPosition.Y, scaledWidth, scaledHeight);
         }
     }
 }
