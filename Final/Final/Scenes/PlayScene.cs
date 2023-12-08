@@ -1,4 +1,5 @@
 ﻿using Final.GameComponents;
+using Final.GameObjects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -83,6 +84,7 @@ namespace Final.Scenes
 
             gameBoard = new GameBoard(mainGame, playSceneSpriteBatch);
             ComponentList.Add(gameBoard);
+
         }
         private void InitializeAircraftDirections()
         {
@@ -171,6 +173,10 @@ namespace Final.Scenes
 
         private double smallHelicopterElapsedTime;
         private double smallHelicopterGeneratingSequence = 3000;
+
+
+        private double destroyAnimationElapsedTime;
+        private double destoryAnimationGeneratingSequence = 1000;
 
         public override void Update(GameTime gameTime)
         {
@@ -270,10 +276,22 @@ namespace Final.Scenes
                         bossBulletElapsedTime = 0;
                     }
                 }
+
                 void RemoveBossBasictBullet(BossHelicopterBasicBullet bossHelicopterBasicBullet)
                 {
                     ComponentList.Remove(bossHelicopterBasicBullet);
                     bossHelicopterBasicBullet.Dispose();
+                }
+            }
+
+            if (bossHelicopter.bossStage == BossHelicopter.BossStage.destroyed)
+            {
+                destroyAnimationElapsedTime += gameTime.ElapsedGameTime.TotalMilliseconds;
+                if (destroyAnimationElapsedTime >= destoryAnimationGeneratingSequence)
+                {
+                    DestoryAnimation destoryAnimation = new DestoryAnimation(mainGame, playSceneSpriteBatch);
+                    ComponentList.Add(destoryAnimation);
+                    destroyAnimationElapsedTime = 0;
                 }
             }
 

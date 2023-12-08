@@ -55,7 +55,6 @@ namespace Final
 
             backgroundMusic = this.Content.Load<Song>("sounds/backgroundMusic");
             MediaPlayer.IsRepeating = true;
-            MediaPlayer.Play(backgroundMusic);
 
             startScene.Show();
         }
@@ -107,7 +106,7 @@ namespace Final
 
                 if(MediaPlayer.State != MediaState.Playing)
                 {
-                    MediaPlayer.Play(backgroundMusic);
+                    //MediaPlayer.Play(backgroundMusic);
                 }
             }
             else

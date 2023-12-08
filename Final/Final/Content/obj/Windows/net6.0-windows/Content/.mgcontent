@@ -11,6 +11,7 @@
     <File>C:/Users/blitz/OneDrive - Conestoga College/3rdSemester/PROG2370/Projects/AirborneAssault/Final/Final/Content/images/aircraftBasicAttackBullet.png</File>
     <File>C:/Users/blitz/OneDrive - Conestoga College/3rdSemester/PROG2370/Projects/AirborneAssault/Final/Final/Content/images/background.png</File>
     <File>C:/Users/blitz/OneDrive - Conestoga College/3rdSemester/PROG2370/Projects/AirborneAssault/Final/Final/Content/images/bossHelicopterBasicBullet.png</File>
+    <File>C:/Users/blitz/OneDrive - Conestoga College/3rdSemester/PROG2370/Projects/AirborneAssault/Final/Final/Content/images/deadBossHelicopter.png</File>
     <File>C:/Users/blitz/OneDrive - Conestoga College/3rdSemester/PROG2370/Projects/AirborneAssault/Final/Final/Content/images/destroyAnimation.png</File>
     <File>C:/Users/blitz/OneDrive - Conestoga College/3rdSemester/PROG2370/Projects/AirborneAssault/Final/Final/Content/images/fighterAircraft.png</File>
     <File>C:/Users/blitz/OneDrive - Conestoga College/3rdSemester/PROG2370/Projects/AirborneAssault/Final/Final/Content/images/firstStageBossHelicopter.png</File>
@@ -22,6 +23,7 @@
     <File>C:/Users/blitz/OneDrive - Conestoga College/3rdSemester/PROG2370/Projects/AirborneAssault/Final/Final/Content/sounds/backgroundMusic.mp3</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
