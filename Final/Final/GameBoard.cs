@@ -33,9 +33,26 @@ namespace Final
         public override void Draw(GameTime gameTime)
         {
             gameBoardSpriteBatch.Begin();
+            float outline = 2.0f;
+            Vector2 hittenCountPosition = new Vector2(30f, 780f);
+            Vector2 enemyKillCountPosition = new Vector2(30f, 830f);
+            Vector2 timeCountPosition = new Vector2(30f, 880f);
 
-            gameBoardSpriteBatch.DrawString(regularFont, $"The Number of Hitten: {numberOfGotHit}", new Vector2(50f, 50f), Color.White);
-            gameBoardSpriteBatch.DrawString(regularFont, $"The Number of Small Helicopter: {numberOfDestoryedSmallHelicopter}", new Vector2(70f, 70f), Color.White);
+            for (float x = -outline; x <= outline; x += 1)
+            {
+                for (float y = -outline; y <= outline; y += 1)
+                {
+
+                    gameBoardSpriteBatch.DrawString(regularFont, $"Hitten: {numberOfGotHit}", hittenCountPosition + new Vector2(x, y), Color.Black);
+                    gameBoardSpriteBatch.DrawString(regularFont, $"Enemy Kill: {numberOfDestoryedSmallHelicopter}", enemyKillCountPosition + new Vector2(x, y), Color.Black);
+                    gameBoardSpriteBatch.DrawString(regularFont, $"Time: ", timeCountPosition + new Vector2(x, y), Color.Black);
+                }
+
+            }
+
+            gameBoardSpriteBatch.DrawString(regularFont, $"Hitten: {numberOfGotHit}", hittenCountPosition, Color.White);
+            gameBoardSpriteBatch.DrawString(regularFont, $"Enemy Kill: {numberOfDestoryedSmallHelicopter}", enemyKillCountPosition, Color.White);
+            gameBoardSpriteBatch.DrawString(regularFont, $"Time: ", timeCountPosition, Color.White);
             gameBoardSpriteBatch.End();
 
 
