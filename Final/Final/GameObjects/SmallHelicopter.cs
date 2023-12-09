@@ -205,7 +205,7 @@ namespace Final.GameComponents
                 isBeingDestroyed = true;
                 isDestructionInitiated = true;
                 destructionSound.Play();
-                GameBoard.NumberOfDestoryedSmallHelicopter++;
+                PlayScene.NumberOfDestoryedSmallHelicopter++;
             }
 
             //if It got destroyed

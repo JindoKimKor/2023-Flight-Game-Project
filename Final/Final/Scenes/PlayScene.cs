@@ -48,6 +48,12 @@ namespace Final.Scenes
         private TimeSpan totalTimeElapsed;
         private static string timeString;
 
+
+        private static int numberOfDestoryedSmallHelicopter;
+        private static int numberOfGotHit;
+
+        public static int NumberOfDestoryedSmallHelicopter { get => numberOfDestoryedSmallHelicopter; set => numberOfDestoryedSmallHelicopter = value; }
+        public static int NumberOfGotHit { get => numberOfGotHit; set => numberOfGotHit = value; }
         // Properties
         public static List<SmallHelicopter> SmallHelicopterList { get => smallHelicopterList; set => smallHelicopterList = value; }
         public static string TimeString { get => timeString; set => timeString = value; }
@@ -82,12 +88,6 @@ namespace Final.Scenes
             oneBulletModeRectangle = new Rectangle((int)Shared.stageSize.X - 120, (int)Shared.stageSize.Y - 250, (int)(singleBulletModeTexture.Width * iconScale), (int)(singleBulletModeTexture.Height * iconScale));
             tripleBulletModeTexture = mainGame.Content.Load<Texture2D>("images/threeBulletMode");
             threeBulletModeRectangle = new Rectangle((int)Shared.stageSize.X - 120, (int)Shared.stageSize.Y - 150, (int)(tripleBulletModeTexture.Width * iconScale), (int)(tripleBulletModeTexture.Height * iconScale));
-
-            // Initialize game board
-            gameBoard = new GameBoard(mainGame, playSceneSpriteBatch);
-            GameBoard.NumberOfDestoryedSmallHelicopter = 0;
-            GameBoard.NumberOfGotHit = 0;
-            ComponentList.Add(gameBoard);
         }
 
         // Aircraft bullet management
@@ -218,6 +218,9 @@ namespace Final.Scenes
             if (bossBulletGenerationTime > 3000)
             {
                 isBossBulletActive = true;
+                // Initialize game board
+                gameBoard = new GameBoard(mainGame, playSceneSpriteBatch);
+                ComponentList.Add(gameBoard);
             }
             if (bossBulletStopTime > 3000)
             {
