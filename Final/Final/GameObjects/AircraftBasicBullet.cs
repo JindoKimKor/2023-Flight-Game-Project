@@ -11,126 +11,139 @@ namespace Final.GameComponents
 
     public class AircraftBasicBullet : DrawableGameComponent
     {
-        private SpriteBatch basicBulletSpriteBatch;
-        private Texture2D basicBulletTexture;
-        private Vector2 currentPosition;
+        // SpriteBatch and texture for rendering the basic bullet
+        private SpriteBatch spriteBatch;
+        private Texture2D bulletTexture;
 
-        private Vector2 originTexture;
-        private float maxBulletYCoordinate;
-        private const float movingSpeed = 30f;
-        private string direction;
-        private Vector2 bulletFrameDimension;
+        // Animation frames and dimensions for the bullet
+        private Vector2 bulletFrameSize;
         private List<Rectangle> animationFrames;
         private const int BASIC_BULLET_ROWS = 6;
+
+        // Position and movement properties of the bullet
+        private Vector2 currentPosition;
+        private Vector2 originTexture;
+        private float maxBulletYCoordinate;
+        private const float INITIAL_Y_OFFSET = 30f;
+        private const float BULLET_SPEED = 12f;
+        private string bulletDirection; // Direction of bullet movement: "left", "center", "right"
+
+        // Animation control for the bullet
         private int currentFrameIndex = 0;
+        private double elapsedTime = 0;
+        private double frameInterval = 50;
 
-
+        // Main game reference for accessing shared resources
         private MainGame mainGame;
 
+        private const float HORIZONTAL_MOVEMENT_FACTOR = 0.3f;
+        private const float VERTICAL_MOVEMENT_FACTOR = 0.7f;
+
+        // Delegate for removing bullet when it passes a certain Y coordinate
         public RemovePassedMinYCoordinateBullet RemoveBulletDelegate { get; set; }
 
         public AircraftBasicBullet(Game game, SpriteBatch playSceneAircraftSpriteBatch) : base(game)
         {
-            mainGame = (MainGame)game;
-            basicBulletSpriteBatch = playSceneAircraftSpriteBatch;
-            currentPosition = PlayScene.FighterAircraftCurrentPosition;
-            currentPosition.Y = currentPosition.Y - 30f;
-            basicBulletTexture = mainGame.Content.Load<Texture2D>("images/aircraftBasicAttackBullet");
-            bulletFrameDimension = new Vector2(basicBulletTexture.Width / BASIC_BULLET_ROWS, basicBulletTexture.Height);
-            maxBulletYCoordinate = -basicBulletTexture.Height;
-            originTexture = new Vector2(bulletFrameDimension.X / 2, bulletFrameDimension.Y / 2);
-            animationFrames = new List<Rectangle>();
-
-            for (int c = 0; c < BASIC_BULLET_ROWS; c++)
-            {
-                int x = c * (int)bulletFrameDimension.X;
-
-                animationFrames.Add(new Rectangle(x, 0, (int)bulletFrameDimension.X, (int)bulletFrameDimension.Y));
-            }
-            direction = "";
+            InitializeBullet(game, playSceneAircraftSpriteBatch, "");
         }
+
         public AircraftBasicBullet(Game game, SpriteBatch playSceneAircraftSpriteBatch, string direction) : base(game)
         {
-            mainGame = (MainGame)game;
-            basicBulletSpriteBatch = playSceneAircraftSpriteBatch;
-            currentPosition = PlayScene.FighterAircraftCurrentPosition;
-            currentPosition.Y = currentPosition.Y - 30f;
-            basicBulletTexture = mainGame.Content.Load<Texture2D>("images/aircraftBasicAttackBullet");
-            bulletFrameDimension = new Vector2(basicBulletTexture.Width / BASIC_BULLET_ROWS, basicBulletTexture.Height);
-            maxBulletYCoordinate = -basicBulletTexture.Height;
-            originTexture = new Vector2(bulletFrameDimension.X / 2, bulletFrameDimension.Y / 2);
-            animationFrames = new List<Rectangle>();
-
-            for (int c = 0; c < BASIC_BULLET_ROWS; c++)
-            {
-                int x = c * (int)bulletFrameDimension.X;
-
-                animationFrames.Add(new Rectangle(x, 0, (int)bulletFrameDimension.X, (int)bulletFrameDimension.Y));
-            }
-            this.direction = direction;
+            InitializeBullet(game, playSceneAircraftSpriteBatch, direction);
         }
 
+        // Initializes the basic bullet with common setup
+        private void InitializeBullet(Game game, SpriteBatch spriteBatch, string direction)
+        {
+            mainGame = (MainGame)game;
+            this.spriteBatch = spriteBatch;
+            currentPosition = FighterAircraft.AircraftCurrentPosition - new Vector2(0, INITIAL_Y_OFFSET);
+            bulletTexture = mainGame.Content.Load<Texture2D>("images/aircraftBasicAttackBullet");
+            bulletFrameSize = new Vector2(bulletTexture.Width / BASIC_BULLET_ROWS, bulletTexture.Height);
+            maxBulletYCoordinate = -bulletTexture.Height;
+            originTexture = new Vector2(bulletFrameSize.X / 2, bulletFrameSize.Y / 2);
+            animationFrames = GenerateAnimationFrames();
+            this.bulletDirection = direction;
+        }
 
+        // Generates animation frames for the bullet
+        private List<Rectangle> GenerateAnimationFrames()
+        {
+            List<Rectangle> frames = new List<Rectangle>();
+            for (int c = 0; c < BASIC_BULLET_ROWS; c++)
+            {
+                int x = c * (int)bulletFrameSize.X;
+                frames.Add(new Rectangle(x, 0, (int)bulletFrameSize.X, (int)bulletFrameSize.Y));
+            }
+            return frames;
+        }
 
-        private double elapsedTime = 0;
-        private double frameInterval = 50;
         public override void Update(GameTime gameTime)
         {
-            elapsedTime += gameTime.ElapsedGameTime.TotalMilliseconds;
-            if (elapsedTime >= frameInterval)
-            {
-                currentFrameIndex++;
-                switch (direction)
-                {
-                    case "left":
-                        currentPosition.X -= movingSpeed * 0.4f;
-                        currentPosition.Y -= movingSpeed * 0.7f;
-                        break;
-                    case "center":
-                        currentPosition.Y -= movingSpeed;
-                        break;
-                    case "right":
-                        currentPosition.X += movingSpeed * 0.4f;
-                        currentPosition.Y -= movingSpeed * 0.7f;
-                        break;
-                    default:
-                        currentPosition.Y -= movingSpeed;
-                        break;
-                }
-                if (currentFrameIndex >= BASIC_BULLET_ROWS)
-                {
-                    currentFrameIndex = 0;
-                }
-                elapsedTime = 0;
-            }
-            if (currentPosition.Y <= maxBulletYCoordinate)
-            {
-                //It got called only if It's not null
-                RemoveBulletDelegate?.Invoke(this);
-            }
-            if (true)
-            {
 
-            }
+            UpdateAnimationFrame(gameTime);
+
+            UpdateBulletPosition();
+
+            CheckBulletPositionAndRemove();
+
             base.Update(gameTime);
         }
 
         public override void Draw(GameTime gameTime)
         {
-            basicBulletSpriteBatch.Begin();
+            spriteBatch.Begin();
 
-            basicBulletSpriteBatch.Draw(basicBulletTexture, currentPosition, animationFrames[currentFrameIndex], Color.White, 0f, originTexture, 0.2f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(bulletTexture, currentPosition, animationFrames[currentFrameIndex], Color.White, 0f, originTexture, 0.2f, SpriteEffects.None, 0f);
 
-            basicBulletSpriteBatch.End();
+            spriteBatch.End();
 
 
             base.Draw(gameTime);
         }
+        private void UpdateAnimationFrame(GameTime gameTime)
+        {
+            elapsedTime += gameTime.ElapsedGameTime.TotalMilliseconds;
+            if (elapsedTime >= frameInterval)
+            {
+                // Setting the index
+                currentFrameIndex = (currentFrameIndex + 1) % BASIC_BULLET_ROWS;
+                elapsedTime = 0;
+            }
+        }
 
+        private void UpdateBulletPosition()
+        {
+            switch (bulletDirection)
+            {
+                case "left":
+                    currentPosition.X -= BULLET_SPEED * HORIZONTAL_MOVEMENT_FACTOR;
+                    currentPosition.Y -= BULLET_SPEED * VERTICAL_MOVEMENT_FACTOR;
+                    break;
+                case "center":
+                    currentPosition.Y -= BULLET_SPEED;
+                    break;
+                case "right":
+                    currentPosition.X += BULLET_SPEED * HORIZONTAL_MOVEMENT_FACTOR;
+                    currentPosition.Y -= BULLET_SPEED * VERTICAL_MOVEMENT_FACTOR;
+                    break;
+                default:
+                    currentPosition.Y -= BULLET_SPEED;
+                    break;
+            }
+        }
+        private void CheckBulletPositionAndRemove()
+        {
+            if (currentPosition.Y <= maxBulletYCoordinate)
+            {
+                //It got called only if It's not null
+                RemoveBulletDelegate?.Invoke(this);
+            }
+        }
         public Rectangle GetHitbox()
         {
-            int scaledWidth = (int)(bulletFrameDimension.X * 0.2f);
-            int scaledHeight = (int)(bulletFrameDimension.Y * 0.2f);
+            int scaledWidth = (int)(bulletFrameSize.X * 0.2f);
+            int scaledHeight = (int)(bulletFrameSize.Y * 0.2f);
 
             return new Rectangle((int)currentPosition.X, (int)currentPosition.Y, scaledWidth, scaledHeight);
         }

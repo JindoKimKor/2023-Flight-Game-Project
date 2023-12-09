@@ -188,3 +188,7 @@ C:\Users\blitz\OneDrive - Conestoga College\3rdSemester\PROG2370\Projects\Airbor
 C:\Users\blitz\OneDrive - Conestoga College\3rdSemester\PROG2370\Projects\AirborneAssault\Final\Final\bin\Debug\net6.0-windows\Content\images\Spacebar.xnb
 C:\Users\blitz\OneDrive - Conestoga College\3rdSemester\PROG2370\Projects\AirborneAssault\Final\Final\bin\Debug\net6.0-windows\Content\images\wasd (1).xnb
 C:\Users\blitz\OneDrive - Conestoga College\3rdSemester\PROG2370\Projects\AirborneAssault\Final\Final\bin\Debug\net6.0-windows\Content\images\deadBossHelicopter.xnb
+C:\Users\blitz\OneDrive - Conestoga College\3rdSemester\PROG2370\Projects\AirborneAssault\Final\Final\bin\Debug\net6.0-windows\Content\sounds\destroyedSound.xnb
+C:\Users\blitz\OneDrive - Conestoga College\3rdSemester\PROG2370\Projects\AirborneAssault\Final\Final\bin\Debug\net6.0-windows\Content\sounds\hitSound.xnb
+C:\Users\blitz\OneDrive - Conestoga College\3rdSemester\PROG2370\Projects\AirborneAssault\Final\Final\bin\Debug\net6.0-windows\Content\sounds\playSceneBackgroundSound.xnb
+C:\Users\blitz\OneDrive - Conestoga College\3rdSemester\PROG2370\Projects\AirborneAssault\Final\Final\bin\Debug\net6.0-windows\Content\images\bossSpecialAttack.xnb

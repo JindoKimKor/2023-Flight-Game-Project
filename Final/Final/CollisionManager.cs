@@ -1,6 +1,7 @@
 ﻿using Final.GameComponents;
 using Final.Scenes;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,12 +12,14 @@ namespace Final
 {
     public class CollisionManager : GameComponent
     {
+        private MainGame mainGame;
         private List<GameComponent> gameSceneGameComponents;
         private BossHelicopter bossHelicopter;
         private FighterAircraft fighterAircraft;
 
         public CollisionManager(Game game, PlayScene playScene, BossHelicopter bossHelicopter, FighterAircraft fighterAircraft) : base(game)
         {
+            mainGame = (MainGame)game;
             this.gameSceneGameComponents = playScene.ComponentList;
             this.bossHelicopter = bossHelicopter;
             this.fighterAircraft = fighterAircraft;
@@ -92,7 +95,7 @@ namespace Final
 
                     if (bossHitBox.Intersects(aircraftBulletHitBox))
                     {
-                        bossHelicopter.IsGotHit = true;
+                        bossHelicopter.IsHit = true;
                         bulletsToRemove.Add(eachAircraftBullet);
                     }
                     foreach (SmallHelicopter smallHelicopter in PlayScene.SmallHelicopterList)
@@ -100,9 +103,8 @@ namespace Final
                         Rectangle smallHelicopterHitBox = smallHelicopter.GetHitbox();
                         if (smallHelicopterHitBox.Intersects(aircraftBulletHitBox))
                         {
-
                             bulletsToRemove.Add(eachAircraftBullet);
-                            smallHelicopter.IsGotHit = true;
+                            smallHelicopter.IsHit = true;
                         }
                     }
                 }

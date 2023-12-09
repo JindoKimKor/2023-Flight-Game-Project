@@ -35,8 +35,8 @@ namespace Final.GameObjects
             originTexture = new Vector2(destroyAnimationFrameDimension.X / 2, destroyAnimationFrameDimension.Y / 2);
             Random random = new Random();
             destroyAnimationPosition = new Vector2(
-                random.Next((int)BossHelicopter.BossHelicopterCurrentPosition.X - 50, (int)BossHelicopter.BossHelicopterCurrentPosition.X + 50),
-                random.Next((int)BossHelicopter.BossHelicopterCurrentPosition.Y - 50, (int)BossHelicopter.BossHelicopterCurrentPosition.Y + 50));
+                random.Next((int)BossHelicopter.BossCurrentPosition.X - 50, (int)BossHelicopter.BossCurrentPosition.X + 50),
+                random.Next((int)BossHelicopter.BossCurrentPosition.Y - 50, (int)BossHelicopter.BossCurrentPosition.Y + 50));
         }
 
         private float destroyeGeneratingElapsedTime = 0;
