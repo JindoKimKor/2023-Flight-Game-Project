@@ -49,7 +49,7 @@ namespace Final
                     if (fighterAircraftHixBox.Intersects(bossBulletHitBox))
                     {
                         fighterAircraft.IsGotHit = true;
-                        GameBoard.NumberOfGotHit++;
+                        PlayScene.NumberOfGotHit++;
                         bossBulletsToRemove.Add(eachBossBullet);
                     }
                 }
@@ -59,7 +59,7 @@ namespace Final
                     if (fighterAircraftHixBox.Intersects(smallBulletHitBox))
                     {
                         fighterAircraft.IsGotHit = true;
-                        GameBoard.NumberOfGotHit++;
+                        PlayScene.NumberOfGotHit++;
                         smallBulletsToRemove.Add(eachSmallBullet);
                     }
                 }

@@ -14,18 +14,12 @@ namespace Final
     {
         private SpriteBatch gameBoardSpriteBatch;
         private SpriteFont regularFont;
-        private static int numberOfDestoryedSmallHelicopter;
-        private static int numberOfGotHit;
 
-        public static int NumberOfDestoryedSmallHelicopter { get => numberOfDestoryedSmallHelicopter; set => numberOfDestoryedSmallHelicopter = value; }
-        public static int NumberOfGotHit { get => numberOfGotHit; set => numberOfGotHit = value; }
 
         public GameBoard(Game game, SpriteBatch playSceneSpirteBatch) : base(game)
         {
             gameBoardSpriteBatch = playSceneSpirteBatch;
-            regularFont = game.Content.Load<SpriteFont>("fonts/RegularFont");
-            numberOfDestoryedSmallHelicopter = 0;
-            numberOfGotHit = 0;
+            regularFont = game.Content.Load<SpriteFont>("fonts/RegularFont");;
         }
 
         public override void Update(GameTime gameTime)
@@ -46,15 +40,15 @@ namespace Final
                 for (float y = -outline; y <= outline; y += 1)
                 {
 
-                    gameBoardSpriteBatch.DrawString(regularFont, $"Hitten: {numberOfGotHit}", hittenCountPosition + new Vector2(x, y), Color.Black);
-                    gameBoardSpriteBatch.DrawString(regularFont, $"Enemy Kill: {numberOfDestoryedSmallHelicopter}", enemyKillCountPosition + new Vector2(x, y), Color.Black);
+                    gameBoardSpriteBatch.DrawString(regularFont, $"Hitten: {PlayScene.NumberOfGotHit}", hittenCountPosition + new Vector2(x, y), Color.Black);
+                    gameBoardSpriteBatch.DrawString(regularFont, $"Enemy Kill: {PlayScene.NumberOfDestoryedSmallHelicopter}", enemyKillCountPosition + new Vector2(x, y), Color.Black);
                     gameBoardSpriteBatch.DrawString(regularFont, $"Time: {PlayScene.TimeString}", timeCountPosition + new Vector2(x, y), Color.Black);
                 }
 
             }
 
-            gameBoardSpriteBatch.DrawString(regularFont, $"Hitten: {numberOfGotHit}", hittenCountPosition, Color.White);
-            gameBoardSpriteBatch.DrawString(regularFont, $"Enemy Kill: {numberOfDestoryedSmallHelicopter}", enemyKillCountPosition, Color.White);
+            gameBoardSpriteBatch.DrawString(regularFont, $"Hitten: {PlayScene.NumberOfGotHit}", hittenCountPosition, Color.White);
+            gameBoardSpriteBatch.DrawString(regularFont, $"Enemy Kill: {PlayScene.NumberOfDestoryedSmallHelicopter}", enemyKillCountPosition, Color.White);
             gameBoardSpriteBatch.DrawString(regularFont, $"Time: {PlayScene.TimeString}", timeCountPosition, Color.White);
             gameBoardSpriteBatch.End();
 

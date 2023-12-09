@@ -78,8 +78,8 @@ namespace Final
         {
             playScene.Hide();
             finishScene.Show();
-            Components.Remove(playScene);
 
+            Components.Remove(playScene);
             playScene = new PlayScene(this);
             playScene.EndGameEventHandler += EndPlayMode;
             Components.Add(playScene);

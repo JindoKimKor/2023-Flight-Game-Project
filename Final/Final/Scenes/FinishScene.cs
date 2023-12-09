@@ -21,9 +21,6 @@ namespace Final.Scenes
         private double delay = 1;
         private double delayCounter;
         private bool flag = true;
-
-        private int numberOfDestoryedSmallHelicopter = GameBoard.NumberOfDestoryedSmallHelicopter;
-        private int numberOfGotHit = GameBoard.NumberOfGotHit;
         
         public FinishScene(Game game) : base(game)
         {
@@ -61,15 +58,15 @@ namespace Final.Scenes
             finishSceneSpriteBatch.DrawString(hilightFont, PlayScene.TimeString, new Vector2(350, 390), Color.DarkViolet);
 
             finishSceneSpriteBatch.DrawString(regularFont, "Enemy Kill: ", new Vector2(150, 500), Color.PaleVioletRed);
-            finishSceneSpriteBatch.DrawString(hilightFont, GameBoard.NumberOfDestoryedSmallHelicopter.ToString(), new Vector2(350, 490), Color.DarkViolet);
+            finishSceneSpriteBatch.DrawString(hilightFont, PlayScene.NumberOfDestoryedSmallHelicopter.ToString(), new Vector2(350, 490), Color.DarkViolet);
 
             finishSceneSpriteBatch.DrawString(regularFont, "Hitten: ", new Vector2(150, 600), Color.PaleVioletRed);
-            finishSceneSpriteBatch.DrawString(hilightFont, numberOfGotHit.ToString(), new Vector2(350, 590), Color.DarkViolet);
+            finishSceneSpriteBatch.DrawString(hilightFont, PlayScene.NumberOfGotHit.ToString(), new Vector2(350, 590), Color.DarkViolet);
             
             finishSceneSpriteBatch.DrawString(regularFont, "Total Score: ", new Vector2(150, 800), Color.PaleVioletRed);
             if (flag)
             {
-                finishSceneSpriteBatch.DrawString(hilightFont, (GameBoard.NumberOfDestoryedSmallHelicopter - GameBoard.NumberOfGotHit).ToString(), new Vector2(350, 790), Color.DarkViolet); 
+                finishSceneSpriteBatch.DrawString(hilightFont, (PlayScene.NumberOfDestoryedSmallHelicopter - PlayScene.NumberOfGotHit).ToString(), new Vector2(350, 790), Color.DarkViolet); 
             }
 
 
