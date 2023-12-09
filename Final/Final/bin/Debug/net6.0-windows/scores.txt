@@ -1,0 +1,14 @@
+DDH
+0
+DDA
+5
+DDB
+4
+DDC
+3
+CDD
+2
+DDD
+1
+XXB
+-13
