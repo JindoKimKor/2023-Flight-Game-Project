@@ -135,7 +135,7 @@ namespace Final
                     MediaPlayer.Stop();
                 }
             }
-            if(playScene.Enabled || helpScene.Enabled || creditScene.Enabled)
+            if(playScene.Enabled || helpScene.Enabled || creditScene.Enabled || finishScene.Enabled)
             {
                 if (keyboardState.IsKeyDown(Keys.Escape))
                 {

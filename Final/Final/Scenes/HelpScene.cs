@@ -114,12 +114,13 @@ namespace Final.Scenes
 
             helpSceneSpriteBatch.DrawString(titleFont, titleText, titlePosition, Color.BlueViolet);
 
-            helpSceneSpriteBatch.DrawString(regularFont, "Control the airplane \nusing the WASD keys", new Vector2(270, 300), Color.PaleVioletRed);
+            helpSceneSpriteBatch.DrawString(regularFont, "Control the fighter \nusing the WASD keys", new Vector2(270, 300), Color.PaleVioletRed);
             helpSceneSpriteBatch.DrawString(regularFont, "Fire bullets using \nthe space bar", new Vector2(270, 400), Color.PaleVioletRed);
             helpSceneSpriteBatch.DrawString(regularFont, "Dodge the bullets \nfired by enemies", new Vector2(270, 500), Color.PaleVioletRed);
             helpSceneSpriteBatch.DrawString(regularFont, "Defeat the enemy planes", new Vector2(270, 600), Color.PaleVioletRed);
             helpSceneSpriteBatch.DrawString(regularFont, "Total score will be the count of defeated", new Vector2(50, 700), Color.PaleVioletRed);
-            helpSceneSpriteBatch.DrawString(regularFont, "enemy planes and total time", new Vector2(130, 740), Color.PaleVioletRed);
+            helpSceneSpriteBatch.DrawString(regularFont, "enemy planes deducted by hitten count", new Vector2(53, 740), Color.PaleVioletRed);
+            helpSceneSpriteBatch.DrawString(regularFont, "The game will end when the boss dead", new Vector2(53, 780), Color.PaleVioletRed);
 
             helpSceneSpriteBatch.Draw(WASDTexture, new Rectangle(70, 260, 150, 150), Color.White);
             helpSceneSpriteBatch.Draw(SpaceBarTexture, new Rectangle(70, 360, 150, 150), Color.White);
