@@ -18,6 +18,7 @@ namespace Final
         private HelpScene helpScene;
         private CreditScene creditScene;
         private FinishScene finishScene;
+        private LeaderBoardScene leaderBoardScene;
 
         private Song backgroundMusic;
         private SoundEffect playSceneBackgroundSound;
@@ -57,6 +58,9 @@ namespace Final
             this.Components.Add(creditScene);
             finishScene = new FinishScene(this);
             Components.Add(finishScene);
+            finishScene.FinishSceneCompleted += ReturnToStartScene;
+            leaderBoardScene = new LeaderBoardScene(this);
+            this.Components.Add(leaderBoardScene);
             backgroundMusic = this.Content.Load<Song>("sounds/backgroundMusic");
             MediaPlayer.IsRepeating = true;
             playSceneBackgroundSound = Content.Load<SoundEffect>("sounds/playSceneBackgroundSound");
@@ -83,6 +87,11 @@ namespace Final
             playScene = new PlayScene(this);
             playScene.EndGameEventHandler += EndPlayMode;
             Components.Add(playScene);
+        }
+        private void ReturnToStartScene()
+        {
+            HideAllScenes();
+            startScene.Show();
         }
 
         protected override void Update(GameTime gameTime)
@@ -112,6 +121,7 @@ namespace Final
                 else if(selectedIndex == 2 && keyboardState.IsKeyDown(Keys.Enter))
                 {
                     startScene.Hide();
+                    leaderBoardScene.Show();
                 }
                 else if(selectedIndex == 3 && keyboardState.IsKeyDown(Keys.Enter))
                 {
@@ -135,7 +145,8 @@ namespace Final
                     MediaPlayer.Stop();
                 }
             }
-            if(playScene.Enabled || helpScene.Enabled || creditScene.Enabled || finishScene.Enabled)
+
+            if(playScene.Enabled || helpScene.Enabled || creditScene.Enabled || finishScene.Enabled || leaderBoardScene.Enabled)
             {
                 if (keyboardState.IsKeyDown(Keys.Escape))
                 {
@@ -143,11 +154,6 @@ namespace Final
                     startScene.Show();
                 }
             }
-
-
-
-
-
             base.Update(gameTime);
 
         }
