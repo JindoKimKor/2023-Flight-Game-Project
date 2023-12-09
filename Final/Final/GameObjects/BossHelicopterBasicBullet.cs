@@ -13,114 +13,145 @@ namespace Final.GameComponents
 
     public class BossHelicopterBasicBullet : DrawableGameComponent
     {
+        // Main game reference
         private MainGame mainGame;
 
-        private SpriteBatch bossBasicBulletSpriteBatch;
-        private Texture2D bossBulletTexture;
-        private Vector2 frameDimension;
-        private List<Rectangle> animationFrames;
-        private const int BASIC_BULLET_ROWS = 4;
+        // SpriteBatch and texture for bullet rendering
+        private SpriteBatch spriteBatch;
+        private Texture2D bulletTexture;
+
+        // Animation frames and dimensions
+        private Vector2 frameSize;
+        private List<Rectangle> bulletAnimationFrames;
+        private const int NUM_BULLET_ROWS = 4;
+
+        // Bullet position, direction, and origin
         private Vector2 currentPosition;
         private Vector2 direction;
-        private Vector2 originTexture;
+        private Vector2 textureOrigin;
 
-        private float maxYCoordinate;
-        private float bulletSpeed = 7.0f;
-        private int currentFrameIndex = 0;
+        // Bullet movement properties
+        private float maxYPosition;
+        private float bulletSpeed = 6.0f;
 
+        // Animation control
+        private int frameIndex = 0;
+        private double elapsedTimeFrameChange = 0;
+        private double frameChangeInterval = 40;
+
+        // Delegate for removing the bullet when it passes a certain Y coordinate
         public RemovePassedMaxYCoordinateBossBullet RemoveBossBulletDelegate { get; set; }
 
-        public BossHelicopterBasicBullet(Game game, SpriteBatch playSceneSpriteBatch) : base(game)
+        public BossHelicopterBasicBullet(Game game, SpriteBatch playSceneSpriteBatch)
+    : base(game)
         {
-            mainGame = (MainGame)game;
-            bossBasicBulletSpriteBatch = playSceneSpriteBatch;
-            bossBulletTexture = mainGame.Content.Load<Texture2D>("images/bossHelicopterBasicBullet");
-            frameDimension = new Vector2(bossBulletTexture.Width / BASIC_BULLET_ROWS, bossBulletTexture.Height);
-            animationFrames = new List<Rectangle>();
-            currentPosition = BossHelicopter.BossHelicopterCurrentPosition;
-            originTexture = new Vector2(frameDimension.X / 2, frameDimension.Y / 2);
-            direction = Vector2.Normalize(PlayScene.FighterAircraftCurrentPosition - currentPosition);
-            maxYCoordinate = Shared.stageSize.Y;
+            InitializeBullet(game, playSceneSpriteBatch);
+            SetInitialPosition(BossHelicopter.BossCurrentPosition);
+        }
 
-            for (int r = 0; r < BASIC_BULLET_ROWS; r++)
+        public BossHelicopterBasicBullet(Game game, SpriteBatch playSceneSpriteBatch, string startingPosition)
+            : base(game)
+        {
+            InitializeBullet(game, playSceneSpriteBatch);
+            SetPositionBasedOnStartingPoint(startingPosition);
+        }
+
+        // Initializes shared bullet properties
+        private void InitializeBullet(Game game, SpriteBatch spriteBatch)
+        {
+            // Set main game and spriteBatch references
+            mainGame = (MainGame)game;
+            this.spriteBatch = spriteBatch;
+
+            // Load texture and set frame size
+            bulletTexture = mainGame.Content.Load<Texture2D>("images/bossHelicopterBasicBullet");
+            frameSize = new Vector2(bulletTexture.Width / NUM_BULLET_ROWS, bulletTexture.Height);
+            textureOrigin = new Vector2(frameSize.X / 2, frameSize.Y / 2);
+            maxYPosition = Shared.stageSize.Y;
+
+            // Initialize bullet animation frames
+            bulletAnimationFrames = new List<Rectangle>();
+            for (int r = 0; r < NUM_BULLET_ROWS; r++)
             {
-                int x = r * (int)frameDimension.X;
-                animationFrames.Add(new Rectangle(x, 0, (int)frameDimension.X, (int)frameDimension.Y));
+                int x = r * (int)frameSize.X;
+                bulletAnimationFrames.Add(new Rectangle(x, 0, (int)frameSize.X, (int)frameSize.Y));
             }
         }
 
-        public BossHelicopterBasicBullet(Game game, SpriteBatch playSceneSpriteBatch, string startingPosition) : base(game)
+        // Sets initial position based on boss helicopter position
+        private void SetInitialPosition(Vector2 bossPosition)
         {
-            mainGame = (MainGame)game;
-            bossBasicBulletSpriteBatch = playSceneSpriteBatch;
-            bossBulletTexture = mainGame.Content.Load<Texture2D>("images/bossHelicopterBasicBullet");
-            frameDimension = new Vector2(bossBulletTexture.Width / BASIC_BULLET_ROWS, bossBulletTexture.Height);
-            animationFrames = new List<Rectangle>();
+            currentPosition = bossPosition;
+            direction = Vector2.Normalize(FighterAircraft.AircraftCurrentPosition - currentPosition);
+        }
+
+        // Sets position based on starting point ("left", "right", or default)
+        private void SetPositionBasedOnStartingPoint(string startingPosition)
+        {
             switch (startingPosition)
             {
                 case "left":
-                    currentPosition = BossHelicopter.BossHelicopterCurrentPosition - new Vector2(50f, 0);
+                    currentPosition = BossHelicopter.BossCurrentPosition - new Vector2(50f, 10f);
                     break;
                 case "right":
-                    currentPosition = BossHelicopter.BossHelicopterCurrentPosition + new Vector2(50f, 0);
+                    currentPosition = BossHelicopter.BossCurrentPosition + new Vector2(50f, -10f);
                     break;
                 default:
-                    currentPosition = BossHelicopter.BossHelicopterCurrentPosition;
+                    currentPosition = BossHelicopter.BossCurrentPosition;
                     break;
             }
-
-            
-            originTexture = new Vector2(frameDimension.X / 2, frameDimension.Y / 2);
-            direction = Vector2.Normalize(PlayScene.FighterAircraftCurrentPosition - currentPosition);
+            direction = Vector2.Normalize(FighterAircraft.AircraftCurrentPosition - currentPosition);
             direction += direction;
-            maxYCoordinate = Shared.stageSize.Y;
-
-            for (int r = 0; r < BASIC_BULLET_ROWS; r++)
-            {
-                int x = r * (int)frameDimension.X;
-                animationFrames.Add(new Rectangle(x, 0, (int)frameDimension.X, (int)frameDimension.Y));
-            }
         }
 
 
-        private double elapsedTime = 0;
-        private double frameInterval = 40;
+
         public override void Update(GameTime gameTime)
         {
-            elapsedTime += gameTime.ElapsedGameTime.TotalMilliseconds;
-            if (elapsedTime >= frameInterval)
+            UpdateAnimationFrame(gameTime);
+            MoveBullet();
+            CheckBulletRemoval();
+            base.Update(gameTime);
+        }
+
+        private void UpdateAnimationFrame(GameTime gameTime)
+        {
+            elapsedTimeFrameChange += gameTime.ElapsedGameTime.TotalMilliseconds;
+            if (elapsedTimeFrameChange >= frameChangeInterval)
             {
-                currentFrameIndex++;
-                currentPosition += direction * bulletSpeed;
-                if (currentFrameIndex >= BASIC_BULLET_ROWS)
-                {
-                    currentFrameIndex = 0;
-                }
-                elapsedTime = 0;
+                frameIndex = (frameIndex + 1) % NUM_BULLET_ROWS;
+                elapsedTimeFrameChange = 0;
             }
-            if (currentPosition.Y >= maxYCoordinate)
+        }
+
+        private void MoveBullet()
+        {
+            currentPosition += direction * bulletSpeed;
+        }
+
+        private void CheckBulletRemoval()
+        {
+            if (currentPosition.Y >= maxYPosition)
             {
-                //It got called only if It's not null
                 RemoveBossBulletDelegate?.Invoke(this);
             }
-            base.Update(gameTime);
         }
 
         public override void Draw(GameTime gameTime)
         {
-            bossBasicBulletSpriteBatch.Begin();
+            spriteBatch.Begin();
 
-            bossBasicBulletSpriteBatch.Draw(bossBulletTexture, currentPosition, animationFrames[currentFrameIndex], Color.White, 0f, originTexture, 0.07f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(bulletTexture, currentPosition, bulletAnimationFrames[frameIndex], Color.White, 0f, textureOrigin, 0.07f, SpriteEffects.None, 0f);
 
 
-            bossBasicBulletSpriteBatch.End();
+            spriteBatch.End();
             base.Draw(gameTime);
         }
 
         public Rectangle GetHitbox()
         {
-            int scaledWidth = (int)(frameDimension.X * 0.1f);
-            int scaledHeight = (int)(frameDimension.Y * 0.1f);
+            int scaledWidth = (int)(frameSize.X * 0.1f);
+            int scaledHeight = (int)(frameSize.Y * 0.1f);
 
             return new Rectangle((int)currentPosition.X, (int)currentPosition.Y, scaledWidth, scaledHeight);
         }

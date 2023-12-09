@@ -92,7 +92,7 @@ namespace Final
 
                     if (bossHitBox.Intersects(aircraftBulletHitBox))
                     {
-                        bossHelicopter.IsGotHit = true;
+                        bossHelicopter.IsHit = true;
                         bulletsToRemove.Add(eachAircraftBullet);
                     }
                     foreach (SmallHelicopter smallHelicopter in PlayScene.SmallHelicopterList)
@@ -102,7 +102,7 @@ namespace Final
                         {
 
                             bulletsToRemove.Add(eachAircraftBullet);
-                            smallHelicopter.IsGotHit = true;
+                            smallHelicopter.IsHit = true;
                         }
                     }
                 }

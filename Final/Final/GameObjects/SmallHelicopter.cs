@@ -14,35 +14,43 @@ namespace Final.GameComponents
     public class SmallHelicopter : DrawableGameComponent
     {
         private MainGame mainGame;
-        private SpriteBatch smallHelicopterSpriteBatch;
-        private Texture2D smallHelicopterTexture;
-        private Vector2 frameDimension;
+
+        // SpriteBatch and texture for rendering
+        private SpriteBatch spriteBatch;
+        private Texture2D helicopterTexture;
+
+        // Animation frames and dimensions
+        private Vector2 frameSize;
         private List<Rectangle> animationFrames;
-        private int currentFrameIndex;
-        private Random random;
+        private const int HELICOPTER_COLS = 5;
+        private int helicopterFrameIndex;
+
+        // Helicopter position and movement properties
         private Vector2 currentPosition;
         private Vector2 textureOrigin;
-        private const int SMALL_HELICOPTER_COLS = 5;
-
         private float movingSpeed;
-        private int randomXPosition;
-        private const int maxHealthCount = 1;
-        private int hitCount = 0;
+        private int startPositionX;
+        private const int MAX_HEALTH = 1;
+        private Random randomizeXAndYStartPosition;
 
-        private bool isGotHit = false;
+        // Helicopter state tracking
+        private int hitCount = 0;
+        private bool isHit = false;
         private bool isDestroyed = false;
 
-        //destroyed
-        private Texture2D destroyedTexture;
-        private Vector2 destroyFrameDimension;
+        // Destruction animation properties
+        private Texture2D destructionTexture;
+        private Vector2 destructionFrameSize;
         private List<Rectangle> destroyAnimationFrames;
         private const int DESTROY_ANIMATION_COLS = 7;
-        private int destroyedTextureIndex = 0;
+        private int destructionFrameIndex = 0;
+        private float destructionElapsedTime = 0;
 
-        //generating bullet
+
+        // Bullet generation properties
         PlayScene playScene;
         
-        public bool IsGotHit { get => isGotHit; set => isGotHit = value; }
+        public bool IsHit { get => isHit; set => isHit = value; }
 
         public RemovePassedOrExpolosedDelegate RemovePassedOrExpolosed { get; set; }
         public Vector2 CurrentPosition { get => currentPosition; set => currentPosition = value; }
@@ -50,50 +58,119 @@ namespace Final.GameComponents
         public SmallHelicopter(Game game, SpriteBatch playSceneSpriteBatch, PlayScene playScene) : base(game)
         {
             mainGame = (MainGame)game;
-            smallHelicopterSpriteBatch = playSceneSpriteBatch;
-            smallHelicopterTexture = mainGame.Content.Load<Texture2D>("images/smallHelicopter");
-            frameDimension = new Vector2(smallHelicopterTexture.Width / SMALL_HELICOPTER_COLS, smallHelicopterTexture.Height);
-            textureOrigin = new Vector2(frameDimension.X / 2, frameDimension.Y / 2);
-            animationFrames = new List<Rectangle>();
-            random = new Random();
-            randomXPosition = random.Next(0, 2);
-            int randomYPosition = random.Next(170, 450);
-            movingSpeed = random.Next(2, 4);
-            currentPosition = new Vector2(randomXPosition == 0 ? 0 : Shared.stageSize.X, randomYPosition);
-
-            for (int c = 0; c < SMALL_HELICOPTER_COLS; c++)
-            {
-                int x = c * (int)frameDimension.X;
-                animationFrames.Add(new Rectangle(x, 0, (int)frameDimension.X, (int)frameDimension.Y));
-            }
-
-            PlayScene.SmallHelicopterList.Add(this);
-
-            //destroying
-            destroyedTexture = mainGame.Content.Load<Texture2D>("images/destroyAnimation");
-            destroyFrameDimension = new Vector2(destroyedTexture.Width / DESTROY_ANIMATION_COLS, destroyedTexture.Height);
-            destroyAnimationFrames = new List<Rectangle>();
-
-            for (int c = 0; c < DESTROY_ANIMATION_COLS; c++)
-            {
-                int x = c * (int)destroyFrameDimension.X;
-
-                destroyAnimationFrames.Add(new Rectangle(x, 0, (int)destroyFrameDimension.X, (int)destroyFrameDimension.Y));
-            }
-
+            spriteBatch = playSceneSpriteBatch;
             this.playScene = playScene;
 
+            InitializeTextures();
+            InitializeAnimationFrames();
+            InitializePositionAndSpeed();
+            AddToScene();
         }
 
-        private float destroyeGeneratingElapsedTime = 0;
+        private void InitializeTextures()
+        {
+            helicopterTexture = mainGame.Content.Load<Texture2D>("images/smallHelicopter");
+            destructionTexture = mainGame.Content.Load<Texture2D>("images/destroyAnimation");
+        }
+
+        private void InitializeAnimationFrames()
+        {
+            frameSize = new Vector2(helicopterTexture.Width / HELICOPTER_COLS, helicopterTexture.Height);
+            textureOrigin = new Vector2(frameSize.X / 2, frameSize.Y / 2);
+            animationFrames = GenerateAnimationFrames(helicopterTexture, HELICOPTER_COLS);
+
+            destructionFrameSize = new Vector2(destructionTexture.Width / DESTROY_ANIMATION_COLS, destructionTexture.Height);
+            destroyAnimationFrames = GenerateAnimationFrames(destructionTexture, DESTROY_ANIMATION_COLS);
+        }
+
+        private void InitializePositionAndSpeed()
+        {
+            randomizeXAndYStartPosition = new Random();
+            startPositionX = randomizeXAndYStartPosition.Next(0, 2);
+            int randomYPosition = randomizeXAndYStartPosition.Next(170, 450);
+            movingSpeed = randomizeXAndYStartPosition.Next(2, 4);
+            currentPosition = new Vector2(startPositionX == 0 ? 0 : Shared.stageSize.X, randomYPosition);
+        }
+
+        private void AddToScene()
+        {
+            PlayScene.SmallHelicopterList.Add(this);
+        }
+
+        private List<Rectangle> GenerateAnimationFrames(Texture2D texture, int columns)
+        {
+            List<Rectangle> frames = new List<Rectangle>();
+            Vector2 frameSize = new Vector2(texture.Width / columns, texture.Height);
+
+            for (int c = 0; c < columns; c++)
+            {
+                int x = c * (int)frameSize.X;
+                frames.Add(new Rectangle(x, 0, (int)frameSize.X, (int)frameSize.Y));
+            }
+
+            return frames;
+        }
+
 
         public override void Update(GameTime gameTime)
         {
-            destroyeGeneratingElapsedTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            UpdateHelicopterMovement();
+            UpdateDestructionState(gameTime);
+
+            base.Update(gameTime);
+        }
+
+        private double elapsedTime = 0;
+        private double frameInterval = 400;
+        private double hitEffectTimer = 0.005;
+        public override void Draw(GameTime gameTime)
+        {
+            spriteBatch.Begin();
+
+            if (isDestroyed)
+            {
+                Vector2 adjustPosition = new Vector2(currentPosition.X + 40, currentPosition.Y + 50);
+                spriteBatch.Draw(destructionTexture, adjustPosition, destroyAnimationFrames[destructionFrameIndex], Color.White, 0f, textureOrigin, 1.2f, SpriteEffects.None, 0f);
+            }
+            elapsedTime += gameTime.ElapsedGameTime.TotalMilliseconds;
+            if (!isDestroyed)
+            {
+                if (elapsedTime >= frameInterval)
+                {
+                    SmallHelicopterBullet smallHelicopterBullet = new SmallHelicopterBullet(mainGame, spriteBatch, this);
+                    playScene.ComponentList.Add(smallHelicopterBullet);
+                    elapsedTime = 0;
+                }
+            }
+
+            if (IsHit && !isDestroyed)
+            {
+                hitEffectTimer -= gameTime.ElapsedGameTime.TotalSeconds;
+                if (hitEffectTimer <= 0)
+                {
+                    IsHit = false;
+                    hitCount++;
+                }
+                spriteBatch.Draw(helicopterTexture, currentPosition, animationFrames[helicopterFrameIndex], Color.Red, 0f, textureOrigin, 0.8f, SpriteEffects.None, 0f);
+            }
+            else if(!IsHit && !isDestroyed)
+            {
+                spriteBatch.Draw(helicopterTexture, currentPosition, animationFrames[helicopterFrameIndex], Color.White, 0f, textureOrigin, 0.8f, SpriteEffects.None, 0f);
+
+            }
 
 
-            currentFrameIndex = currentFrameIndex == animationFrames.Count() - 1 ? 0 : ++currentFrameIndex;
-            if (randomXPosition == 0)
+            spriteBatch.End();
+
+            base.Draw(gameTime);
+        }
+
+        private void UpdateHelicopterMovement()
+        {
+            helicopterFrameIndex = helicopterFrameIndex == animationFrames.Count() - 1 ? 0 : ++helicopterFrameIndex;
+
+            if (startPositionX == 0)
             {
                 if (!isDestroyed)
                 {
@@ -107,14 +184,19 @@ namespace Final.GameComponents
                     currentPosition.X -= movingSpeed;
                 }
             }
-            if ((randomXPosition == 0 && currentPosition.X == Shared.stageSize.X) ||
-                (randomXPosition == 1 && currentPosition.X == 0)
+            if ((startPositionX == 0 && currentPosition.X == Shared.stageSize.X) ||
+                (startPositionX == 1 && currentPosition.X == 0)
                 )
             {
                 RemovePassedOrExpolosed?.Invoke(this);
 
             }
-            if (hitCount >= maxHealthCount)
+        }
+        private void UpdateDestructionState(GameTime gameTime)
+        {
+            destructionElapsedTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (hitCount >= MAX_HEALTH)
             {
                 isDestroyed = true;
             }
@@ -122,70 +204,22 @@ namespace Final.GameComponents
             //if It got destroyed
             if (isDestroyed)
             {
-                if (destroyeGeneratingElapsedTime >= 0.3f)
+                if (destructionElapsedTime >= 0.3f)
                 {
-                    destroyedTextureIndex++;
-                    destroyeGeneratingElapsedTime = 0f;
+                    destructionFrameIndex++;
+                    destructionElapsedTime = 0f;
                 }
             }
-            if (destroyedTextureIndex >= DESTROY_ANIMATION_COLS - 1)
+            if (destructionFrameIndex >= DESTROY_ANIMATION_COLS - 1)
             {
                 RemovePassedOrExpolosed?.Invoke(this);
                 GameBoard.NumberOfDestoryedSmallHelicopter++;
             }
-
-            base.Update(gameTime);
         }
-
-        private double elapsedTime = 0;
-        private double frameInterval = 400;
-        private double hitEffectTimer = 0.005;
-        public override void Draw(GameTime gameTime)
-        {
-            smallHelicopterSpriteBatch.Begin();
-
-            if (isDestroyed)
-            {
-                Vector2 adjustPosition = new Vector2(currentPosition.X + 40, currentPosition.Y + 50);
-                smallHelicopterSpriteBatch.Draw(destroyedTexture, adjustPosition, destroyAnimationFrames[destroyedTextureIndex], Color.White, 0f, textureOrigin, 1.2f, SpriteEffects.None, 0f);
-            }
-            elapsedTime += gameTime.ElapsedGameTime.TotalMilliseconds;
-            if (!isDestroyed)
-            {
-                if (elapsedTime >= frameInterval)
-                {
-                    SmallHelicopterBullet smallHelicopterBullet = new SmallHelicopterBullet(mainGame, smallHelicopterSpriteBatch, this);
-                    playScene.ComponentList.Add(smallHelicopterBullet);
-                    elapsedTime = 0;
-                }
-            }
-
-            if (IsGotHit && !isDestroyed)
-            {
-                hitEffectTimer -= gameTime.ElapsedGameTime.TotalSeconds;
-                if (hitEffectTimer <= 0)
-                {
-                    IsGotHit = false;
-                    hitCount++;
-                }
-                smallHelicopterSpriteBatch.Draw(smallHelicopterTexture, currentPosition, animationFrames[currentFrameIndex], Color.Red, 0f, textureOrigin, 0.8f, SpriteEffects.None, 0f);
-            }
-            else if(!IsGotHit && !isDestroyed)
-            {
-                smallHelicopterSpriteBatch.Draw(smallHelicopterTexture, currentPosition, animationFrames[currentFrameIndex], Color.White, 0f, textureOrigin, 0.8f, SpriteEffects.None, 0f);
-
-            }
-
-
-            smallHelicopterSpriteBatch.End();
-
-            base.Draw(gameTime);
-        }
-
         public Rectangle GetHitbox()
         {
-            int scaledWidth = (int)(frameDimension.X * 0.2f);
-            int scaledHeight = (int)(frameDimension.Y * 0.2f);
+            int scaledWidth = (int)(frameSize.X * 0.2f);
+            int scaledHeight = (int)(frameSize.Y * 0.2f);
 
             return new Rectangle((int)currentPosition.X, (int)currentPosition.Y, scaledWidth, scaledHeight);
         }
