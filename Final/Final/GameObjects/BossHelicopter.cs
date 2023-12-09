@@ -1,5 +1,6 @@
 ﻿using Final.Scenes;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,8 @@ namespace Final.GameComponents
             secondStage,
             destroyed
         }
+
+        private MainGame mainGame;
         // SpriteBatch for rendering the boss helicopter
         private SpriteBatch spriteBatch;
 
@@ -37,7 +40,7 @@ namespace Final.GameComponents
 
         // Health and hit properties
         private bool isHit;
-        private int maxHealth = 10;
+        private int maxHealth = 20;
         private int secondStageHealth = 5;
         private int hitCount;
         public BossStage CurrentStage;
@@ -46,20 +49,24 @@ namespace Final.GameComponents
         public static Vector2 BossCurrentPosition { get => bossCurrentPosition; set => bossCurrentPosition = value; }
         public bool IsHit { get => isHit; set => isHit = value; }
 
-        // Properties for helicopter movement and behavior
+        // Properties for helicopter movement and behavior and destruction
         private double timerNewXCoordinate = 0;
         private double frameInterval = 1000;
         private float newXCoordinate;
         private Random random = new Random();
         private double timerShake = 0;
         private double intervalShake = 50;
+        private SoundEffect destructionSound;
+        private double timerDestruction = 0;
+        private double intervalDestructionSound = 1200;
+
 
         // Hit effect timer
         private double timerHitEffect = 0.005;
 
         public BossHelicopter(Game game, SpriteBatch playSceneSpriteBatch) : base(game)
         {
-
+            mainGame = (MainGame)game;
             // Setting up the SpriteBatch
             spriteBatch = playSceneSpriteBatch;
 
@@ -93,6 +100,8 @@ namespace Final.GameComponents
                     animationFramesAlive.Add(new Rectangle(x, 0, (int)frameDimensionAlive.X, (int)frameDimensionAlive.Y));
                 }
             }
+            destructionSound = mainGame.Content.Load<SoundEffect>("sounds/destroyedSound");
+
         }
 
         public override void Update(GameTime gameTime)
@@ -193,8 +202,14 @@ namespace Final.GameComponents
                 {
                     bossCurrentPosition.X += random.Next(-4, 6);
                     bossCurrentPosition.Y += random.Next(-4, 6);
-
                     timerShake = 0;
+                }
+
+                timerDestruction += gameTime.ElapsedGameTime.TotalMilliseconds;
+                if (timerDestruction >= intervalDestructionSound)
+                {
+                    destructionSound.Play();
+                    timerDestruction = 0;
                 }
             }
         }

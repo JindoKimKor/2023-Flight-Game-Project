@@ -1,9 +1,11 @@
 ﻿using Final.Scenes;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -36,7 +38,9 @@ namespace Final.GameComponents
         // Helicopter state tracking
         private int hitCount = 0;
         private bool isHit = false;
-        private bool isDestroyed = false;
+        private bool isBeingDestroyed = false;
+        private bool isDestructionInitiated = false;
+
 
         // Destruction animation properties
         private Texture2D destructionTexture;
@@ -45,7 +49,7 @@ namespace Final.GameComponents
         private const int DESTROY_ANIMATION_COLS = 7;
         private int destructionFrameIndex = 0;
         private float destructionElapsedTime = 0;
-
+        private SoundEffect destructionSound;
 
         // Bullet generation properties
         PlayScene playScene;
@@ -60,7 +64,7 @@ namespace Final.GameComponents
             mainGame = (MainGame)game;
             spriteBatch = playSceneSpriteBatch;
             this.playScene = playScene;
-
+            destructionSound = mainGame.Content.Load<SoundEffect>("sounds/destroyedSound");
             InitializeTextures();
             InitializeAnimationFrames();
             InitializePositionAndSpeed();
@@ -128,13 +132,13 @@ namespace Final.GameComponents
         {
             spriteBatch.Begin();
 
-            if (isDestroyed)
+            if (isBeingDestroyed)
             {
                 Vector2 adjustPosition = new Vector2(currentPosition.X + 40, currentPosition.Y + 50);
                 spriteBatch.Draw(destructionTexture, adjustPosition, destroyAnimationFrames[destructionFrameIndex], Color.White, 0f, textureOrigin, 1.2f, SpriteEffects.None, 0f);
             }
             elapsedTime += gameTime.ElapsedGameTime.TotalMilliseconds;
-            if (!isDestroyed)
+            if (!isBeingDestroyed)
             {
                 if (elapsedTime >= frameInterval)
                 {
@@ -144,7 +148,7 @@ namespace Final.GameComponents
                 }
             }
 
-            if (IsHit && !isDestroyed)
+            if (IsHit && !isBeingDestroyed)
             {
                 hitEffectTimer -= gameTime.ElapsedGameTime.TotalSeconds;
                 if (hitEffectTimer <= 0)
@@ -154,7 +158,7 @@ namespace Final.GameComponents
                 }
                 spriteBatch.Draw(helicopterTexture, currentPosition, animationFrames[helicopterFrameIndex], Color.Red, 0f, textureOrigin, 0.8f, SpriteEffects.None, 0f);
             }
-            else if(!IsHit && !isDestroyed)
+            else if(!IsHit && !isBeingDestroyed)
             {
                 spriteBatch.Draw(helicopterTexture, currentPosition, animationFrames[helicopterFrameIndex], Color.White, 0f, textureOrigin, 0.8f, SpriteEffects.None, 0f);
 
@@ -172,14 +176,14 @@ namespace Final.GameComponents
 
             if (startPositionX == 0)
             {
-                if (!isDestroyed)
+                if (!isBeingDestroyed)
                 {
                     currentPosition.X += movingSpeed;
                 }
             }
             else
             {
-                if (!isDestroyed)
+                if (!isBeingDestroyed)
                 {
                     currentPosition.X -= movingSpeed;
                 }
@@ -196,13 +200,16 @@ namespace Final.GameComponents
         {
             destructionElapsedTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (hitCount >= MAX_HEALTH)
+            if (hitCount >= MAX_HEALTH && !isDestructionInitiated)
             {
-                isDestroyed = true;
+                isBeingDestroyed = true;
+                isDestructionInitiated = true;
+                destructionSound.Play();
+                GameBoard.NumberOfDestoryedSmallHelicopter++;
             }
 
             //if It got destroyed
-            if (isDestroyed)
+            if (isBeingDestroyed)
             {
                 if (destructionElapsedTime >= 0.3f)
                 {
@@ -213,8 +220,8 @@ namespace Final.GameComponents
             if (destructionFrameIndex >= DESTROY_ANIMATION_COLS - 1)
             {
                 RemovePassedOrExpolosed?.Invoke(this);
-                GameBoard.NumberOfDestoryedSmallHelicopter++;
             }
+
         }
         public Rectangle GetHitbox()
         {

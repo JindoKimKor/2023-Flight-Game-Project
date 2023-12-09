@@ -1,5 +1,6 @@
 ﻿using Final.Scenes;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
@@ -19,7 +20,7 @@ namespace Final
         private FinishScene finishScene;
 
         private Song backgroundMusic;
-
+        private SoundEffect playSceneBackgroundSound;
 
         public MainGame()
         {
@@ -58,7 +59,7 @@ namespace Final
             Components.Add(finishScene);
             backgroundMusic = this.Content.Load<Song>("sounds/backgroundMusic");
             MediaPlayer.IsRepeating = true;
-
+            playSceneBackgroundSound = Content.Load<SoundEffect>("sounds/playSceneBackgroundSound");
             startScene.Show();
         }
         private void HideAllScenes()
@@ -98,6 +99,10 @@ namespace Final
                 {
                     startScene.Hide();
                     playScene.Show();
+                    //play background music in play scene
+                    SoundEffectInstance soundInstance = playSceneBackgroundSound.CreateInstance();
+                    soundInstance.IsLooped = true;
+                    soundInstance.Play();
                 }
                 else if (selectedIndex == 1 && keyboardState.IsKeyDown(Keys.Enter))
                 {
@@ -120,7 +125,7 @@ namespace Final
 
                 if(MediaPlayer.State != MediaState.Playing)
                 {
-                    //MediaPlayer.Play(backgroundMusic);
+                    MediaPlayer.Play(backgroundMusic);
                 }
             }
             else

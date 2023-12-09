@@ -109,7 +109,7 @@ namespace Final.Scenes
         private double destroyAnimationElapsedTime;
         private double endGameAnimationDuration = 1000;
         private double closeGameElapsedTime = 0;
-        private double closeGameInterval = 5000;
+        private double closeGameInterval = 10000;
 
         public override void Update(GameTime gameTime)
         {

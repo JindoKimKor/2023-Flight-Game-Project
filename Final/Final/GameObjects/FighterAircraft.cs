@@ -1,5 +1,6 @@
 ﻿using Final.Scenes;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -74,6 +75,10 @@ namespace Final.GameComponents
         private bool isGotHit;
         private int hitCounter;
         private double hitEffectDuration = 0.005;
+        private SoundEffect hitSoundEffect;
+        private double fireSoundElapsedTime = 0;
+        private double fireSoundInterval = 200;
+
 
         // Main game reference
         private MainGame mainGame;
@@ -90,7 +95,7 @@ namespace Final.GameComponents
             // Main game reference and sprite batch initialization
             mainGame = (MainGame)game;
             spriteBatch = playSceneSpriteBatch;
-
+            hitSoundEffect = mainGame.Content.Load<SoundEffect>("sounds/hitSound");
             // Load textures and initialize dimensions
             LoadTexturesAndInitializeDimensions();
 
@@ -216,6 +221,13 @@ namespace Final.GameComponents
             if (keyboardState.IsKeyDown(Keys.Space) && !IsInEntrySequence)
             {
                 spriteBatch.Draw(attackAnimationTexture, attackAnimationPosition, fireAnimationFrames[attackAnimationFrameIndex], Color.White);
+                //fire sound
+                fireSoundElapsedTime += gameTime.ElapsedGameTime.TotalMilliseconds;
+                if (fireSoundElapsedTime >= fireSoundInterval)
+                {
+                    hitSoundEffect.Play();
+                    fireSoundElapsedTime = 0;
+                }
             }
             spriteBatch.End();
 
@@ -312,6 +324,7 @@ namespace Final.GameComponents
                 }
                 attackAnimationElapsedTime = 0;
             }
+
 
             attackAnimationPosition = AircraftCurrentPosition;
             //adjust position according to its presentation

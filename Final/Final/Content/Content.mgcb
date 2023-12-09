@@ -196,3 +196,21 @@
 /processorParam:Quality=Best
 /build:sounds/backgroundMusic.mp3
 
+#begin sounds/destroyedSound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sounds/destroyedSound.wav
+
+#begin sounds/hitSound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sounds/hitSound.wav
+
+#begin sounds/playSceneBackgroundSound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sounds/playSceneBackgroundSound.wav
+
