@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using System.Diagnostics;
 
 namespace Final
 {
@@ -19,9 +20,12 @@ namespace Final
         private CreditScene creditScene;
         private FinishScene finishScene;
         private LeaderBoardScene leaderBoardScene;
-
+        private static bool isOneGameFinsihed;
         private Song backgroundMusic;
         private SoundEffect playSceneBackgroundSound;
+
+        private SoundEffectInstance soundInstance;
+        private int selectedIndex = 0;
 
         public MainGame()
         {
@@ -65,6 +69,9 @@ namespace Final
             MediaPlayer.IsRepeating = true;
             playSceneBackgroundSound = Content.Load<SoundEffect>("sounds/playSceneBackgroundSound");
             startScene.Show();
+
+            soundInstance = playSceneBackgroundSound.CreateInstance();
+
         }
         private void HideAllScenes()
         {
@@ -92,6 +99,8 @@ namespace Final
         {
             HideAllScenes();
             startScene.Show();
+            startScene.MenuComponent.SelectedIndex = -1;
+            soundInstance.Stop();
         }
 
         protected override void Update(GameTime gameTime)
@@ -99,7 +108,6 @@ namespace Final
 
             // TODO: Add your update logic here
             KeyboardState keyboardState = Keyboard.GetState();
-            int selectedIndex = 0;
 
             if (startScene.Enabled)
             {
@@ -109,7 +117,6 @@ namespace Final
                     startScene.Hide();
                     playScene.Show();
                     //play background music in play scene
-                    SoundEffectInstance soundInstance = playSceneBackgroundSound.CreateInstance();
                     soundInstance.IsLooped = true;
                     soundInstance.Play();
                 }
@@ -152,6 +159,7 @@ namespace Final
                 {
                     HideAllScenes();
                     startScene.Show();
+                    soundInstance.Stop();
                 }
             }
             base.Update(gameTime);

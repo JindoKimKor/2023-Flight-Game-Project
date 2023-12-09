@@ -16,14 +16,14 @@ namespace Final.Scenes
         private SpriteFont titleFont;
         private Texture2D backgroundTexture;
         private string titleText = "Game End";
-        SpriteFont regularFont;
-        SpriteFont hilightFont;
+        private SpriteFont regularFont;
+        private SpriteFont hilightFont;
         private Texture2D transparentBackground;
 
         private double delayCounter;
         private bool flag = true;
 
-        private string initials = "";
+        private string userInitialToSave = "";
         private int finalScore;
         KeyboardState state;
         KeyboardState oldState = Keyboard.GetState();
@@ -40,10 +40,11 @@ namespace Final.Scenes
             backgroundTexture = mainGame.Content.Load<Texture2D>("images/background");
             transparentBackground = new Texture2D(GraphicsDevice, 1, 1);
             transparentBackground.SetData(new[] { Color.Black });
-            finalScore = PlayScene.NumberOfDestoryedSmallHelicopter - PlayScene.NumberOfGotHit;
         }
         public override void Update(GameTime gameTime)
         {
+            finalScore = PlayScene.NumberOfDestoryedSmallHelicopter - PlayScene.NumberOfGotHit;
+
             delayCounter += gameTime.ElapsedGameTime.TotalSeconds;
             if (delayCounter >= 1.0)
             {
@@ -52,18 +53,18 @@ namespace Final.Scenes
             flag = delayCounter < 0.7;
 
             state = Keyboard.GetState();
-            Keys[] keys = state.GetPressedKeys();
-            if (keys.Length > 0 && !oldState.IsKeyDown(keys[0]))
+            Keys[] userInitialKeys = state.GetPressedKeys();
+            if (userInitialKeys.Length > 0 && !oldState.IsKeyDown(userInitialKeys[0]))
             {
-                if (keys[0] >= Keys.A && keys[0] <= Keys.Z && initials.Length < 3)
+                if (userInitialKeys[0] >= Keys.A && userInitialKeys[0] <= Keys.Z && userInitialToSave.Length < 3)
                 {
-                    initials += keys[0].ToString();
+                    userInitialToSave += userInitialKeys[0].ToString();
                 }
-                else if (keys[0] == Keys.Back && initials.Length > 0)
+                else if (userInitialKeys[0] == Keys.Back && userInitialToSave.Length > 0)
                 {
-                    initials = initials.Substring(0, initials.Length - 1);
+                    userInitialToSave = userInitialToSave.Substring(0, userInitialToSave.Length - 1);
                 }
-                else if (keys[0] == Keys.Enter && initials.Length > 0)
+                else if (userInitialKeys[0] == Keys.Enter && userInitialToSave.Length > 0)
                 {
                     SaveScore();
                 }
@@ -87,13 +88,13 @@ namespace Final.Scenes
             finishSceneSpriteBatch.Draw(transparentBackground, new Rectangle(0, 0, (int)Shared.stageSize.X, (int)Shared.stageSize.Y), Color.White * 0.6f);
             finishSceneSpriteBatch.DrawString(titleFont, titleText, titlePosition, Color.BlueViolet);
 
-            Vector2 initialsSize = hilightFont.MeasureString(initials);
+            Vector2 initialsSize = hilightFont.MeasureString(userInitialToSave);
             Vector2 initialsPosition = new Vector2((Shared.stageSize.X - initialsSize.X) / 2, 320);
             if (flag)
             {
 
                 finishSceneSpriteBatch.DrawString(regularFont, initialsText, messagePosition, Color.White);
-                finishSceneSpriteBatch.DrawString(hilightFont, initials, initialsPosition, Color.White);
+                finishSceneSpriteBatch.DrawString(hilightFont, userInitialToSave, initialsPosition, Color.White);
             }
 
 
@@ -109,10 +110,8 @@ namespace Final.Scenes
             finishSceneSpriteBatch.DrawString(regularFont, "Total Score: ", new Vector2(150, 800), Color.PaleVioletRed);
             if (flag)
             {
-                finishSceneSpriteBatch.DrawString(hilightFont, (PlayScene.NumberOfDestoryedSmallHelicopter - PlayScene.NumberOfGotHit).ToString(), new Vector2(350, 790), Color.DarkViolet);
+                finishSceneSpriteBatch.DrawString(hilightFont, finalScore.ToString(), new Vector2(350, 790), Color.DarkViolet); ;
             }
-
-
 
             finishSceneSpriteBatch.End();
             base.Draw(gameTime);
@@ -122,8 +121,8 @@ namespace Final.Scenes
             string filePath = "scores.txt";
             using (StreamWriter writer = new StreamWriter(filePath, true))
             {
-                writer.WriteLine(initials);
-                writer.WriteLine(PlayScene.NumberOfDestoryedSmallHelicopter - PlayScene.NumberOfGotHit);
+                writer.WriteLine(userInitialToSave);
+                writer.WriteLine(finalScore);
             }
             FinishSceneCompleted?.Invoke();
         }
