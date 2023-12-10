@@ -96,7 +96,7 @@ namespace Final.GameComponents
             {
                 randomizeXAndYStartPosition = new Random();
                 startPositionX = randomizeXAndYStartPosition.Next(0, 2);
-                int randomYPosition = randomizeXAndYStartPosition.Next(200, 450);
+                int randomYPosition = randomizeXAndYStartPosition.Next(250, 450);
                 movingSpeed = randomizeXAndYStartPosition.Next(2, 4);
                 currentPosition = new Vector2(startPositionX == 0 ? 0 : Shared.stageSize.X, randomYPosition);
             }

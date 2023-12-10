@@ -273,7 +273,16 @@ namespace Final.GameComponents
                     {
                         currentFrame = DetermineAnimationFrameWithKeyboardInput(AircraftFrames.Idle);
                     }
-                    AircraftCurrentPosition += aircraftDirectionsWithSpeed[currentFrame];
+                    if (!keyboardState.IsKeyDown(Keys.Space))
+                    {
+                        Vector2 boostSpeed = new Vector2(aircraftDirectionsWithSpeed[currentFrame].X * 0.3f, aircraftDirectionsWithSpeed[currentFrame].Y * 0.3f);
+                        AircraftCurrentPosition += aircraftDirectionsWithSpeed[currentFrame] + boostSpeed;
+                    }
+                    else
+                    {
+                        Vector2 boostSpeed = new Vector2(aircraftDirectionsWithSpeed[currentFrame].X * 0.3f, aircraftDirectionsWithSpeed[currentFrame].Y * 0.3f);
+                        AircraftCurrentPosition += aircraftDirectionsWithSpeed[currentFrame] - boostSpeed;
+                    }
                     KeepWithinScreenLimits(AircraftCurrentPosition);
                 }
             }
