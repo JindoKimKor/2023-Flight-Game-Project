@@ -1,5 +1,4 @@
-﻿using Final.Scenes;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -8,7 +7,9 @@ using System.Linq;
 
 namespace Final.GameComponents
 {
-
+    /// <summary>
+    /// Boss Helicopter Class
+    /// </summary>
     public class BossHelicopter : DrawableGameComponent
     {
         public enum BossStage
@@ -39,9 +40,9 @@ namespace Final.GameComponents
         private const int FINAL_Y_ENTRY_POSITION = 100;
 
         // Health and hit properties
+        private int secondStageHealth = 200;
+        private int maxHealth = 400;
         private bool isHit;
-        private int maxHealth = 20;
-        private int secondStageHealth = 5;
         private int hitCount;
         public BossStage CurrentStage;
 
@@ -64,10 +65,14 @@ namespace Final.GameComponents
         // Hit effect timer
         private double timerHitEffect = 0.005;
 
+        /// <summary>
+        /// Boss Helicopter Constructor
+        /// </summary>
+        /// <param name="game"></param>
+        /// <param name="playSceneSpriteBatch"></param>
         public BossHelicopter(Game game, SpriteBatch playSceneSpriteBatch) : base(game)
         {
             mainGame = (MainGame)game;
-            // Setting up the SpriteBatch
             spriteBatch = playSceneSpriteBatch;
 
             // Setting the initial position of the boss helicopter
@@ -109,13 +114,74 @@ namespace Final.GameComponents
 
             HandleEntrySequence();
 
-            AdjustXPositionBasedOnAircraft(gameTime);
+            AdjustXPositionBasedOnAircraft();
 
-            ShakeIfDestroyed(gameTime);
+            ShakeIfDestroyed();
 
             ChangeStageBasedOnHealth();
 
             base.Update(gameTime);
+
+            void HandleEntrySequence()
+            {
+                Action<int> changeStartSequence = (x) => { if (BossCurrentPosition.Y >= x) IsStartSequence = false; };
+
+                currentAnimationFrameIndex = currentAnimationFrameIndex == animationFramesAlive.Count() - 1 ? 0 : ++currentAnimationFrameIndex;
+                bossCurrentPosition.Y = IsStartSequence == true ? BossCurrentPosition.Y + ENTRY_SPEED : BossCurrentPosition.Y;
+
+                changeStartSequence(FINAL_Y_ENTRY_POSITION);
+            }
+
+            void AdjustXPositionBasedOnAircraft()
+            {
+                timerNewXCoordinate += gameTime.ElapsedGameTime.TotalMilliseconds;
+                if (timerNewXCoordinate >= frameInterval && (CurrentStage == BossStage.firstStage || CurrentStage == BossStage.secondStage))
+                {
+                    Vector2 FighterAircraftCurrentPosition = FighterAircraft.AircraftCurrentPosition;
+                    newXCoordinate = FighterAircraftCurrentPosition.X;
+                    timerNewXCoordinate = 0;
+                }
+
+                if (bossCurrentPosition.X > newXCoordinate)
+                {
+                    bossCurrentPosition.X--;
+                }
+                else if (bossCurrentPosition.X < newXCoordinate)
+                {
+                    bossCurrentPosition.X++;
+                }
+            }
+            void ShakeIfDestroyed()
+            {
+                if (CurrentStage == BossStage.destroyed)
+                {
+                    timerShake += gameTime.ElapsedGameTime.TotalMilliseconds;
+                    if (timerShake >= intervalShake)
+                    {
+                        bossCurrentPosition.X += random.Next(-4, 6);
+                        bossCurrentPosition.Y += random.Next(-4, 6);
+                        timerShake = 0;
+                    }
+
+                    timerDestruction += gameTime.ElapsedGameTime.TotalMilliseconds;
+                    if (timerDestruction >= intervalDestructionSound)
+                    {
+                        destructionSound.Play();
+                        timerDestruction = 0;
+                    }
+                }
+            }
+            void ChangeStageBasedOnHealth()
+            {
+                if (hitCount >= secondStageHealth && hitCount < maxHealth)
+                {
+                    CurrentStage = BossStage.secondStage;
+                }
+                else if (hitCount >= maxHealth)
+                {
+                    CurrentStage = BossStage.destroyed;
+                }
+            }
         }
 
         public override void Draw(GameTime gameTime)
@@ -130,102 +196,40 @@ namespace Final.GameComponents
                     IsHit = false;
                     hitCount++;
                 }
-                if (hitCount >= secondStageHealth && hitCount < maxHealth)
-                {
-                    spriteBatch.Draw(textureSecondStage, BossCurrentPosition, animationFramesAlive[currentAnimationFrameIndex], Color.Red, 0f, originTexture, 0.9f, SpriteEffects.None, 0f);
-                }
 
-                else if (hitCount >= 0 && hitCount < secondStageHealth)
+                if (CurrentStage == BossStage.firstStage)
                 {
                     spriteBatch.Draw(textureFirstStage, BossCurrentPosition, animationFramesAlive[currentAnimationFrameIndex], Color.Red, 0f, originTexture, 0.91f, SpriteEffects.None, 0f);
                 }
-
+                else if (CurrentStage == BossStage.secondStage)
+                {
+                    spriteBatch.Draw(textureSecondStage, BossCurrentPosition, animationFramesAlive[currentAnimationFrameIndex], Color.Red, 0f, originTexture, 0.9f, SpriteEffects.None, 0f);
+                }
             }
             else
             {
-                if (hitCount >= secondStageHealth && hitCount < maxHealth)
-                {
-                    spriteBatch.Draw(textureSecondStage, BossCurrentPosition, animationFramesAlive[currentAnimationFrameIndex], Color.White, 0f, originTexture, 0.9f, SpriteEffects.None, 0f);
-                }
-                else if (hitCount >= 0 && hitCount < secondStageHealth)
+                if (CurrentStage == BossStage.firstStage)
                 {
                     spriteBatch.Draw(textureFirstStage, BossCurrentPosition, animationFramesAlive[currentAnimationFrameIndex], Color.White, 0f, originTexture, 0.9f, SpriteEffects.None, 0f);
                 }
-                else if (hitCount >= maxHealth)
+                else if (CurrentStage == BossStage.secondStage)
+                {
+                    spriteBatch.Draw(textureSecondStage, BossCurrentPosition, animationFramesAlive[currentAnimationFrameIndex], Color.White, 0f, originTexture, 0.9f, SpriteEffects.None, 0f);
+                }
+                else if (CurrentStage == BossStage.destroyed)
                 {
                     IsHit = !IsHit;//flash effect
                     spriteBatch.Draw(textureDestroyedStage, BossCurrentPosition, new Rectangle(0, 0, textureDestroyedStage.Width, textureDestroyedStage.Height), Color.White, 0f, originTexture, 0.9f, SpriteEffects.None, 0f);
                 }
 
             }
-
             spriteBatch.End();
             base.Draw(gameTime);
         }
-
-        private void HandleEntrySequence()
-        {
-            Action<int> changeStartSequence = (x) => { if (BossCurrentPosition.Y >= x) IsStartSequence = false; };
-
-            currentAnimationFrameIndex = currentAnimationFrameIndex == animationFramesAlive.Count() - 1 ? 0 : ++currentAnimationFrameIndex;
-            bossCurrentPosition.Y = IsStartSequence == true ? BossCurrentPosition.Y + ENTRY_SPEED : BossCurrentPosition.Y;
-
-            changeStartSequence(FINAL_Y_ENTRY_POSITION);
-        }
-
-        private void AdjustXPositionBasedOnAircraft(GameTime gameTime)
-        {
-            timerNewXCoordinate += gameTime.ElapsedGameTime.TotalMilliseconds;
-            if (timerNewXCoordinate >= frameInterval && (CurrentStage == BossStage.firstStage || CurrentStage == BossStage.secondStage))
-            {
-                Vector2 FighterAircraftCurrentPosition = FighterAircraft.AircraftCurrentPosition;
-                newXCoordinate = FighterAircraftCurrentPosition.X;
-                timerNewXCoordinate = 0;
-            }
-
-            if (bossCurrentPosition.X > newXCoordinate)
-            {
-                bossCurrentPosition.X--;
-            }
-            else if (bossCurrentPosition.X < newXCoordinate)
-            {
-                bossCurrentPosition.X++;
-            }
-        }
-
-        private void ShakeIfDestroyed(GameTime gameTime)
-        {
-            if (CurrentStage == BossStage.destroyed)
-            {
-                timerShake += gameTime.ElapsedGameTime.TotalMilliseconds;
-                if (timerShake >= intervalShake)
-                {
-                    bossCurrentPosition.X += random.Next(-4, 6);
-                    bossCurrentPosition.Y += random.Next(-4, 6);
-                    timerShake = 0;
-                }
-
-                timerDestruction += gameTime.ElapsedGameTime.TotalMilliseconds;
-                if (timerDestruction >= intervalDestructionSound)
-                {
-                    destructionSound.Play();
-                    timerDestruction = 0;
-                }
-            }
-        }
-
-        private void ChangeStageBasedOnHealth()
-        {
-            if (hitCount >= secondStageHealth && hitCount < maxHealth)
-            {
-                CurrentStage = BossStage.secondStage;
-            }
-            else if (hitCount >= maxHealth)
-            {
-                CurrentStage = BossStage.destroyed;
-            }
-        }
-
+        /// <summary>
+        /// To get boss helicopter hit box
+        /// </summary>
+        /// <returns>Boss Texture's Frame Positions and Size</returns>
         public Rectangle GetHitbox()
         {
             int scaledWidth = (int)(frameDimensionAlive.X * 0.9f);

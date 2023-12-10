@@ -192,3 +192,4 @@ C:\Users\blitz\OneDrive - Conestoga College\3rdSemester\PROG2370\Projects\Airbor
 C:\Users\blitz\OneDrive - Conestoga College\3rdSemester\PROG2370\Projects\AirborneAssault\Final\Final\bin\Debug\net6.0-windows\Content\sounds\hitSound.xnb
 C:\Users\blitz\OneDrive - Conestoga College\3rdSemester\PROG2370\Projects\AirborneAssault\Final\Final\bin\Debug\net6.0-windows\Content\sounds\playSceneBackgroundSound.xnb
 C:\Users\blitz\OneDrive - Conestoga College\3rdSemester\PROG2370\Projects\AirborneAssault\Final\Final\bin\Debug\net6.0-windows\Content\images\bossSpecialAttack.xnb
+C:\Users\blitz\OneDrive - Conestoga College\3rdSemester\PROG2370\Projects\AirborneAssault\Final\Final\bin\Debug\net6.0-windows\Content\images\wasdKeyboardIcon.xnb

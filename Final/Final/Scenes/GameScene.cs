@@ -1,13 +1,11 @@
-﻿using Final.GameComponents;
-using Microsoft.Xna.Framework;
-using System;
+﻿using Microsoft.Xna.Framework;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Final.Scenes
 {
+    /// <summary>
+    /// Abstract Class for all game scenes
+    /// </summary>
     public abstract class GameScene : DrawableGameComponent
     {
         public List<GameComponent> ComponentList { get; set; }
@@ -22,6 +20,10 @@ namespace Final.Scenes
             Enabled = true;
             Visible = true;
         }
+        /// <summary>
+        /// Constructor, initialize Scene's Game Components List
+        /// </summary>
+        /// <param name="game"></param>
         protected GameScene(Game game) : base(game)
         {
             ComponentList = new List<GameComponent>();
@@ -37,8 +39,6 @@ namespace Final.Scenes
                     gameComponent.Update(gameTime);
                 }
             }
-
-
             base.Update(gameTime);
         }
         public override void Draw(GameTime gameTime)

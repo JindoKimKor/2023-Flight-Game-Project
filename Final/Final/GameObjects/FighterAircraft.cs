@@ -1,14 +1,8 @@
-﻿using Final.Scenes;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Final.GameComponents
 {
@@ -32,7 +26,9 @@ namespace Final.GameComponents
         MoveSoutheastSlow = 19,
         MoveSoutheastFast = 24,
     }
-
+    /// <summary>
+    /// Aircraft(main character) Class
+    /// </summary>
     public class FighterAircraft : DrawableGameComponent
     {
         // SpriteBatch and texture for rendering
@@ -90,12 +86,18 @@ namespace Final.GameComponents
 
         public static Vector2 AircraftCurrentPosition { get => aircraftCurrentPosition; set => aircraftCurrentPosition = value; }
 
+        /// <summary>
+        /// Aircraft Constructor
+        /// </summary>
+        /// <param name="game"></param>
+        /// <param name="playSceneSpriteBatch"></param>
         public FighterAircraft(Game game, SpriteBatch playSceneSpriteBatch) : base(game)
         {
             // Main game reference and sprite batch initialization
             mainGame = (MainGame)game;
             spriteBatch = playSceneSpriteBatch;
             hitSoundEffect = mainGame.Content.Load<SoundEffect>("sounds/hitSound");
+
             // Load textures and initialize dimensions
             LoadTexturesAndInitializeDimensions();
 
@@ -107,52 +109,51 @@ namespace Final.GameComponents
 
             // Initialize directions and speeds for aircraft movement
             InitializeAircraftDirectionsWithSpeed();
-        }
 
-        private void LoadTexturesAndInitializeDimensions()
-        {
-            aircraftTexture = mainGame.Content.Load<Texture2D>("images/fighterAircraft");
-            aircraftFrameSize = new Vector2(aircraftTexture.Width / AIRCRAFT_TEXTURE_ROWS, aircraftTexture.Height / AIRCRAFT_TEXTURE_COLS);
-            textureOrigin = new Vector2(aircraftFrameSize.X / 2, aircraftFrameSize.Y / 2);
-
-            attackAnimationTexture = mainGame.Content.Load<Texture2D>("images/aircraftAttackAnimation");
-            attackAnimationFrameSize = new Vector2(attackAnimationTexture.Width, attackAnimationTexture.Height / FIRE_TEXTURE_ROWS);
-            attackAnimationFrameIndex = (FIRE_TEXTURE_ROWS - 1);
-        }
-
-        private void InitializeAircraftPositionAndState()
-        {
-            AircraftCurrentPosition = new Vector2(Shared.stageSize.X / 2, Shared.stageSize.Y);
-            currentFrame = AircraftFrames.Idle;
-            isInEntrySequence = true;
-        }
-
-        private void InitializeAnimationFrames()
-        {
-            // Initialize frames for aircraft movement
-            animationFrames = new List<Rectangle>();
-            for (int r = 0; r < AIRCRAFT_TEXTURE_ROWS; r++)
+            void LoadTexturesAndInitializeDimensions()
             {
-                for (int c = 0; c < AIRCRAFT_TEXTURE_COLS; c++)
+                aircraftTexture = mainGame.Content.Load<Texture2D>("images/fighterAircraft");
+                aircraftFrameSize = new Vector2(aircraftTexture.Width / AIRCRAFT_TEXTURE_ROWS, aircraftTexture.Height / AIRCRAFT_TEXTURE_COLS);
+                textureOrigin = new Vector2(aircraftFrameSize.X / 2, aircraftFrameSize.Y / 2);
+
+                attackAnimationTexture = mainGame.Content.Load<Texture2D>("images/aircraftAttackAnimation");
+                attackAnimationFrameSize = new Vector2(attackAnimationTexture.Width, attackAnimationTexture.Height / FIRE_TEXTURE_ROWS);
+                attackAnimationFrameIndex = (FIRE_TEXTURE_ROWS - 1);
+            }
+
+            void InitializeAircraftPositionAndState()
+            {
+                AircraftCurrentPosition = new Vector2(Shared.stageSize.X / 2, Shared.stageSize.Y);
+                currentFrame = AircraftFrames.Idle;
+                isInEntrySequence = true;
+            }
+
+            void InitializeAnimationFrames()
+            {
+                // Initialize frames for aircraft movement
+                animationFrames = new List<Rectangle>();
+                for (int r = 0; r < AIRCRAFT_TEXTURE_ROWS; r++)
                 {
-                    int x = c * (int)aircraftFrameSize.X;
-                    int y = r * (int)aircraftFrameSize.Y;
-                    animationFrames.Add(new Rectangle(x, y, (int)aircraftFrameSize.X, (int)aircraftFrameSize.Y));
+                    for (int c = 0; c < AIRCRAFT_TEXTURE_COLS; c++)
+                    {
+                        int x = c * (int)aircraftFrameSize.X;
+                        int y = r * (int)aircraftFrameSize.Y;
+                        animationFrames.Add(new Rectangle(x, y, (int)aircraftFrameSize.X, (int)aircraftFrameSize.Y));
+                    }
+                }
+
+                // Initialize frames for fire animation
+                fireAnimationFrames = new List<Rectangle>();
+                for (int r = 0; r < FIRE_TEXTURE_ROWS; r++)
+                {
+                    int y = r * (int)attackAnimationFrameSize.Y;
+                    fireAnimationFrames.Add(new Rectangle(0, y, (int)attackAnimationFrameSize.X, (int)attackAnimationFrameSize.Y));
                 }
             }
 
-            // Initialize frames for fire animation
-            fireAnimationFrames = new List<Rectangle>();
-            for (int r = 0; r < FIRE_TEXTURE_ROWS; r++)
+            void InitializeAircraftDirectionsWithSpeed()
             {
-                int y = r * (int)attackAnimationFrameSize.Y;
-                fireAnimationFrames.Add(new Rectangle(0, y, (int)attackAnimationFrameSize.X, (int)attackAnimationFrameSize.Y));
-            }
-        }
-
-        private void InitializeAircraftDirectionsWithSpeed()
-        {
-            aircraftDirectionsWithSpeed = new Dictionary<AircraftFrames, Vector2>
+                aircraftDirectionsWithSpeed = new Dictionary<AircraftFrames, Vector2>
             {
                 { AircraftFrames.Idle, new Vector2(0, 0) },
                 { AircraftFrames.MoveLeftSlow, new Vector2(-1 * 2, 0) },
@@ -173,7 +174,7 @@ namespace Final.GameComponents
                 { AircraftFrames.MoveSoutheastFast, new Vector2(1.4142f * 2, 1.4142f * 2) }
             };
 
-            directionDurations = new Dictionary<AircraftFrames, double>
+                directionDurations = new Dictionary<AircraftFrames, double>
             {
                 { AircraftFrames.MoveLeftSlow, 0 },
                 { AircraftFrames.MoveRightSlow, 0 },
@@ -184,17 +185,118 @@ namespace Final.GameComponents
                 { AircraftFrames.MoveSouthwestSlow, 0 },
                 { AircraftFrames.MoveSoutheastSlow, 0 }
             };
+            }
         }
+
+
         public override void Update(GameTime gameTime)
         {
 
             HandleAircraftEntry(gameTime);
+
             HandleAircraftMovement(gameTime);
+
             UpdateFireAnimation(gameTime);
 
 
             base.Update(gameTime);
 
+
+            void HandleAircraftEntry(GameTime gameTime)
+            {
+                //Control aircraft loading time
+                if (IsInEntrySequence)
+                {
+                    aircraftCurrentPosition.Y -= aircraftEntrySpeed;
+
+                    if (AircraftCurrentPosition.Y == aircraftFullyLoadedYPosition)
+                    {
+                        IsInEntrySequence = false;
+                    }
+                    currentFrame = AircraftFrames.Idle;
+                }
+            }
+
+            void HandleAircraftMovement(GameTime gameTime)
+            {
+                if (!IsInEntrySequence)
+                {
+                    KeyboardState keyboardState = Keyboard.GetState();
+
+                    bool left = keyboardState.IsKeyDown(Keys.Left) || keyboardState.IsKeyDown(Keys.A);
+                    bool right = keyboardState.IsKeyDown(Keys.Right) || keyboardState.IsKeyDown(Keys.D);
+                    bool up = keyboardState.IsKeyDown(Keys.Up) || keyboardState.IsKeyDown(Keys.W);
+                    bool down = keyboardState.IsKeyDown(Keys.Down) || keyboardState.IsKeyDown(Keys.S);
+
+
+                    if (left && up)
+                    {
+                        directionDurations[AircraftFrames.MoveNorthwestSlow] += gameTime.ElapsedGameTime.TotalSeconds;
+                        currentFrame = DetermineAnimationFrameWithKeyboardInput(AircraftFrames.MoveNorthwestSlow);
+                    }
+                    else if (left && down)
+                    {
+                        directionDurations[AircraftFrames.MoveSouthwestSlow] += gameTime.ElapsedGameTime.TotalSeconds;
+                        currentFrame = DetermineAnimationFrameWithKeyboardInput(AircraftFrames.MoveSouthwestSlow);
+                    }
+                    else if (right && up)
+                    {
+                        directionDurations[AircraftFrames.MoveNortheastSlow] += gameTime.ElapsedGameTime.TotalSeconds;
+                        currentFrame = DetermineAnimationFrameWithKeyboardInput(AircraftFrames.MoveNortheastSlow);
+                    }
+                    else if (right && down)
+                    {
+                        directionDurations[AircraftFrames.MoveSoutheastSlow] += gameTime.ElapsedGameTime.TotalSeconds;
+                        currentFrame = DetermineAnimationFrameWithKeyboardInput(AircraftFrames.MoveSoutheastSlow);
+                    }
+                    else if (left)
+                    {
+                        directionDurations[AircraftFrames.MoveLeftSlow] += gameTime.ElapsedGameTime.TotalSeconds;
+                        currentFrame = DetermineAnimationFrameWithKeyboardInput(AircraftFrames.MoveLeftSlow);
+                    }
+                    else if (right)
+                    {
+                        directionDurations[AircraftFrames.MoveRightSlow] += gameTime.ElapsedGameTime.TotalSeconds;
+                        currentFrame = DetermineAnimationFrameWithKeyboardInput(AircraftFrames.MoveRightSlow);
+                    }
+                    else if (up)
+                    {
+                        directionDurations[AircraftFrames.MoveUpSlow] += gameTime.ElapsedGameTime.TotalSeconds;
+                        currentFrame = DetermineAnimationFrameWithKeyboardInput(AircraftFrames.MoveUpSlow);
+                    }
+                    else if (down)
+                    {
+                        directionDurations[AircraftFrames.MoveDownSlow] += gameTime.ElapsedGameTime.TotalSeconds;
+                        currentFrame = DetermineAnimationFrameWithKeyboardInput(AircraftFrames.MoveDownSlow);
+                    }
+                    else
+                    {
+                        currentFrame = DetermineAnimationFrameWithKeyboardInput(AircraftFrames.Idle);
+                    }
+                    AircraftCurrentPosition += aircraftDirectionsWithSpeed[currentFrame];
+                    KeepWithinScreenLimits(AircraftCurrentPosition);
+                }
+            }
+
+            void UpdateFireAnimation(GameTime gameTime)
+            {
+                attackAnimationElapsedTime += gameTime.ElapsedGameTime.TotalMilliseconds;
+                if (attackAnimationElapsedTime >= attackAnimationFrameInterval)
+                {
+                    attackAnimationFrameIndex--;
+                    if (attackAnimationFrameIndex <= 1)
+                    {
+                        attackAnimationFrameIndex = (FIRE_TEXTURE_ROWS - 1);
+                    }
+                    attackAnimationElapsedTime = 0;
+                }
+
+
+                attackAnimationPosition = AircraftCurrentPosition;
+                //adjust position according to its presentation
+                attackAnimationPosition.X = attackAnimationPosition.X - 22f;
+                attackAnimationPosition.Y = attackAnimationPosition.Y - 50f;
+            }
         }
 
         public override void Draw(GameTime gameTime)
@@ -233,105 +335,12 @@ namespace Final.GameComponents
 
             base.Draw(gameTime);
         }
-
-        private void HandleAircraftEntry(GameTime gameTime)
-        {
-            //Control aircraft loading time
-            if (IsInEntrySequence)
-            {
-                aircraftCurrentPosition.Y -= aircraftEntrySpeed;
-
-                if (AircraftCurrentPosition.Y == aircraftFullyLoadedYPosition)
-                {
-                    IsInEntrySequence = false;
-                }
-                ChangeAirCraftPositionAndAnimationWithSpeed(AircraftFrames.Idle, AircraftCurrentPosition);
-            }
-        }
-
-        private void HandleAircraftMovement(GameTime gameTime)
-        {
-            if (!IsInEntrySequence)
-            {
-                KeyboardState keyboardState = Keyboard.GetState();
-
-                currentFrame = AircraftFrames.Idle;
-
-                bool left = keyboardState.IsKeyDown(Keys.Left) || keyboardState.IsKeyDown(Keys.A);
-                bool right = keyboardState.IsKeyDown(Keys.Right) || keyboardState.IsKeyDown(Keys.D);
-                bool up = keyboardState.IsKeyDown(Keys.Up) || keyboardState.IsKeyDown(Keys.W);
-                bool down = keyboardState.IsKeyDown(Keys.Down) || keyboardState.IsKeyDown(Keys.S);
-
-
-                if (left && up)
-                {
-                    directionDurations[AircraftFrames.MoveNorthwestSlow] += gameTime.ElapsedGameTime.TotalSeconds;
-                    currentFrame = DetermineCurrentFrameAndInitilizeOthers(AircraftFrames.MoveNorthwestSlow);
-                }
-                else if (left && down)
-                {
-                    directionDurations[AircraftFrames.MoveSouthwestSlow] += gameTime.ElapsedGameTime.TotalSeconds;
-                    currentFrame = DetermineCurrentFrameAndInitilizeOthers(AircraftFrames.MoveSouthwestSlow);
-                }
-                else if (right && up)
-                {
-                    directionDurations[AircraftFrames.MoveNortheastSlow] += gameTime.ElapsedGameTime.TotalSeconds;
-                    currentFrame = DetermineCurrentFrameAndInitilizeOthers(AircraftFrames.MoveNortheastSlow);
-                }
-                else if (right && down)
-                {
-                    directionDurations[AircraftFrames.MoveSoutheastSlow] += gameTime.ElapsedGameTime.TotalSeconds;
-                    currentFrame = DetermineCurrentFrameAndInitilizeOthers(AircraftFrames.MoveSoutheastSlow);
-                }
-                else if (left)
-                {
-                    directionDurations[AircraftFrames.MoveLeftSlow] += gameTime.ElapsedGameTime.TotalSeconds;
-                    currentFrame = DetermineCurrentFrameAndInitilizeOthers(AircraftFrames.MoveLeftSlow);
-                }
-                else if (right)
-                {
-                    directionDurations[AircraftFrames.MoveRightSlow] += gameTime.ElapsedGameTime.TotalSeconds;
-                    currentFrame = DetermineCurrentFrameAndInitilizeOthers(AircraftFrames.MoveRightSlow);
-                }
-                else if (up)
-                {
-                    directionDurations[AircraftFrames.MoveUpSlow] += gameTime.ElapsedGameTime.TotalSeconds;
-                    currentFrame = DetermineCurrentFrameAndInitilizeOthers(AircraftFrames.MoveUpSlow);
-                }
-                else if (down)
-                {
-                    directionDurations[AircraftFrames.MoveDownSlow] += gameTime.ElapsedGameTime.TotalSeconds;
-                    currentFrame = DetermineCurrentFrameAndInitilizeOthers(AircraftFrames.MoveDownSlow);
-                }
-                else
-                {
-                    currentFrame = DetermineCurrentFrameAndInitilizeOthers(AircraftFrames.Idle);
-                }
-                AircraftCurrentPosition += aircraftDirectionsWithSpeed[currentFrame];
-                ChangeAirCraftPositionAndAnimationWithSpeed(currentFrame, AircraftCurrentPosition);
-            }
-        }
-
-        private void UpdateFireAnimation(GameTime gameTime)
-        {
-            attackAnimationElapsedTime += gameTime.ElapsedGameTime.TotalMilliseconds;
-            if (attackAnimationElapsedTime >= attackAnimationFrameInterval)
-            {
-                attackAnimationFrameIndex--;
-                if (attackAnimationFrameIndex <= 1)
-                {
-                    attackAnimationFrameIndex = (FIRE_TEXTURE_ROWS - 1);
-                }
-                attackAnimationElapsedTime = 0;
-            }
-
-
-            attackAnimationPosition = AircraftCurrentPosition;
-            //adjust position according to its presentation
-            attackAnimationPosition.X = attackAnimationPosition.X - 22f;
-            attackAnimationPosition.Y = attackAnimationPosition.Y - 50f;
-        }
-        private AircraftFrames DetermineCurrentFrameAndInitilizeOthers(AircraftFrames aircraftFrames)
+        /// <summary>
+        /// Determain aircraft animation frame based on Keyboard input
+        /// </summary>
+        /// <param name="aircraftFrames">current aircraft frame</param>
+        /// <returns>New Aircraft Frame</returns>
+        private AircraftFrames DetermineAnimationFrameWithKeyboardInput(AircraftFrames aircraftFrames)
         {
             foreach (AircraftFrames item in directionDurations.Keys)
             {
@@ -340,7 +349,7 @@ namespace Final.GameComponents
                     directionDurations[item] = 0;
                 }
             }
-            if (directionDurations.ContainsKey(aircraftFrames) && directionDurations[aircraftFrames] >= 0.15)
+            if (directionDurations.ContainsKey(aircraftFrames) && directionDurations[aircraftFrames] >= 0.17)
             {
                 switch (aircraftFrames)
                 {
@@ -364,30 +373,29 @@ namespace Final.GameComponents
                         return aircraftFrames;
                 }
             }
-
             return aircraftFrames;
         }
-
-        public void ChangeAirCraftPositionAndAnimationWithSpeed(AircraftFrames newFrame, Vector2 newPosition)
+        /// <summary>
+        /// To Keep aircraft within the screen display
+        /// </summary>
+        /// <param name="currentPosition">Aircraft current positoin</param>
+        private void KeepWithinScreenLimits(Vector2 currentPosition)
         {
-            float screenEdgeMinimumX = (aircraftFrameSize.X / 2);
-            float screenEdgeMinimumY = (aircraftFrameSize.Y / 2);
+            float screenEdgeMinX = 0 + (aircraftFrameSize.X / 2);
+            float screenEdgeMinY = 0 + (aircraftFrameSize.Y / 2);
             float screenEdgeMaxX = Shared.stageSize.X - (aircraftFrameSize.X / 2);
             float screenEdgeMaxY = Shared.stageSize.Y - (aircraftFrameSize.Y / 2);
 
-            currentFrame = newFrame;
-            //To keep the aircraft within the screen
-            if (!IsInEntrySequence)
-            {
-                AircraftCurrentPosition = new Vector2(
-                    newPosition.X <= screenEdgeMinimumX ? screenEdgeMinimumX : newPosition.X >= screenEdgeMaxX ? screenEdgeMaxX : newPosition.X,
-                    newPosition.Y <= screenEdgeMinimumY ? screenEdgeMinimumY : newPosition.Y >= screenEdgeMaxY ? screenEdgeMaxY : newPosition.Y
-                );
-            }
+            AircraftCurrentPosition = new Vector2(
+                currentPosition.X <= screenEdgeMinX ? screenEdgeMinX : currentPosition.X >= screenEdgeMaxX ? screenEdgeMaxX : currentPosition.X,
+                currentPosition.Y <= screenEdgeMinY ? screenEdgeMinY : currentPosition.Y >= screenEdgeMaxY ? screenEdgeMaxY : currentPosition.Y
+            );
         }
 
-
-
+        /// <summary>
+        /// To get aircraft hit box
+        /// </summary>
+        /// <returns>aircraft Texture's Frame Positions and Size</returns>
         public Rectangle GetHitbox()
         {
             int scaledWidth = (int)(aircraftFrameSize.X * 0.8f);

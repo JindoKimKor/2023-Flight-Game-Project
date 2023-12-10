@@ -1,83 +1,110 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Final.Scenes
 {
-    internal class LeaderBoardScene : GameScene
+    /// <summary>
+    /// Leader Board Scene
+    /// </summary>
+    public class LeaderBoardScene : GameScene
     {
-        private SpriteBatch leaderBoardSceneSpriteBatch;
+        // Rendering components
+        private SpriteBatch spriteBatch;
+
+        // Fonts for text rendering
         private SpriteFont titleFont;
+        private SpriteFont highlightFont;
+
+        // Textures for scene visuals
         private Texture2D backgroundTexture;
-        private string titleText = "Top 5";
-        private SpriteFont regularFont;
-        private SpriteFont hilightFont;
         private Texture2D transparentBackground;
 
+        // Scene specific fields
+        private string titleText = "Top 5";
         private List<(string Initials, int Score)> topScores;
+        private string scoresFilePath = "scores.txt";
+        private Vector2 titlePosition;
+        private Vector2 titleSize;
+
+        // Constants for layout
+        private const int ScoreStartYPosition = 350;
+        private const int ScoreYPositionIncrement = 80;
 
         public LeaderBoardScene(Game game) : base(game)
         {
             MainGame mainGame = (MainGame)game;
-            leaderBoardSceneSpriteBatch = mainGame._spriteBatch;
-            regularFont = game.Content.Load<SpriteFont>("fonts/RegularFont");
-            hilightFont = game.Content.Load<SpriteFont>("fonts/HighlightFont");
-            titleFont = game.Content.Load<SpriteFont>("fonts/TitleFont");
-            backgroundTexture = mainGame.Content.Load<Texture2D>("images/background");
-            transparentBackground = new Texture2D(GraphicsDevice, 1, 1);
-            transparentBackground.SetData(new[] { Color.Black });
+            spriteBatch = mainGame.SpriteBatch;
+            LoadContent();
+            void LoadContent()
+            {
+                highlightFont = game.Content.Load<SpriteFont>("fonts/HighlightFont");
+                titleFont = game.Content.Load<SpriteFont>("fonts/TitleFont");
+                backgroundTexture = mainGame.Content.Load<Texture2D>("images/background");
+            }
+            InitializeTransparentBackground();
+            void InitializeTransparentBackground()
+            {
+                transparentBackground = new Texture2D(GraphicsDevice, 1, 1);
+                transparentBackground.SetData(new[] { Color.Black });
+            }
 
-
-            topScores = new List<(string Initials, int Score)>();
-            LoadTopScores();
         }
 
-        private void LoadTopScores()
+        /// <summary>
+        /// Load current data
+        /// </summary>
+        public void LoadTopScores()
         {
-            string filePath = "scores.txt";
-            if (File.Exists(filePath))
+            topScores = new List<(string Initials, int Score)>();
+
+            if (File.Exists(scoresFilePath))
             {
-                var lines = File.ReadAllLines(filePath);
+                var lines = File.ReadAllLines(scoresFilePath);
                 for (int i = 0; i < lines.Length; i += 2)
                 {
                     string initials = lines[i];
                     int score = int.Parse(lines[i + 1]);
                     topScores.Add((initials, score));
+                    topScores = topScores.OrderByDescending(s => s.Score).Take(5).ToList();
                 }
-
-                topScores = topScores.OrderByDescending(s => s.Score).Take(5).ToList();
             }
         }
 
         public override void Draw(GameTime gameTime)
         {
-            leaderBoardSceneSpriteBatch.Begin();
-            Vector2 titleSize = titleFont.MeasureString(titleText);
-            Vector2 titlePosition = new Vector2((Shared.stageSize.X - titleSize.X) / 2, 100);
-            leaderBoardSceneSpriteBatch.Draw(backgroundTexture, new Rectangle(0, 0, (int)Shared.stageSize.X, (int)Shared.stageSize.Y), Color.White);
-            leaderBoardSceneSpriteBatch.Draw(transparentBackground, new Rectangle(0, 0, (int)Shared.stageSize.X, (int)Shared.stageSize.Y), Color.White * 0.6f);
-            leaderBoardSceneSpriteBatch.DrawString(titleFont, titleText, titlePosition, Color.BlueViolet);
-
-
-            int yPosition = 350; 
-            int rank = 1;
-            foreach (var score in topScores)
+            spriteBatch.Begin();
+            DrawBackground();
+            void DrawBackground()
             {
-                string scoreText = $"#{rank}: {score.Initials} - {score.Score}";
-                Vector2 scorePosition = new Vector2((Shared.stageSize.X / 2) - (hilightFont.MeasureString(scoreText).X / 2), yPosition);
-                leaderBoardSceneSpriteBatch.DrawString(hilightFont, scoreText, scorePosition, Color.White);
-
-                yPosition += 80; 
-                rank++;
+                spriteBatch.Draw(backgroundTexture, new Rectangle(0, 0, (int)Shared.stageSize.X, (int)Shared.stageSize.Y), Color.White);
+                spriteBatch.Draw(transparentBackground, new Rectangle(0, 0, (int)Shared.stageSize.X, (int)Shared.stageSize.Y), Color.White * 0.6f);
             }
+            DrawTitle();
+            void DrawTitle()
+            {
+                titleSize = titleFont.MeasureString(titleText);
+                titlePosition = new Vector2((Shared.stageSize.X - titleSize.X) / 2, 100);
+                spriteBatch.DrawString(titleFont, titleText, titlePosition, Color.BlueViolet);
+            }
+            DrawScores();
+            void DrawScores()
+            {
+                int yPosition = ScoreStartYPosition;
+                int rank = 1;
+                foreach (var score in topScores)
+                {
+                    string scoreText = $"#{rank}: {score.Initials} - {score.Score}";
+                    Vector2 scorePosition = new Vector2((Shared.stageSize.X / 2) - (highlightFont.MeasureString(scoreText).X / 2), yPosition);
+                    spriteBatch.DrawString(highlightFont, scoreText, scorePosition, Color.White);
 
-            leaderBoardSceneSpriteBatch.End();
-
+                    yPosition += ScoreYPositionIncrement;
+                    rank++;
+                }
+            }
+            spriteBatch.End();
         }
     }
 }

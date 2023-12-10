@@ -1,14 +1,14 @@
-﻿using Final.Scenes;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
-using System.Drawing.Imaging;
 
 
 namespace Final.GameComponents
 {
     public delegate void RemovePassedMinYCoordinateBullet(AircraftBasicBullet bullet);
-
+    /// <summary>
+    /// Main Character bullet Class
+    /// </summary>
     public class AircraftBasicBullet : DrawableGameComponent
     {
         // SpriteBatch and texture for rendering the basic bullet
@@ -42,11 +42,21 @@ namespace Final.GameComponents
         // Delegate for removing bullet when it passes a certain Y coordinate
         public RemovePassedMinYCoordinateBullet RemoveBulletDelegate { get; set; }
 
+        /// <summary>
+        /// One Bullet Mode Constructor
+        /// </summary>
+        /// <param name="game"></param>
+        /// <param name="playSceneAircraftSpriteBatch"></param>
         public AircraftBasicBullet(Game game, SpriteBatch playSceneAircraftSpriteBatch) : base(game)
         {
             InitializeBullet(game, playSceneAircraftSpriteBatch, "");
         }
-
+        /// <summary>
+        /// Three Bullet Mode Constructor
+        /// </summary>
+        /// <param name="game"></param>
+        /// <param name="playSceneAircraftSpriteBatch"></param>
+        /// <param name="direction"></param>
         public AircraftBasicBullet(Game game, SpriteBatch playSceneAircraftSpriteBatch, string direction) : base(game)
         {
             InitializeBullet(game, playSceneAircraftSpriteBatch, direction);
@@ -64,29 +74,66 @@ namespace Final.GameComponents
             originTexture = new Vector2(bulletFrameSize.X / 2, bulletFrameSize.Y / 2);
             animationFrames = GenerateAnimationFrames();
             this.bulletDirection = direction;
-        }
 
-        // Generates animation frames for the bullet
-        private List<Rectangle> GenerateAnimationFrames()
-        {
-            List<Rectangle> frames = new List<Rectangle>();
-            for (int c = 0; c < BASIC_BULLET_ROWS; c++)
+            // Generates animation frames for the bullet
+            List<Rectangle> GenerateAnimationFrames()
             {
-                int x = c * (int)bulletFrameSize.X;
-                frames.Add(new Rectangle(x, 0, (int)bulletFrameSize.X, (int)bulletFrameSize.Y));
+                List<Rectangle> frames = new List<Rectangle>();
+                for (int c = 0; c < BASIC_BULLET_ROWS; c++)
+                {
+                    int x = c * (int)bulletFrameSize.X;
+                    frames.Add(new Rectangle(x, 0, (int)bulletFrameSize.X, (int)bulletFrameSize.Y));
+                }
+                return frames;
             }
-            return frames;
+
         }
 
         public override void Update(GameTime gameTime)
         {
 
-            UpdateAnimationFrame(gameTime);
-
+            UpdateAnimationFrame();
             UpdateBulletPosition();
-
             CheckBulletPositionAndRemove();
 
+            void UpdateAnimationFrame()
+            {
+                elapsedTime += gameTime.ElapsedGameTime.TotalMilliseconds;
+                if (elapsedTime >= frameInterval)
+                {
+                    // Setting the index
+                    currentFrameIndex = (currentFrameIndex + 1) % BASIC_BULLET_ROWS;
+                    elapsedTime = 0;
+                }
+            }
+            void UpdateBulletPosition()
+            {
+                switch (bulletDirection)
+                {
+                    case "left":
+                        currentPosition.X -= BULLET_SPEED * HORIZONTAL_MOVEMENT_FACTOR;
+                        currentPosition.Y -= BULLET_SPEED * VERTICAL_MOVEMENT_FACTOR;
+                        break;
+                    case "center":
+                        currentPosition.Y -= BULLET_SPEED;
+                        break;
+                    case "right":
+                        currentPosition.X += BULLET_SPEED * HORIZONTAL_MOVEMENT_FACTOR;
+                        currentPosition.Y -= BULLET_SPEED * VERTICAL_MOVEMENT_FACTOR;
+                        break;
+                    default:
+                        currentPosition.Y -= BULLET_SPEED;
+                        break;
+                }
+            }
+            void CheckBulletPositionAndRemove()
+            {
+                if (currentPosition.Y <= maxBulletYCoordinate)
+                {
+                    //It got called only if It's not null
+                    RemoveBulletDelegate?.Invoke(this);
+                }
+            }
             base.Update(gameTime);
         }
 
@@ -101,45 +148,7 @@ namespace Final.GameComponents
 
             base.Draw(gameTime);
         }
-        private void UpdateAnimationFrame(GameTime gameTime)
-        {
-            elapsedTime += gameTime.ElapsedGameTime.TotalMilliseconds;
-            if (elapsedTime >= frameInterval)
-            {
-                // Setting the index
-                currentFrameIndex = (currentFrameIndex + 1) % BASIC_BULLET_ROWS;
-                elapsedTime = 0;
-            }
-        }
-
-        private void UpdateBulletPosition()
-        {
-            switch (bulletDirection)
-            {
-                case "left":
-                    currentPosition.X -= BULLET_SPEED * HORIZONTAL_MOVEMENT_FACTOR;
-                    currentPosition.Y -= BULLET_SPEED * VERTICAL_MOVEMENT_FACTOR;
-                    break;
-                case "center":
-                    currentPosition.Y -= BULLET_SPEED;
-                    break;
-                case "right":
-                    currentPosition.X += BULLET_SPEED * HORIZONTAL_MOVEMENT_FACTOR;
-                    currentPosition.Y -= BULLET_SPEED * VERTICAL_MOVEMENT_FACTOR;
-                    break;
-                default:
-                    currentPosition.Y -= BULLET_SPEED;
-                    break;
-            }
-        }
-        private void CheckBulletPositionAndRemove()
-        {
-            if (currentPosition.Y <= maxBulletYCoordinate)
-            {
-                //It got called only if It's not null
-                RemoveBulletDelegate?.Invoke(this);
-            }
-        }
+        
         public Rectangle GetHitbox()
         {
             int scaledWidth = (int)(bulletFrameSize.X * 0.2f);

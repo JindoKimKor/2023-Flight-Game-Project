@@ -21,12 +21,14 @@
     <File>C:/Users/blitz/OneDrive - Conestoga College/3rdSemester/PROG2370/Projects/AirborneAssault/Final/Final/Content/images/smallHelicopter.png</File>
     <File>C:/Users/blitz/OneDrive - Conestoga College/3rdSemester/PROG2370/Projects/AirborneAssault/Final/Final/Content/images/smallHelicopterBullet.png</File>
     <File>C:/Users/blitz/OneDrive - Conestoga College/3rdSemester/PROG2370/Projects/AirborneAssault/Final/Final/Content/images/threeBulletMode.png</File>
+    <File>C:/Users/blitz/OneDrive - Conestoga College/3rdSemester/PROG2370/Projects/AirborneAssault/Final/Final/Content/images/wasdKeyboardIcon.png</File>
     <File>C:/Users/blitz/OneDrive - Conestoga College/3rdSemester/PROG2370/Projects/AirborneAssault/Final/Final/Content/sounds/backgroundMusic.mp3</File>
     <File>C:/Users/blitz/OneDrive - Conestoga College/3rdSemester/PROG2370/Projects/AirborneAssault/Final/Final/Content/sounds/destroyedSound.wav</File>
     <File>C:/Users/blitz/OneDrive - Conestoga College/3rdSemester/PROG2370/Projects/AirborneAssault/Final/Final/Content/sounds/hitSound.wav</File>
     <File>C:/Users/blitz/OneDrive - Conestoga College/3rdSemester/PROG2370/Projects/AirborneAssault/Final/Final/Content/sounds/playSceneBackgroundSound.wav</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

@@ -13,11 +13,13 @@ using System.Threading.Tasks;
 namespace Final.Scenes
 {
     public delegate void EndGameEventHandlerDelegate();
-
+    /// <summary>
+    /// Play Scene Class
+    /// </summary>
     public class PlayScene : GameScene
     {
         // SpriteBatch and texture for rendering
-        private SpriteBatch playSceneSpriteBatch;
+        private SpriteBatch spriteBatch;
         private Texture2D backgroundTexture;
         private Rectangle topBackgroundRectangle;
         private Rectangle bottomBackgroundRectangle;
@@ -62,12 +64,15 @@ namespace Final.Scenes
         // Events
         public event EndGameEventHandlerDelegate EndGameEventHandler;
 
-
+        /// <summary>
+        /// PlayScene Constructor
+        /// </summary>
+        /// <param name="game"></param>
         public PlayScene(Game game) : base(game)
         {
             // Initialize main game reference and sprite batch
             mainGame = (MainGame)game;
-            playSceneSpriteBatch = mainGame._spriteBatch;
+            spriteBatch = mainGame.SpriteBatch;
 
             // Load textures and set rectangles for background
             backgroundTexture = mainGame.Content.Load<Texture2D>("images/background");
@@ -75,9 +80,9 @@ namespace Final.Scenes
             bottomBackgroundRectangle = new Rectangle(0, -(int)Shared.stageSize.Y, (int)Shared.stageSize.X, (int)Shared.stageSize.Y);
 
             // Initialize game objects
-            fighterAircraft = new FighterAircraft(mainGame, playSceneSpriteBatch);
+            fighterAircraft = new FighterAircraft(mainGame, spriteBatch);
             ComponentList.Add(fighterAircraft);
-            bossHelicopter = new BossHelicopter(mainGame, playSceneSpriteBatch);
+            bossHelicopter = new BossHelicopter(mainGame, spriteBatch);
             ComponentList.Add(bossHelicopter);
             collisionManager = new CollisionManager(mainGame, this, bossHelicopter, fighterAircraft);
             ComponentList.Add(collisionManager);
@@ -86,8 +91,7 @@ namespace Final.Scenes
             // Load textures and set rectangles for UI elements
             singleBulletModeTexture = mainGame.Content.Load<Texture2D>("images/oneBulletMode");
             oneBulletModeRectangle = new Rectangle((int)Shared.stageSize.X - 120, (int)Shared.stageSize.Y - 250, (int)(singleBulletModeTexture.Width * iconScale), (int)(singleBulletModeTexture.Height * iconScale));
-            tripleBulletModeTexture = mainGame.Content.Load<Texture2D>("images/threeBulletMode");
-            threeBulletModeRectangle = new Rectangle((int)Shared.stageSize.X - 120, (int)Shared.stageSize.Y - 150, (int)(tripleBulletModeTexture.Width * iconScale), (int)(tripleBulletModeTexture.Height * iconScale));
+            
         }
 
         // Aircraft bullet management
@@ -102,7 +106,7 @@ namespace Final.Scenes
         private double bossBulletGeneratingSequence = 800;
 
         // Small helicopter management
-        private double smallHelicopterElapsedTime;
+        private double smallHelicopterSpawningElapsedTime;
         private double smallHelicopterSpawnInterval = 3000;
 
         // End game animation and timing
@@ -131,18 +135,26 @@ namespace Final.Scenes
 
         public override void Draw(GameTime gameTime)
         {
-            playSceneSpriteBatch.Begin();
+            spriteBatch.Begin();
             //drawing background
-            playSceneSpriteBatch.Draw(backgroundTexture, topBackgroundRectangle, Color.White);
-            playSceneSpriteBatch.Draw(backgroundTexture, bottomBackgroundRectangle, Color.White);
+            spriteBatch.Draw(backgroundTexture, topBackgroundRectangle, Color.White);
+            spriteBatch.Draw(backgroundTexture, bottomBackgroundRectangle, Color.White);
             //drawing single or triple bullet mode icon
-            playSceneSpriteBatch.Draw(singleBulletModeTexture, oneBulletModeRectangle, Color.White);
-            playSceneSpriteBatch.Draw(tripleBulletModeTexture, threeBulletModeRectangle, Color.White);
+            spriteBatch.Draw(singleBulletModeTexture, oneBulletModeRectangle, Color.White);
+            
+            if (bossHelicopter.CurrentStage != BossHelicopter.BossStage.firstStage)
+            {
+                tripleBulletModeTexture = mainGame.Content.Load<Texture2D>("images/threeBulletMode");
+                threeBulletModeRectangle = new Rectangle((int)Shared.stageSize.X - 120, (int)Shared.stageSize.Y - 150, (int)(tripleBulletModeTexture.Width * iconScale), (int)(tripleBulletModeTexture.Height * iconScale));
+                spriteBatch.Draw(tripleBulletModeTexture, threeBulletModeRectangle, Color.White);
+            }
 
-            playSceneSpriteBatch.End();
+            spriteBatch.End();
             base.Draw(gameTime);
         }
-
+        /// <summary>
+        /// To create an illusion of movement in the game by scrolling the background vertically
+        /// </summary>
         private void ScrollBackground()
         {
             topBackgroundRectangle.Y += backgroundTextureScrollSpeed;
@@ -157,6 +169,10 @@ namespace Final.Scenes
             }
         }
 
+        /// <summary>
+        /// Main Character bullet mode, generating and destroying bullets
+        /// </summary>
+        /// <param name="gameTime"></param>
         private void HandleInputAndBulletGeneration(GameTime gameTime)
         {
             double currentTime = gameTime.TotalGameTime.TotalMilliseconds;
@@ -185,15 +201,15 @@ namespace Final.Scenes
                 {
                     if (isSingleBulletMode)
                     {
-                        AircraftBasicBullet aircraftBasicBullet = new AircraftBasicBullet(mainGame, playSceneSpriteBatch);
+                        AircraftBasicBullet aircraftBasicBullet = new AircraftBasicBullet(mainGame, spriteBatch);
                         aircraftBasicBullet.RemoveBulletDelegate = RemoveAircraftBullet;
                         ComponentList.Add(aircraftBasicBullet);
                     }
                     else
                     {
-                        AircraftBasicBullet leftAircraftBasicBullet = new AircraftBasicBullet(mainGame, playSceneSpriteBatch, "left");
-                        AircraftBasicBullet centerAircraftBasicBullet = new AircraftBasicBullet(mainGame, playSceneSpriteBatch, "center");
-                        AircraftBasicBullet rightAircraftBasicBullet = new AircraftBasicBullet(mainGame, playSceneSpriteBatch, "right");
+                        AircraftBasicBullet leftAircraftBasicBullet = new AircraftBasicBullet(mainGame, spriteBatch, "left");
+                        AircraftBasicBullet centerAircraftBasicBullet = new AircraftBasicBullet(mainGame, spriteBatch, "center");
+                        AircraftBasicBullet rightAircraftBasicBullet = new AircraftBasicBullet(mainGame, spriteBatch, "right");
                         leftAircraftBasicBullet.RemoveBulletDelegate = RemoveAircraftBullet;
                         centerAircraftBasicBullet.RemoveBulletDelegate = RemoveAircraftBullet;
                         rightAircraftBasicBullet.RemoveBulletDelegate = RemoveAircraftBullet;
@@ -210,6 +226,11 @@ namespace Final.Scenes
                 }
             }
         }
+
+        /// <summary>
+        /// Generating and Destroy Boss bullets depends on boss's stage level
+        /// </summary>
+        /// <param name="gameTime"></param>
         private void BossBulletManagement(GameTime gameTime)
         {
             //boss generating bullet time control logic
@@ -219,7 +240,7 @@ namespace Final.Scenes
             {
                 isBossBulletActive = true;
                 // Initialize game board
-                gameBoard = new GameBoard(mainGame, playSceneSpriteBatch);
+                gameBoard = new GameBoard(mainGame, spriteBatch);
                 ComponentList.Add(gameBoard);
             }
             if (bossBulletStopTime > 3000)
@@ -238,7 +259,7 @@ namespace Final.Scenes
                 {
                     if (bossBulletElapsedTime > bossBulletGeneratingSequence && !bossHelicopter.IsStartSequence)
                     {
-                        BossHelicopterBasicBullet bossBasicBullet = new BossHelicopterBasicBullet(mainGame, playSceneSpriteBatch);
+                        BossHelicopterBasicBullet bossBasicBullet = new BossHelicopterBasicBullet(mainGame, spriteBatch);
                         bossBasicBullet.RemoveBossBulletDelegate = RemoveBossBasictBullet;
                         ComponentList.Add(bossBasicBullet);
                         bossBulletElapsedTime = 0;
@@ -248,9 +269,9 @@ namespace Final.Scenes
                 {
                     if (bossBulletElapsedTime > bossBulletGeneratingSequence && !bossHelicopter.IsStartSequence)
                     {
-                        BossHelicopterBasicBullet leftBossBasicBullet = new BossHelicopterBasicBullet(mainGame, playSceneSpriteBatch, "left");
-                        BossHelicopterBasicBullet centerBossBasicBullet = new BossHelicopterBasicBullet(mainGame, playSceneSpriteBatch, "center");
-                        BossHelicopterBasicBullet rightBossBasicBullet = new BossHelicopterBasicBullet(mainGame, playSceneSpriteBatch, "right");
+                        BossHelicopterBasicBullet leftBossBasicBullet = new BossHelicopterBasicBullet(mainGame, spriteBatch, "left");
+                        BossHelicopterBasicBullet centerBossBasicBullet = new BossHelicopterBasicBullet(mainGame, spriteBatch, "center");
+                        BossHelicopterBasicBullet rightBossBasicBullet = new BossHelicopterBasicBullet(mainGame, spriteBatch, "right");
                         leftBossBasicBullet.RemoveBossBulletDelegate = RemoveBossBasictBullet;
                         centerBossBasicBullet.RemoveBossBulletDelegate = RemoveBossBasictBullet;
                         rightBossBasicBullet.RemoveBossBulletDelegate = RemoveBossBasictBullet;
@@ -269,17 +290,22 @@ namespace Final.Scenes
             }
         }
 
+        /// <summary>
+        /// Generating and destroying Small Helicopter as an enemy
+        /// </summary>
+        /// <param name="gameTime"></param>
         private void GenerateSmallHelicopters(GameTime gameTime)
         {
             // generating small helicopter
             if (!FighterAircraft.IsInEntrySequence)
             {
-                smallHelicopterElapsedTime += gameTime.ElapsedGameTime.TotalMilliseconds;
-                if (smallHelicopterElapsedTime > smallHelicopterSpawnInterval)
+                smallHelicopterSpawningElapsedTime += gameTime.ElapsedGameTime.TotalMilliseconds;
+                if (smallHelicopterSpawningElapsedTime > smallHelicopterSpawnInterval)
                 {
-                    smallHelicopter = new SmallHelicopter(mainGame, playSceneSpriteBatch, this);
+                    smallHelicopter = new SmallHelicopter(mainGame, spriteBatch, this);
                     ComponentList.Add(smallHelicopter);
-                    smallHelicopterElapsedTime = 0;
+
+                    smallHelicopterSpawningElapsedTime = bossHelicopter.CurrentStage == BossHelicopter.BossStage.firstStage ? 0 : 1000;
 
                     smallHelicopter.RemovePassedOrExpolosed += RemoveSmallHelicopter;
                     void RemoveSmallHelicopter(SmallHelicopter smallHelicopter)
@@ -292,6 +318,10 @@ namespace Final.Scenes
             }
         }
 
+        /// <summary>
+        /// To Track play time used in GameBoard Class
+        /// </summary>
+        /// <param name="gameTime"></param>
         private void TrackPlayTime(GameTime gameTime)
         {
             //tracking play time
@@ -301,7 +331,10 @@ namespace Final.Scenes
                 TimeString = $"{totalTimeElapsed.Minutes:D2}:{totalTimeElapsed.Seconds:D2}";
             }
         }
-
+        /// <summary>
+        /// Check Boss Stage level and Ending game initial point
+        /// </summary>
+        /// <param name="gameTime"></param>
         private void CheckEndGameConditions(GameTime gameTime)
         {
             //End Game initial point
@@ -310,7 +343,7 @@ namespace Final.Scenes
                 destroyAnimationElapsedTime += gameTime.ElapsedGameTime.TotalMilliseconds;
                 if (destroyAnimationElapsedTime >= endGameAnimationDuration)
                 {
-                    DestoryAnimation destoryAnimation = new DestoryAnimation(mainGame, playSceneSpriteBatch);
+                    DestroyBossAnimation destoryAnimation = new DestroyBossAnimation(mainGame, spriteBatch);
                     ComponentList.Add(destoryAnimation);
                     destroyAnimationElapsedTime = 0;
                 }
