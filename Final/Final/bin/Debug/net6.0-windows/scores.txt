@@ -10,3 +10,9 @@ AAA
 -1
 AAA
 16
+JKD
+-14
+AAA
+-22
+AAA
+-2

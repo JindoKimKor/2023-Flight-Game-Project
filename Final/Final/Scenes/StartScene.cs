@@ -1,4 +1,4 @@
-﻿using Final.GameObjects;
+﻿using Final.GameObjects.UIs;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 

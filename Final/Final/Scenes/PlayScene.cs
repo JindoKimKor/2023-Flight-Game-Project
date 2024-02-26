@@ -1,5 +1,8 @@
-﻿using Final.GameComponents;
-using Final.GameObjects;
+﻿using Final.GameObjects;
+using Final.GameObjects.Characters;
+using Final.GameObjects.Mechanics;
+using Final.GameObjects.UIs;
+using Final.GameObjects.Weapons;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -107,7 +110,7 @@ namespace Final.Scenes
 
         // Small helicopter management
         private double smallHelicopterSpawningElapsedTime;
-        private double smallHelicopterSpawnInterval = 3000;
+        private double smallHelicopterSpawnInterval = 1500;
 
         // End game animation and timing
         private double destroyAnimationElapsedTime;
